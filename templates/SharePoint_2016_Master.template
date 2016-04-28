@@ -1,0 +1,608 @@
+{
+    "AWSTemplateFormatVersion": "2010-09-09",
+    "Description": "This template deploys SharePoint 2016 by deploying AD, SQL, and SharePoint CloudFormation stacks. **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Metadata": {
+        "AWS::CloudFormation::Interface": {
+            "ParameterGroups": [
+                {
+                    "Label": {
+                        "default": "Network Configuration"
+                    },
+                    "Parameters": [
+                        "VPCCIDR",
+                        "PrivateSubnet1CIDR",
+                        "PrivateSubnet2CIDR",
+                        "PublicSubnet1CIDR",
+                        "PublicSubnet2CIDR"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Amazon EC2 Configuration"
+                    },
+                    "Parameters": [
+                        "KeyPairName",
+                        "RDGWInstanceType",
+                        "ADServer1InstanceType",
+                        "ADServer1NetBIOSName",
+                        "ADServer1PrivateIP",
+                        "ADServer2InstanceType",
+                        "ADServer2NetBIOSName",
+                        "ADServer2PrivateIP",
+                        "WSFCNode1InstanceType",
+                        "WSFCNode1NetBIOSName",
+                        "WSFCNode1PrivateIP1",
+                        "WSFCNode1PrivateIP2",
+                        "WSFCNode1PrivateIP3",
+                        "WSFCNode2InstanceType",
+                        "WSFCNode2NetBIOSName",
+                        "WSFCNode2PrivateIP1",
+                        "WSFCNode2PrivateIP2",
+                        "WSFCNode2PrivateIP3",
+                        "SPInstanceType",
+                        "OOSInstanceType",
+                        "ELBConfiguration"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Active Directory Configuration"
+                    },
+                    "Parameters": [
+                        "DomainDNSName",
+                        "DomainNetBIOSName",
+                        "RestoreModePassword",
+                        "DomainAdminUser",
+                        "DomainAdminPassword"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft SQL Server Configuration"
+                    },
+                    "Parameters": [
+                        "SQLServerVersion",
+                        "SQLServiceAccount",
+                        "SQLServiceAccountPassword"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft SharePoint Configuration"
+                    },
+                    "Parameters": [
+                        "SPKey",
+                        "SPServersPerAZ",
+                        "SPSnapshotID",
+                        "SPFarmAccount",
+                        "SPFarmAccountPassword",
+                        "IncludeOfficeOnlineServer"
+                    ]
+                }
+            ],
+            "ParameterLabels": {
+                "ADServer1InstanceType": {
+                    "default": "Domain Controller 1 Instance Type"
+                },
+                "ADServer1NetBIOSName": {
+                    "default": "Domain Controller 1 NetBIOS Name"
+                },
+                "ADServer1PrivateIP": {
+                    "default": "Domain Controller 1 Private IP Address"
+                },
+                "ADServer2InstanceType": {
+                    "default": "Domain Controller 2 Instance Type"
+                },
+                "ADServer2NetBIOSName": {
+                    "default": "Domain Controller 2 NetBIOS Name"
+                },
+                "ADServer2PrivateIP": {
+                    "default": "Domain Controller 2 Private IP Address"
+                },
+                "DomainAdminPassword": {
+                    "default": "Domain Admin Password"
+                },
+                "DomainAdminUser": {
+                    "default": "Domain Admin User Name"
+                },
+                "DomainDNSName": {
+                    "default": "Domain DNS Name"
+                },
+                "DomainNetBIOSName": {
+                    "default": "Domain NetBIOS Name"
+                },
+                "ELBConfiguration": {
+                    "default": "ELB Configuration"
+                },
+                "IncludeOfficeOnlineServer": {
+                    "default": "Include Office Online Servers"
+                },
+                "KeyPairName": {
+                    "default": "Key Pair Name"
+                },
+                "OOSInstanceType": {
+                    "default": "Office Online Server Instance Type"
+                },
+                "PrivateSubnet1CIDR": {
+                    "default": "Private Subnet 1 CIDR"
+                },
+                "PrivateSubnet2CIDR": {
+                    "default": "Private Subnet 2 CIDR"
+                },
+                "PublicSubnet1CIDR": {
+                    "default": "Public Subnet 1 CIDR"
+                },
+                "PublicSubnet2CIDR": {
+                    "default": "Public Subnet 2 CIDR"
+                },
+                "RDGWInstanceType": {
+                    "default": "Remote Desktop Gateway Server Instance Type"
+                },
+                "RestoreModePassword": {
+                    "default": "Restore Mode Password"
+                },
+                "SPFarmAccount": {
+                    "default": "Farm Account Name"
+                },
+                "SPFarmAccountPassword": {
+                    "default": "Farm Account Password"
+                },
+                "SPInstanceType": {
+                    "default": "SharePoint Server Instance Type"
+                },
+                "SPKey": {
+                    "default": "Product Key"
+                },
+                "SPServersPerAZ": {
+                    "default": "Number of Servers Per AZ"
+                },
+                "SPSnapshotID": {
+                    "default": "Media EBS Snapshot ID"
+                },
+                "SQLServerVersion": {
+                    "default": "Version"
+                },
+                "SQLServiceAccount": {
+                    "default": "Service Account Name"
+                },
+                "SQLServiceAccountPassword": {
+                    "default": "Service Account Password"
+                },
+                "VPCCIDR": {
+                    "default": "VPC CIDR"
+                },
+                "WSFCNode1InstanceType": {
+                    "default": "WSFC Node 1 Instance Type"
+                },
+                "WSFCNode1NetBIOSName": {
+                    "default": "WSFC Node 1 NetBIOS Name"
+                },
+                "WSFCNode1PrivateIP1": {
+                    "default": "WSFC Node 1 Private IP Address 1"
+                },
+                "WSFCNode1PrivateIP2": {
+                    "default": "WSFC Node 1 Private IP Address 2"
+                },
+                "WSFCNode1PrivateIP3": {
+                    "default": "WSFC Node 1 Private IP Address 3"
+                },
+                "WSFCNode2InstanceType": {
+                    "default": "WSFC Node 2 Instance Type"
+                },
+                "WSFCNode2NetBIOSName": {
+                    "default": "WSFC Node 2 NetBIOS Name"
+                },
+                "WSFCNode2PrivateIP1": {
+                    "default": "WSFC Node 2 Private IP Address 1"
+                },
+                "WSFCNode2PrivateIP2": {
+                    "default": "WSFC Node 2 Private IP Address 2"
+                },
+                "WSFCNode2PrivateIP3": {
+                    "default": "WSFC Node 2 Private IP Address 3"
+                }
+            }
+        }
+    },
+    "Parameters": {
+        "ADServer1InstanceType": {
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ],
+            "Default": "m4.xlarge",
+            "Description": "Amazon EC2 instance type for the first Active Directory Instance",
+            "Type": "String"
+        },
+        "ADServer1NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "DC1",
+            "Description": "NetBIOS name of the 1st AD Server (upto 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ADServer1PrivateIP": {
+            "Default": "10.0.0.10",
+            "Description": "Fixed private IP for the first Active Directory server located in AZ1",
+            "Type": "String"
+        },
+        "ADServer2InstanceType": {
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ],
+            "Default": "m4.xlarge",
+            "Description": "Amazon EC2 instance type for the second Active Directory Instance",
+            "Type": "String"
+        },
+        "ADServer2NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "DC2",
+            "Description": "NetBIOS name of the 2nd AD Server (upto 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ADServer2PrivateIP": {
+            "Default": "10.0.64.10",
+            "Description": "Fixed private IP for the second Active Directory server located in AZ2",
+            "Type": "String"
+        },
+        "DomainAdminPassword": {
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "Password for the domain admin user. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "true",
+            "Type": "String"
+        },
+        "DomainAdminUser": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "Default": "StackAdmin",
+            "Description": "User name for the account that will be added as Domain Administrator. This is separate from the default \"Administrator\" account",
+            "MaxLength": "25",
+            "MinLength": "5",
+            "Type": "String"
+        },
+        "DomainDNSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "example.com",
+            "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. example.com",
+            "MaxLength": "25",
+            "MinLength": "3",
+            "Type": "String"
+        },
+        "DomainNetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "example",
+            "Description": "NetBIOS name of the domain (upto 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "ELBConfiguration": {
+            "AllowedValues": [
+                "internal",
+                "external"
+            ],
+            "Default": "external",
+            "Description": "Specify how to configure the Elastic Load Balancer. Allowed values are internal or external",
+            "Type": "String"
+        },
+        "IncludeOfficeOnlineServer": {
+            "AllowedValues": [
+                "true",
+                "false"
+            ],
+            "Default": "false",
+            "Description": "To include an Office Online Server in each AZ, set this parameter to true.",
+            "Type": "String"
+        },
+        "KeyPairName": {
+            "Description": "Public/private key pairs allow you to securely connect to your instance after it launches",
+            "Type": "AWS::EC2::KeyPair::KeyName"
+        },
+        "OOSInstanceType": {
+            "AllowedValues": [
+                "m3.large",
+                "m3.xlarge",
+                "m2.4xlarge"
+            ],
+            "Default": "m3.xlarge",
+            "Description": "Amazon EC2 instance type for the Office Online Servers",
+            "Type": "String"
+        },
+        "PrivateSubnet1CIDR": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "10.0.0.0/19",
+            "Description": "CIDR block for the AD Server tier located in AZ1.",
+            "Type": "String"
+        },
+        "PrivateSubnet2CIDR": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "10.0.64.0/19",
+            "Description": "CIDR block for the AD Server tier located in AZ2.",
+            "Type": "String"
+        },
+        "PublicSubnet1CIDR": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "10.0.32.0/20",
+            "Description": "CIDR Block for the Public DMZ Subnet located in AZ1",
+            "Type": "String"
+        },
+        "PublicSubnet2CIDR": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "10.0.96.0/20",
+            "Description": "CIDR Block for the Public DMZ Subnet located in AZ2",
+            "Type": "String"
+        },
+        "RDGWInstanceType": {
+            "AllowedValues": [
+                "m4.large",
+                "m4.xlarge",
+                "m4.2xlarge",
+                "m4.4xlarge"
+            ],
+            "Default": "m4.xlarge",
+            "Description": "Amazon EC2 instance type for the Remote Desktop Gatweway Instance",
+            "Type": "String"
+        },
+        "RestoreModePassword": {
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "Password for a separate Administrator account when the domain controller is in Restore Mode. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "True",
+            "Type": "String"
+        },
+        "SPFarmAccount": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "Default": "spfarm",
+            "Description": "User name for the SP Farm account.",
+            "MaxLength": "25",
+            "MinLength": "5",
+            "Type": "String"
+        },
+        "SPFarmAccountPassword": {
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "Password for the SP Farm account. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "true",
+            "Type": "String"
+        },
+        "SPInstanceType": {
+            "AllowedValues": [
+                "c3.2xlarge",
+                "c3.4xlarge"
+            ],
+            "ConstraintDescription": "Only Compute Optimized instance types c3.2xlarg, c3.4xlarge, c3.4xlarge allowed",
+            "Default": "c3.2xlarge",
+            "Description": "Amazon EC2 instance type for the SharePoint Web Front-End Servers",
+            "Type": "String"
+        },
+        "SPKey": {
+            "Default": "NQGJR-63HC8-XCRQH-MYVCH-3J3QR",
+            "Description": "The Product Key for SharePoint 2016. The trial key is provided by default. You can replace with your own key",
+            "Type": "String"
+        },
+        "SPServersPerAZ": {
+            "AllowedValues": [
+                "2",
+                "3",
+                "4"
+            ],
+            "Default": "2",
+            "Description": "Specify the total number of SharePoint servers to deploy in each AZ. Allowed values are 2, 3, or 4",
+            "Type": "String"
+        },
+        "SPSnapshotID": {
+            "Description": "ID of the volume snapshot containing the SharePoint Server 2013 installation media (e.g., snap-dc834329)",
+            "Type": "String"
+        },
+        "SQLServerVersion": {
+            "AllowedValues": [
+                "2014",
+                "2012"
+            ],
+            "Default": "2014",
+            "Description": "Version of SQL Server to install on WSFC Nodes. Options include either \"2014\" or \"2012\"",
+            "Type": "String"
+        },
+        "SQLServiceAccount": {
+            "AllowedPattern": "[a-zA-Z0-9]*",
+            "Default": "sqlsa",
+            "Description": "User name for the SQL Server Service Account. This Account is a Domain User.",
+            "MaxLength": "25",
+            "MinLength": "5",
+            "Type": "String"
+        },
+        "SQLServiceAccountPassword": {
+            "AllowedPattern": "(?=^.{6,255}$)((?=.*\\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*",
+            "Description": "Password for the SQL Service account. Must be at least 8 characters containing letters, numbers and symbols",
+            "MaxLength": "32",
+            "MinLength": "8",
+            "NoEcho": "true",
+            "Type": "String"
+        },
+        "VPCCIDR": {
+            "AllowedPattern": "[a-zA-Z0-9]+\\..+",
+            "Default": "10.0.0.0/16",
+            "Description": "CIDR Block for the VPC",
+            "Type": "String"
+        },
+        "WSFCNode1InstanceType": {
+            "AllowedValues": [
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge"
+            ],
+            "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
+            "Default": "r3.2xlarge",
+            "Description": "Amazon EC2 instance type for the 1st WSFC Node",
+            "Type": "String"
+        },
+        "WSFCNode1NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "WSFCNode1",
+            "Description": "NetBIOS name of the 1st WSFC Node (up to 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "WSFCNode1PrivateIP1": {
+            "Default": "10.0.0.100",
+            "Description": "Primary private IP for the 1st WSFC Node located in AZ1",
+            "Type": "String"
+        },
+        "WSFCNode1PrivateIP2": {
+            "Default": "10.0.0.101",
+            "Description": "Secondary private IP for WSFC cluster on 1st WSFC Node",
+            "Type": "String"
+        },
+        "WSFCNode1PrivateIP3": {
+            "Default": "10.0.0.102",
+            "Description": "Third private IP for Availability Group Listener on 1st WSFC Node",
+            "Type": "String"
+        },
+        "WSFCNode2InstanceType": {
+            "AllowedValues": [
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge"
+            ],
+            "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
+            "Default": "r3.2xlarge",
+            "Description": "Amazon EC2 instance type for the 1st WSFC Node",
+            "Type": "String"
+        },
+        "WSFCNode2NetBIOSName": {
+            "AllowedPattern": "[a-zA-Z0-9]+",
+            "Default": "WSFCNode2",
+            "Description": "NetBIOS name of the 2nd WSFC Node (up to 15 characters)",
+            "MaxLength": "15",
+            "MinLength": "1",
+            "Type": "String"
+        },
+        "WSFCNode2PrivateIP1": {
+            "Default": "10.0.64.100",
+            "Description": "Primary private IP for the 2nd WSFC Node located in AZ2",
+            "Type": "String"
+        },
+        "WSFCNode2PrivateIP2": {
+            "Default": "10.0.64.101",
+            "Description": "Secondary private IP for WSFC cluster on 2nd WSFC Node",
+            "Type": "String"
+        },
+        "WSFCNode2PrivateIP3": {
+            "Default": "10.0.64.102",
+            "Description": "Third private IP for Availability Group Listener on 2nd WSFC Node",
+            "Type": "String"
+        }
+    },
+    "Resources": {
+        "ADStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/activedirectory/latest/templates/Template_1_AD_2012R2.template",
+                "Parameters": {
+                    "ADServer1InstanceType": {"Ref": "ADServer1InstanceType"},
+                    "ADServer1NetBIOSName": {"Ref": "ADServer1NetBIOSName"},
+                    "ADServer1PrivateIP": {"Ref": "ADServer1PrivateIP"},
+                    "ADServer2InstanceType": {"Ref": "ADServer2InstanceType"},
+                    "ADServer2NetBIOSName": {"Ref": "ADServer2NetBIOSName"},
+                    "ADServer2PrivateIP": {"Ref": "ADServer2PrivateIP"},
+                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
+                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
+                    "DomainDNSName": {"Ref": "DomainDNSName"},
+                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
+                    "KeyPairName": {"Ref": "KeyPairName"},
+                    "PrivateSubnet1CIDR": {"Ref": "PrivateSubnet1CIDR"},
+                    "PrivateSubnet2CIDR": {"Ref": "PrivateSubnet2CIDR"},
+                    "PublicSubnet1CIDR": {"Ref": "PublicSubnet1CIDR"},
+                    "PublicSubnet2CIDR": {"Ref": "PublicSubnet2CIDR"},
+                    "RDGWInstanceType": {"Ref": "RDGWInstanceType"},
+                    "RestoreModePassword": {"Ref": "RestoreModePassword"},
+                    "VPCCIDR": {"Ref": "VPCCIDR"}
+                }
+            }
+        },
+        "SQLStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "DependsOn": "ADStack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/sql/latest/templates/Template_1_SQL_AlwaysOn.template",
+                "Parameters": {
+                    "ADServer1PrivateIp": {"Ref": "ADServer1PrivateIP"},
+                    "ADServer2PrivateIp": {"Ref": "ADServer2PrivateIP"},
+                    "ADServerNetBIOSName1": {"Ref": "ADServer1NetBIOSName"},
+                    "ADServerNetBIOSName2": {"Ref": "ADServer2NetBIOSName"},
+                    "SQLServerVersion": {"Ref": "SQLServerVersion"},
+                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
+                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
+                    "DomainDNSName": {"Ref": "DomainDNSName"},
+                    "DomainMemberSGID": { "Fn::GetAtt": [ "ADStack", "Outputs.DomainMemberSGID" ] },
+                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
+                    "KeyPairName": {"Ref": "KeyPairName"},
+                    "SQLServiceAccount": {"Ref": "SQLServiceAccount"},
+                    "SQLServiceAccountPassword": {"Ref": "SQLServiceAccountPassword"},
+                    "VPC": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCID" ] },
+                    "PrivSub1CIDR": {"Ref": "PrivateSubnet1CIDR"},
+                    "WSFCNode1InstanceType": {"Ref": "WSFCNode1InstanceType"},
+                    "WSFCNode1NetBIOSName": {"Ref": "WSFCNode1NetBIOSName"},
+                    "WSFCNode1PrivateIp": {"Ref": "WSFCNode1PrivateIP1"},
+                    "WSFCNode1PrivateIp2": {"Ref": "WSFCNode1PrivateIP2"},
+                    "WSFCNode1PrivateIp3": {"Ref": "WSFCNode1PrivateIP3"},
+                    "PrivateSubnet1Id": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet1ID" ] },
+                    "PrivSub2CIDR": {"Ref": "PrivateSubnet2CIDR"},
+                    "WSFCNode2InstanceType": {"Ref": "WSFCNode2InstanceType"},
+                    "WSFCNode2NetBIOSName": {"Ref": "WSFCNode2NetBIOSName"},
+                    "WSFCNode2PrivateIp": {"Ref": "WSFCNode2PrivateIP1"},
+                    "WSFCNode2PrivateIp2": {"Ref": "WSFCNode2PrivateIP2"},
+                    "WSFCNode2PrivateIp3": {"Ref": "WSFCNode2PrivateIP3"},
+                    "PrivateSubnet2Id": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet2ID" ] },
+                    "VPCCIDR": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCCIDR" ] }
+                }
+            }
+        },
+        "SharePointStack": {
+            "Type": "AWS::CloudFormation::Stack",
+            "DependsOn": "SQLStack",
+            "Properties": {
+                "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/templates/Template_1_SharePoint_2016.template",
+                "Parameters": {
+                    "ADServer1PrivateIP": {"Ref": "ADServer1PrivateIP"},
+                    "ADServer2PrivateIP": {"Ref": "ADServer2PrivateIP"},
+                    "ADServer1NetBIOSName": {"Ref": "ADServer1NetBIOSName"},
+                    "ADServer2NetBIOSName": {"Ref": "ADServer2NetBIOSName"},
+                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
+                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
+                    "DomainDNSName": {"Ref": "DomainDNSName"},
+                    "DomainMemberSGID": { "Fn::GetAtt": [ "ADStack", "Outputs.DomainMemberSGID" ] },
+                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
+                    "ELBConfiguration": {"Ref": "ELBConfiguration"},
+                    "IncludeOfficeOnlineServer": {"Ref": "IncludeOfficeOnlineServer"},
+                    "KeyPairName": {"Ref": "KeyPairName"},
+                    "OOSInstanceType": {"Ref": "OOSInstanceType"},
+                    "PrivateSubnet1ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet1ID" ] },
+                    "PrivateSubnet2ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet2ID" ] },
+                    "PublicSubnet1ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PublicSubnet1ID" ] },
+                    "PublicSubnet2ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PublicSubnet2ID" ] },
+                    "SPFarmAccount": {"Ref": "SPFarmAccount"},
+                    "SPFarmAccountPassword": {"Ref": "SPFarmAccountPassword"},
+                    "SPInstanceType": {"Ref": "SPInstanceType"},
+                    "SPKey": {"Ref": "SPKey"},
+                    "SPServersPerAZ": {"Ref": "SPServersPerAZ"},
+                    "SPSnapshotID": {"Ref": "SPSnapshotID"},
+                    "VPCID": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCID" ] },
+                    "VPCCIDR": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCCIDR" ] }
+                }
+            }
+        }
+    }
+}
