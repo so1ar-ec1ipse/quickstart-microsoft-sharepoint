@@ -71,9 +71,9 @@
                         "default": "Microsoft SharePoint Configuration"
                     },
                     "Parameters": [
+                        "SPISOImageURI",
                         "SPKey",
-                        "SPServersPerAZ",
-                        "SPSnapshotID",
+                        "SPTopology",
                         "SPFarmAccount",
                         "SPFarmAccountPassword",
                         "IncludeOfficeOnlineServer"
@@ -150,14 +150,14 @@
                 "SPInstanceType": {
                     "default": "SharePoint Server Instance Type"
                 },
+                "SPISOImageURI": {
+                    "default": "Installation Media ISO Image File URI"
+                },
                 "SPKey": {
                     "default": "Product Key"
                 },
-                "SPServersPerAZ": {
-                    "default": "Number of Servers Per AZ"
-                },
-                "SPSnapshotID": {
-                    "default": "Media EBS Snapshot ID"
+                "SPTopology": {
+                    "default": "Farm Topology"
                 },
                 "SQLServerVersion": {
                     "default": "Version"
@@ -386,23 +386,23 @@
             "Description": "Amazon EC2 instance type for the SharePoint Web Front-End Servers",
             "Type": "String"
         },
+        "SPISOImageURI": {
+            "AllowedPattern": "^(?i)(s3|http|https):\\/\\/.+",
+            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.iso). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.iso)",
+            "Type": "String"
+        },
         "SPKey": {
             "Default": "NQGJR-63HC8-XCRQH-MYVCH-3J3QR",
             "Description": "The Product Key for SharePoint 2016. The trial key is provided by default. You can replace with your own key",
             "Type": "String"
         },
-        "SPServersPerAZ": {
+        "SPTopology": {
             "AllowedValues": [
-                "2",
-                "3",
-                "4"
+                "traditional",
+                "streamlined"
             ],
-            "Default": "2",
-            "Description": "Specify the total number of SharePoint servers to deploy in each AZ. Allowed values are 2, 3, or 4",
-            "Type": "String"
-        },
-        "SPSnapshotID": {
-            "Description": "ID of the volume snapshot containing the SharePoint Server 2013 installation media (e.g., snap-dc834329)",
+            "Default": "traditional",
+            "Description": "Specify the topology for the SharePoint farm to be deployed. Allowed values are traditional or streamlined",
             "Type": "String"
         },
         "SQLServerVersion": {
@@ -596,9 +596,9 @@
                     "SPFarmAccount": {"Ref": "SPFarmAccount"},
                     "SPFarmAccountPassword": {"Ref": "SPFarmAccountPassword"},
                     "SPInstanceType": {"Ref": "SPInstanceType"},
+                    "SPISOImageURI": {"Ref": "SPISOImageURI"},
                     "SPKey": {"Ref": "SPKey"},
-                    "SPServersPerAZ": {"Ref": "SPServersPerAZ"},
-                    "SPSnapshotID": {"Ref": "SPSnapshotID"},
+                    "SPTopology": {"Ref": "SPTopology"},
                     "VPCID": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCID" ] },
                     "VPCCIDR": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCCIDR" ] }
                 }

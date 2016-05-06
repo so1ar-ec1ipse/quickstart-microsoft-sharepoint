@@ -17,7 +17,10 @@ param (
     [string]$ServerRole,
 
     [Parameter(Mandatory=$false)]
-    [switch]$CreateFarm
+    [switch]$CreateFarm,
+
+    [Parameter(Mandatory=$false)]
+    [switch]$StreamlinedTopology
 )
 
 try {
@@ -31,10 +34,12 @@ try {
         Set-Content -Path C:\cfn\scripts\config2016.xml -Value $config
     }
 
-    Start-Process D:\setup.exe -ArgumentList '/config c:\cfn\scripts\config2016.xml'
+    $driveLetter = Get-Volume | ?{$_.DriveType -eq 'CD-ROM'} | select -ExpandProperty DriveLetter
+    if ($driveLetter.Count -gt 1) {
+        throw "More than 1 mounted ISO found"
+    }
 
-    #pause while installing...
-    while(Get-Process setup -ErrorAction 0) {Start-Sleep -Seconds 30}
+    Start-Process "$($driveLetter):\setup.exe" -ArgumentList '/config c:\cfn\scripts\config2016.xml' -Wait
 
     New-Item HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo\ -EA 0
     New-ItemProperty HKLM:\SOFTWARE\Microsoft\MSSQLServer\Client\ConnectTo\ -Name SQL -Value "DBMSSOCN,$SQLServer"
@@ -44,11 +49,35 @@ try {
 
     Add-PSSnapin *sharepoint*
     if($CreateFarm) {
-        New-SPConfigurationDatabase -LocalServerRole $ServerRole -DatabaseServer SQL -DatabaseName SPConfigDB -AdministrationContentDatabaseName AdminDB -PassPhrase (ConvertTo-SecureString $Password -AsPlainText -Force) -FarmCredentials $cred
+        $newSPConfigurationDatabaseParams = @{
+            LocalServerRole = $ServerRole
+            DatabaseServer = "SQL"
+            DatabaseName = "SPConfigDB"
+            AdministrationContentDatabaseName = "AdminDB"
+            PassPhrase = $(ConvertTo-SecureString $Password -AsPlainText -Force)
+            FarmCredentials = $cred
+        }
+
+        if ($StreamlinedTopology -and $ServerRole -ne "DistributedCache") {
+            $newSPConfigurationDatabaseParams.Add("SkipRegisterAsDistributedCacheHost",$true)
+        }
+
+        New-SPConfigurationDatabase @newSPConfigurationDatabaseParams
         New-SPCentralAdministration –Port 18473 –WindowsAuthProvider NTLM
     }
     else {
-        Connect-SPConfigurationDatabase -LocalServerRole $ServerRole -DatabaseServer SQL -DatabaseName SPConfigDB -Passphrase (ConvertTo-SecureString $Password -AsPlainText -Force)
+        $connectSPConfigurationDatabaseParams = @{
+            LocalServerRole = $ServerRole
+            DatabaseServer = "SQL"
+            DatabaseName = "SPConfigDB"
+            PassPhrase = $(ConvertTo-SecureString $Password -AsPlainText -Force)
+        }
+
+        if ($StreamlinedTopology -and $ServerRole -ne "DistributedCache") {
+            $connectSPConfigurationDatabaseParams.Add("SkipRegisterAsDistributedCacheHost",$true)
+        }
+
+        Connect-SPConfigurationDatabase @connectSPConfigurationDatabaseParams
     }
 
     Install-SPHelpCollection -All

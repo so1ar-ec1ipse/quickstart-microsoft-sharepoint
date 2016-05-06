@@ -1,6 +1,6 @@
 {
     "AWSTemplateFormatVersion": "2010-09-09",
-    "Description": "QS(0009) - This template deploys two Web Front-Ends and two, four, or six Application Servers with SharePoint 2016 installed. This template is intended to be installed into an existing VPC that was built using the sample reference architecture titled: \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
+    "Description": "QS(0023) - This template deploys a SharePoint 2016 traditional topology farm with two Web Front-End servers and two Application servers or a streamlined topology farm with two Web Front End servers, two Application servers, two Distributed Cache Server, and two Search servers. This template is intended to be installed into an existing VPC that was built using the sample reference architecture titled: \"Implementing Active Directory Domain Services in the AWS Cloud\" **WARNING** This template creates Amazon EC2 Windows instance and related resources. You will be billed for the AWS resources used if you create a stack from this template.",
     "Metadata": {
         "AWS::CloudFormation::Interface": {
             "ParameterGroups": [
@@ -51,9 +51,9 @@
                         "default": "Microsoft SharePoint Configuration"
                     },
                     "Parameters": [
+                        "SPISOImageURI",
                         "SPKey",
-                        "SPServersPerAZ",
-                        "SPSnapshotID",
+                        "SPTopology",
                         "SPFarmAccount",
                         "SPFarmAccountPassword",
                         "IncludeOfficeOnlineServer"
@@ -121,14 +121,14 @@
                 "SPInstanceType": {
                     "default": "SharePoint Server Instance Type"
                 },
+                "SPISOImageURI": {
+                    "default": "Installation Media ISO Image File URI"
+                },
                 "SPKey": {
                     "default": "Product Key"
                 },
-                "SPServersPerAZ": {
-                    "default": "Number of Servers Per AZ"
-                },
-                "SPSnapshotID": {
-                    "default": "Media EBS Snapshot ID"
+                "SPTopology": {
+                    "default": "Farm Topology"
                 },
                 "VPCID": {
                     "default": "VPC ID"
@@ -282,23 +282,23 @@
             "Description": "Amazon EC2 instance type for the SharePoint Web Front-End and App Servers",
             "Type": "String"
         },
+        "SPISOImageURI": {
+            "AllowedPattern": "^(?i)(s3|http|https):\\/\\/.+",
+            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.iso). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.iso)",
+            "Type": "String"
+        },
         "SPKey": {
             "Default": "NQGJR-63HC8-XCRQH-MYVCH-3J3QR",
             "Description": "The Product Key for SharePoint 2016. The trial key is provided by default. You can replace with your own key",
             "Type": "String"
         },
-        "SPServersPerAZ": {
+        "SPTopology": {
             "AllowedValues": [
-                "2",
-                "3",
-                "4"
+                "traditional",
+                "streamlined"
             ],
-            "Default": "2",
-            "Description": "Specify the total number of SharePoint servers to deploy in each AZ. Allowed values are 2, 3, or 4",
-            "Type": "String"
-        },
-        "SPSnapshotID": {
-            "Description": "ID of the volume snapshot containing the SharePoint Server 2016 installation media (e.g., snap-dc834329)",
+            "Default": "traditional",
+            "Description": "Specify the topology for the SharePoint farm to be deployed. Allowed values are traditional or streamlined",
             "Type": "String"
         },
         "VPCID": {
@@ -330,6 +330,9 @@
     },
     "Mappings": {
         "AWSWinRegionMap": {
+            "AMI": {
+                "Name": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2016.04.13"
+            },
             "ap-northeast-1": {
                 "WS2012R2": "ami-ff435e91"
             },
@@ -363,27 +366,12 @@
         }
     },
     "Conditions": {
-        "3SPServersPerAZCondition": {
-            "Fn::Or": [
-                {
-                    "Fn::Equals": [
-                        {
-                            "Ref": "SPServersPerAZ"
-                        },
-                        "3"
-                    ]
-                },
-                {
-                    "Condition": "4SPServersPerAZCondition"
-                }
-            ]
-        },
-        "4SPServersPerAZCondition": {
+        "StreamlinedTopologyCondition": {
             "Fn::Equals": [
                 {
-                    "Ref": "SPServersPerAZ"
+                    "Ref": "SPTopology"
                 },
-                "4"
+                "streamlined"
             ]
         },
         "IncludeOOSCondition": {
@@ -471,6 +459,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -491,7 +485,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -511,8 +507,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application' -CreateFarm\"",
-                                            "\n",
+                                            "' -ServerRole 'Application' -CreateFarm",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -564,15 +567,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -698,7 +706,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "c-install-prerequisiteinstaller": {
+                            "c-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "d-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -816,19 +828,14 @@
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP1MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -940,6 +947,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -957,7 +970,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -977,8 +992,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application'\"",
-                                            "\n",
+                                            "' -ServerRole 'Application'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -1030,15 +1052,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -1114,7 +1141,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -1196,19 +1227,14 @@
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP2MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -1252,9 +1278,9 @@
                 }
             }
         },
-        "SPAPP3": {
+        "SPDCACHE1": {
             "Type": "AWS::EC2::Instance",
-            "Condition": "3SPServersPerAZCondition",
+            "Condition": "StreamlinedTopologyCondition",
             "DependsOn": "SPAPP1",
             "Metadata": {
                 "AWS::CloudFormation::Init": {
@@ -1297,12 +1323,12 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.SPAPP3.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.SPDCACHE1.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -c config -s ",
                                             {
                                                 "Ref": "AWS::StackId"
                                             },
-                                            " -r SPAPP3",
+                                            " -r SPDCACHE1",
                                             " --region ",
                                             {
                                                 "Ref": "AWS::Region"
@@ -1321,6 +1347,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -1338,7 +1370,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -1358,8 +1392,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application'\"",
-                                            "\n",
+                                            "' -ServerRole 'DistributedCache'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -1401,7 +1442,7 @@
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "' -Resource 'SPAPP3' -Region '",
+                                            "' -Resource 'SPDCACHE1' -Region '",
                                             {
                                                 "Ref": "AWS::Region"
                                             },
@@ -1411,15 +1452,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -1430,7 +1476,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPAPP3' -Restart\""
+                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPDCACHE1' -Restart\""
                                         ]
                                     ]
                                 },
@@ -1495,7 +1541,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -1570,26 +1620,21 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "SPAPP3"
+                        "Value": "SPDCACHE1"
                     }
                 ],
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP3MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -1614,7 +1659,7 @@
                                 {
                                     "Ref": "AWS::StackId"
                                 },
-                                " -r SPAPP3",
+                                " -r SPDCACHE1",
                                 " --region ",
                                 {
                                     "Ref": "AWS::Region"
@@ -1633,10 +1678,10 @@
                 }
             }
         },
-        "SPAPP4": {
+        "SPDCACHE2": {
             "Type": "AWS::EC2::Instance",
-            "Condition": "3SPServersPerAZCondition",
-            "DependsOn": "SPAPP1",
+            "Condition": "StreamlinedTopologyCondition",
+            "DependsOn": "SPDCACHE1",
             "Metadata": {
                 "AWS::CloudFormation::Init": {
                     "configSets": {
@@ -1678,12 +1723,12 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.SPAPP4.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.SPDCACHE2.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -c config -s ",
                                             {
                                                 "Ref": "AWS::StackId"
                                             },
-                                            " -r SPAPP4",
+                                            " -r SPDCACHE2",
                                             " --region ",
                                             {
                                                 "Ref": "AWS::Region"
@@ -1702,6 +1747,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -1719,7 +1770,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -1739,8 +1792,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application'\"",
-                                            "\n",
+                                            "' -ServerRole 'DistributedCache'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -1782,7 +1842,7 @@
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "' -Resource 'SPAPP4' -Region '",
+                                            "' -Resource 'SPDCACHE2' -Region '",
                                             {
                                                 "Ref": "AWS::Region"
                                             },
@@ -1792,15 +1852,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -1811,7 +1876,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPAPP4' -Restart\""
+                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPDCACHE2' -Restart\""
                                         ]
                                     ]
                                 },
@@ -1876,7 +1941,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -1951,26 +2020,21 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "SPAPP4"
+                        "Value": "SPDCACHE2"
                     }
                 ],
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP4MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -1995,7 +2059,7 @@
                                 {
                                     "Ref": "AWS::StackId"
                                 },
-                                " -r SPAPP4",
+                                " -r SPDCACHE2",
                                 " --region ",
                                 {
                                     "Ref": "AWS::Region"
@@ -2014,9 +2078,9 @@
                 }
             }
         },
-        "SPAPP5": {
+        "SPSEARCH1": {
             "Type": "AWS::EC2::Instance",
-            "Condition": "4SPServersPerAZCondition",
+            "Condition": "StreamlinedTopologyCondition",
             "DependsOn": "SPAPP1",
             "Metadata": {
                 "AWS::CloudFormation::Init": {
@@ -2059,12 +2123,12 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.SPAPP5.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.SPSEARCH1.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -c config -s ",
                                             {
                                                 "Ref": "AWS::StackId"
                                             },
-                                            " -r SPAPP5",
+                                            " -r SPSEARCH1",
                                             " --region ",
                                             {
                                                 "Ref": "AWS::Region"
@@ -2083,6 +2147,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -2100,7 +2170,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -2120,8 +2192,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application'\"",
-                                            "\n",
+                                            "' -ServerRole 'Search'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -2163,7 +2242,7 @@
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "' -Resource 'SPAPP5' -Region '",
+                                            "' -Resource 'SPSEARCH1' -Region '",
                                             {
                                                 "Ref": "AWS::Region"
                                             },
@@ -2173,15 +2252,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -2192,7 +2276,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPAPP5' -Restart\""
+                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPSEARCH1' -Restart\""
                                         ]
                                     ]
                                 },
@@ -2257,7 +2341,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -2332,26 +2420,21 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "SPAPP5"
+                        "Value": "SPSEARCH1"
                     }
                 ],
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP5MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -2376,7 +2459,7 @@
                                 {
                                     "Ref": "AWS::StackId"
                                 },
-                                " -r SPAPP5",
+                                " -r SPSEARCH1",
                                 " --region ",
                                 {
                                     "Ref": "AWS::Region"
@@ -2395,9 +2478,9 @@
                 }
             }
         },
-        "SPAPP6": {
+        "SPSEARCH2": {
             "Type": "AWS::EC2::Instance",
-            "Condition": "4SPServersPerAZCondition",
+            "Condition": "StreamlinedTopologyCondition",
             "DependsOn": "SPAPP1",
             "Metadata": {
                 "AWS::CloudFormation::Init": {
@@ -2440,12 +2523,12 @@
                                         [
                                             "[cfn-auto-reloader-hook]\n",
                                             "triggers=post.update\n",
-                                            "path=Resources.SPAPP6.Metadata.AWS::CloudFormation::Init\n",
+                                            "path=Resources.SPSEARCH2.Metadata.AWS::CloudFormation::Init\n",
                                             "action=cfn-init.exe -v -c config -s ",
                                             {
                                                 "Ref": "AWS::StackId"
                                             },
-                                            " -r SPAPP6",
+                                            " -r SPSEARCH2",
                                             " --region ",
                                             {
                                                 "Ref": "AWS::Region"
@@ -2464,6 +2547,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -2481,7 +2570,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -2501,8 +2592,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'Application'\"",
-                                            "\n",
+                                            "' -ServerRole 'Search'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -2544,7 +2642,7 @@
                                             {
                                                 "Ref": "AWS::StackName"
                                             },
-                                            "' -Resource 'SPAPP6' -Region '",
+                                            "' -Resource 'SPSEARCH2' -Region '",
                                             {
                                                 "Ref": "AWS::Region"
                                             },
@@ -2554,15 +2652,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -2573,7 +2676,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPAPP6' -Restart\""
+                                            "powershell.exe -Command \"Rename-Computer -NewName 'SPSEARCH2' -Restart\""
                                         ]
                                     ]
                                 },
@@ -2638,7 +2741,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -2713,26 +2820,21 @@
                 "Tags": [
                     {
                         "Key": "Name",
-                        "Value": "SPAPP6"
+                        "Value": "SPSEARCH2"
                     }
                 ],
                 "BlockDeviceMappings": [
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPAPP6MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -2757,7 +2859,7 @@
                                 {
                                     "Ref": "AWS::StackId"
                                 },
-                                " -r SPAPP6",
+                                " -r SPSEARCH2",
                                 " --region ",
                                 {
                                     "Ref": "AWS::Region"
@@ -2844,6 +2946,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -2861,7 +2969,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -2881,8 +2991,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'WebFrontEnd'\"",
-                                            "\n",
+                                            "' -ServerRole 'WebFrontEnd'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -2934,15 +3051,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -3018,7 +3140,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -3100,19 +3226,14 @@
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPWFE1MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -3224,6 +3345,12 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Join-Domain.ps1"
                             },
+                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Download-File.ps1"
+                            },
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Mount-DiskImage.ps1"
+                            },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/utilities/latest/scripts/Disable-AutoLogon.ps1"
                             },
@@ -3241,7 +3368,9 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "\n",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
                                                 "Ref": "WSFCNode1NetBIOSName"
                                             },
@@ -3261,8 +3390,15 @@
                                             {
                                                 "Ref": "SPKey"
                                             },
-                                            "' -ServerRole 'WebFrontEnd'\"",
-                                            "\n",
+                                            "' -ServerRole 'WebFrontEnd'",
+                                            {
+                                                "Fn::If": [
+                                                    "StreamlinedTopologyCondition",
+                                                    " -StreamlinedTopology",
+                                                    ""
+                                                ]
+                                            },
+                                            "\"\n",
                                             "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
                                             "\n"
                                         ]
@@ -3314,15 +3450,20 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-bring-volume-online": {
-                                "command": {
-                                    "Fn::Join": [
+                            "d-download-media" : {
+                                "command" : {
+                                    "Fn::Join" : [
                                         "",
                                         [
-                                            "powershell.exe -Command \"Get-Disk | Where-Object {$_.IsOffline -eq $true} | Set-Disk -IsOffline $false\""
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
+                                            {
+                                                "Ref": "SPISOImageURI"
+                                            },
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
                                         ]
                                     ]
-                                }
+                                },
+                                "waitAfterCompletion" : "0"
                             }
                         }
                     },
@@ -3398,7 +3539,11 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-install-prerequisiteinstaller": {
+                            "b-mount-media" : {
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "waitAfterCompletion" : "0"
+                            },
+                            "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
                                 "waitAfterCompletion": "forever"
                             }
@@ -3480,19 +3625,14 @@
                     {
                         "DeviceName": "/dev/sda1",
                         "Ebs": {
-                            "VolumeSize": "100",
+                            "VolumeSize": "120",
                             "VolumeType": "gp2"
                         }
                     }
                 ],
-                "Volumes": [
-                    {
-                        "VolumeId": {
-                            "Ref": "SPWFE2MediaVolume"
-                        },
-                        "Device": "/dev/xvdf"
-                    }
-                ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "SPServersSG"
@@ -3771,10 +3911,13 @@
                 ],
                 "SecurityGroupIds": [
                     {
-                        "Ref": "DomainMemberSGID"
+                        "Ref": "OfficeOnlineServerSG"
                     },
                     {
-                        "Ref": "OfficeOnlineServerSG"
+                        "Ref": "OfficeOnlineServerFarmSG"
+                    },
+                    {
+                        "Ref": "DomainMemberSGID"
                     }
                 ],
                 "KeyName": {
@@ -4044,10 +4187,13 @@
                 ],
                 "SecurityGroupIds": [
                     {
-                        "Ref": "DomainMemberSGID"
+                        "Ref": "OfficeOnlineServerSG"
                     },
                     {
-                        "Ref": "OfficeOnlineServerSG"
+                        "Ref": "OfficeOnlineServerFarmSG"
+                    },
+                    {
+                        "Ref": "DomainMemberSGID"
                     }
                 ],
                 "KeyName": {
@@ -4079,146 +4225,6 @@
                 "ResourceSignal" : {
                     "Count" : "1",
                     "Timeout" : "PT75M"
-                }
-            }
-        },
-        "SPAPP1MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        0,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPAPP2MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        1,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPAPP3MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Condition": "3SPServersPerAZCondition",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        0,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPAPP4MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Condition": "3SPServersPerAZCondition",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        1,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPAPP5MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Condition": "4SPServersPerAZCondition",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        0,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPAPP6MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Condition": "4SPServersPerAZCondition",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        1,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPWFE1MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        0,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
-                }
-            }
-        },
-        "SPWFE2MediaVolume": {
-            "Type": "AWS::EC2::Volume",
-            "Properties": {
-                "VolumeType": "standard",
-                "AvailabilityZone": {
-                    "Fn::Select": [
-                        1,
-                        {
-                            "Fn::GetAZs": ""
-                        }
-                    ]
-                },
-                "SnapshotId": {
-                    "Ref": "SPSnapshotID"
                 }
             }
         },
@@ -4354,9 +4360,40 @@
                 },
                 "SecurityGroupIngress": [
                     {
+                        "IpProtocol": "icmp",
+                        "FromPort": "-1",
+                        "ToPort": "-1",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "445",
+                        "ToPort": "445",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
                         "IpProtocol": "tcp",
                         "FromPort": "808",
                         "ToPort": "808",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "16500",
+                        "ToPort": "16519",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "22233",
+                        "ToPort": "22236",
                         "SourceSecurityGroupId": {
                             "Ref": "SPServersSG"
                         }
@@ -4376,7 +4413,7 @@
             "Type": "AWS::EC2::SecurityGroup",
             "Condition": "IncludeOOSCondition",
             "Properties": {
-                "GroupDescription": "Security Group for Office Web Apps Servers",
+                "GroupDescription": "Security Group for Office Online Servers",
                 "VpcId": {
                     "Ref": "VPCID"
                 },
@@ -4396,6 +4433,61 @@
                         "CidrIp": {
                             "Ref": "VPCCIDR"
                         }
+                    }
+                ]
+            }
+        },
+        "OfficeOnlineServerFarmSG": {
+            "Type": "AWS::EC2::SecurityGroup",
+            "Condition": "IncludeOOSCondition",
+            "Properties": {
+                "GroupDescription": "Office Online Servers Intra-Farm Communication",
+                "VpcId": {
+                    "Ref": "VPCID"
+                },
+                "SecurityGroupIngress": [
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "809",
+                        "ToPort": "809",
+                        "SourceSecurityGroupId": {
+                            "Ref": "OfficeOnlineServerSG"
+                        }
+                    }
+                ]
+            }
+        },
+        "SPRole": {
+            "Type": "AWS::IAM::Role",
+            "Properties": {
+                "AssumeRolePolicyDocument": {
+                    "Statement": [
+                        {
+                            "Effect": "Allow",
+                            "Principal": {
+                                "Service": [
+                                    "ec2.amazonaws.com"
+                                ]
+                            },
+                            "Action": [
+                                "sts:AssumeRole"
+                            ]
+                        }
+                    ]
+                },
+                "ManagedPolicyArns": [
+                    "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
+                ],
+                "Path": "/"
+            }
+        },
+        "SPInstanceProfile": {
+            "Type": "AWS::IAM::InstanceProfile",
+            "Properties": {
+                "Path": "/",
+                "Roles": [
+                    {
+                        "Ref": "SPRole"
                     }
                 ]
             }
