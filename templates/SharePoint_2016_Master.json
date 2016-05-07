@@ -56,7 +56,7 @@
     },
     {
         "ParameterKey": "IncludeOfficeOnlineServer",
-        "ParameterValue": "false",
+        "ParameterValue": "true",
         "UsePreviousValue": false
     },
     {
