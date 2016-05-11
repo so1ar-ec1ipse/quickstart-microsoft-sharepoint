@@ -284,7 +284,7 @@
         },
         "SPISOImageURI": {
             "AllowedPattern": "^(?i)(s3|http|https):\\/\\/.+",
-            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.iso). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.iso)",
+            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.img). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.img)",
             "Type": "String"
         },
         "SPKey": {
@@ -485,7 +485,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -576,7 +576,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -707,7 +707,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "c-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "d-install-prerequisiteinstaller": {
@@ -970,7 +970,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -1061,7 +1061,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -1142,7 +1142,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -1370,7 +1370,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -1461,7 +1461,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -1542,7 +1542,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -1770,7 +1770,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -1861,7 +1861,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -1942,7 +1942,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -2170,7 +2170,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -2261,7 +2261,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -2342,7 +2342,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -2570,7 +2570,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -2661,7 +2661,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -2742,7 +2742,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -2969,7 +2969,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -3060,7 +3060,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -3141,7 +3141,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
@@ -3368,7 +3368,7 @@
                                     "Fn::Join": [
                                         "",
                                         [
-                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                            "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                             "\n",
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Install-SP2016.ps1 -SQLServer '",
                                             {
@@ -3459,7 +3459,7 @@
                                             {
                                                 "Ref": "SPISOImageURI"
                                             },
-                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.iso'\""
+                                            "' -Destination 'C:\\cfn\\downloads\\sharepoint.img'\""
                                         ]
                                     ]
                                 },
@@ -3540,7 +3540,7 @@
                                 "waitAfterCompletion": "forever"
                             },
                             "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.iso'\"",
+                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
                                 "waitAfterCompletion" : "0"
                             },
                             "c-install-prerequisiteinstaller": {
