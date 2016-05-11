@@ -388,7 +388,7 @@
         },
         "SPISOImageURI": {
             "AllowedPattern": "^(?i)(s3|http|https):\\/\\/.+",
-            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.iso). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.iso)",
+            "Description": "S3 URI to an S3 bucket containing the SharePoint Server 2016 installation media ISO image file (e.g., s3://sample-bucket/microsoft/sharepoint/installation-media.img). An HTTP/HTTPS URI can also be used (e.g., https://example.com/microsoft/sharepoint/installation-media.img)",
             "Type": "String"
         },
         "SPKey": {
