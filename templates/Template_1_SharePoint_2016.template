@@ -451,25 +451,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Add-SPFarmLoginToWSFCNode2.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Add-SPFarmLoginToWSFCNode2.ps1"
@@ -939,25 +939,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -1339,25 +1339,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -1739,25 +1739,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -2139,25 +2139,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -2539,25 +2539,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -2938,25 +2938,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -3337,25 +3337,25 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
                             "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Download-File.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
                             "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Mount-DiskImage.ps1"
+                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Disable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
                             },
                             "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Enable-AutoLogon.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Enable-AutoLogon.ps1"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
@@ -3735,13 +3735,13 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             }
                         },
                         "services": {
@@ -4011,13 +4011,13 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Unzip-Archive.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Unzip-Archive.ps1"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/modules/AWSQuickStart.zip"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/modules/AWSQuickStart.zip"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/utilities/scripts/Join-Domain.ps1"
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             }
                         },
                         "services": {
