@@ -329,9 +329,9 @@
         }
     },
     "Mappings": {
-        "AWSWinRegionMap": {
+        "AWSAMIRegionMap": {
             "AMI": {
-                "Name": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2016.04.13"
+                "WS2012R2": "Windows_Server-2012-R2_RTM-English-64Bit-Base-2016.04.13"
             },
             "ap-northeast-1": {
                 "WS2012R2": "ami-ff435e91"
@@ -459,11 +459,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -548,7 +548,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -567,9 +567,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -580,7 +580,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -706,9 +706,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "c-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "c-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "d-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -805,7 +805,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -872,10 +872,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -947,11 +947,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -1033,7 +1033,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -1052,9 +1052,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -1065,7 +1065,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -1141,9 +1141,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -1204,7 +1204,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -1271,10 +1271,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -1347,11 +1347,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -1433,7 +1433,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -1452,9 +1452,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -1465,7 +1465,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -1541,9 +1541,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -1604,7 +1604,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -1671,10 +1671,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -1747,11 +1747,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -1833,7 +1833,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -1852,9 +1852,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -1865,7 +1865,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -1941,9 +1941,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -2004,7 +2004,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -2071,10 +2071,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -2147,11 +2147,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -2233,7 +2233,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -2252,9 +2252,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -2265,7 +2265,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -2341,9 +2341,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -2404,7 +2404,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -2471,10 +2471,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -2547,11 +2547,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -2633,7 +2633,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -2652,9 +2652,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -2665,7 +2665,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -2741,9 +2741,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -2804,7 +2804,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -2871,10 +2871,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -2946,11 +2946,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -3032,7 +3032,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -3051,9 +3051,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -3064,7 +3064,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -3140,9 +3140,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -3203,7 +3203,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -3270,10 +3270,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -3345,11 +3345,11 @@
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Join-Domain.ps1"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
+                            "c:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Download-File.ps1"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1"             : {
-                                "source" : "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Mount-DiskImage.ps1"
                             },
                             "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
                                 "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/microsoft-utilities/scripts/Disable-AutoLogon.ps1"
@@ -3431,7 +3431,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -3450,9 +3450,9 @@
                                 },
                                 "waitAfterCompletion": "0"
                             },
-                            "d-download-media" : {
-                                "command" : {
-                                    "Fn::Join" : [
+                            "d-download-media": {
+                                "command": {
+                                    "Fn::Join": [
                                         "",
                                         [
                                             "powershell.exe -Command \"C:\\cfn\\scripts\\Download-File.ps1 -Source '",
@@ -3463,7 +3463,7 @@
                                         ]
                                     ]
                                 },
-                                "waitAfterCompletion" : "0"
+                                "waitAfterCompletion": "0"
                             }
                         }
                     },
@@ -3539,9 +3539,9 @@
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"Install-WindowsFeature Net-Framework-Features,Web-Server,Web-WebServer,Web-Common-Http,Web-Static-Content,Web-Default-Doc,Web-Dir-Browsing,Web-Http-Errors,Web-App-Dev,Web-Asp-Net,Web-Net-Ext,Web-ISAPI-Ext,Web-ISAPI-Filter,Web-Health,Web-Http-Logging,Web-Log-Libraries,Web-Request-Monitor,Web-Http-Tracing,Web-Security,Web-Basic-Auth,Web-Windows-Auth,Web-Filtering,Web-Digest-Auth,Web-Performance,Web-Stat-Compression,Web-Dyn-Compression,Web-Mgmt-Tools,Web-Mgmt-Console,Web-Mgmt-Compat,Web-Metabase,Application-Server,AS-Web-Support,AS-TCP-Port-Sharing,AS-WAS-Support,AS-HTTP-Activation,AS-TCP-Activation,AS-Named-Pipes,AS-Net-Framework,WAS,WAS-Process-Model,WAS-NET-Environment,WAS-Config-APIs,Web-Lgcy-Scripting,Windows-Identity-Foundation,Server-Media-Foundation,Xps-Viewer -Restart\"",
                                 "waitAfterCompletion": "forever"
                             },
-                            "b-mount-media" : {
-                                "command" : "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
-                                "waitAfterCompletion" : "0"
+                            "b-mount-media": {
+                                "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Mount-DiskImage.ps1 -ImagePath 'C:\\cfn\\downloads\\sharepoint.img'\"",
+                                "waitAfterCompletion": "0"
                             },
                             "c-install-prerequisiteinstaller": {
                                 "command": "powershell.exe -ExecutionPolicy RemoteSigned -Command \"C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1\"",
@@ -3602,7 +3602,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -3669,10 +3669,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -3766,7 +3766,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -3881,7 +3881,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -3945,10 +3945,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
@@ -4042,7 +4042,7 @@
                                 "waitAfterCompletion": "0"
                             },
                             "c-init-quickstart-module": {
-                                "command" : {
+                                "command": {
                                     "Fn::Join": [
                                         "",
                                         [
@@ -4157,7 +4157,7 @@
             "Properties": {
                 "ImageId": {
                     "Fn::FindInMap": [
-                        "AWSWinRegionMap",
+                        "AWSAMIRegionMap",
                         {
                             "Ref": "AWS::Region"
                         },
@@ -4221,10 +4221,10 @@
                     }
                 }
             },
-            "CreationPolicy" : {
-                "ResourceSignal" : {
-                    "Count" : "1",
-                    "Timeout" : "PT75M"
+            "CreationPolicy": {
+                "ResourceSignal": {
+                    "Count": "1",
+                    "Timeout": "PT75M"
                 }
             }
         },
