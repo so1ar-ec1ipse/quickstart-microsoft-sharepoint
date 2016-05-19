@@ -314,7 +314,7 @@
         "WSFCNode1NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "WSFCNode1",
-            "Description": "NetBIOS name of the 1st SQL WSFC Node (up to 15 characters)",
+            "Description": "NetBIOS name of the first SQL WSFC Node (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
@@ -322,7 +322,7 @@
         "WSFCNode2NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "WSFCNode2",
-            "Description": "NetBIOS name of the 2nd SQL WSFC Node (up to 15 characters)",
+            "Description": "NetBIOS name of the second SQL WSFC Node (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"

@@ -219,7 +219,7 @@
         "ADServer1NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "DC1",
-            "Description": "NetBIOS name of the 1st AD Server (upto 15 characters)",
+            "Description": "NetBIOS name of the first AD Server (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
@@ -243,7 +243,7 @@
         "ADServer2NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "DC2",
-            "Description": "NetBIOS name of the 2nd AD Server (upto 15 characters)",
+            "Description": "NetBIOS name of the second AD Server (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
@@ -280,7 +280,7 @@
         "DomainNetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "example",
-            "Description": "NetBIOS name of the domain (upto 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
+            "Description": "NetBIOS name of the domain (up to 15 characters) for users of earlier versions of Windows e.g. EXAMPLE",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
@@ -444,30 +444,30 @@
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
             "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the 1st WSFC Node",
+            "Description": "Amazon EC2 instance type for the first WSFC Node",
             "Type": "String"
         },
         "WSFCNode1NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "WSFCNode1",
-            "Description": "NetBIOS name of the 1st WSFC Node (up to 15 characters)",
+            "Description": "NetBIOS name of the first WSFC Node (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
         },
         "WSFCNode1PrivateIP1": {
             "Default": "10.0.0.100",
-            "Description": "Primary private IP for the 1st WSFC Node located in AZ1",
+            "Description": "Primary private IP for the first WSFC Node located in AZ1",
             "Type": "String"
         },
         "WSFCNode1PrivateIP2": {
             "Default": "10.0.0.101",
-            "Description": "Secondary private IP for WSFC cluster on 1st WSFC Node",
+            "Description": "Secondary private IP for WSFC cluster on first WSFC Node",
             "Type": "String"
         },
         "WSFCNode1PrivateIP3": {
             "Default": "10.0.0.102",
-            "Description": "Third private IP for Availability Group Listener on 1st WSFC Node",
+            "Description": "Third private IP for Availability Group Listener on first WSFC Node",
             "Type": "String"
         },
         "WSFCNode2InstanceType": {
@@ -478,30 +478,30 @@
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
             "Default": "r3.2xlarge",
-            "Description": "Amazon EC2 instance type for the 1st WSFC Node",
+            "Description": "Amazon EC2 instance type for the second WSFC Node",
             "Type": "String"
         },
         "WSFCNode2NetBIOSName": {
             "AllowedPattern": "[a-zA-Z0-9]+",
             "Default": "WSFCNode2",
-            "Description": "NetBIOS name of the 2nd WSFC Node (up to 15 characters)",
+            "Description": "NetBIOS name of the second WSFC Node (up to 15 characters)",
             "MaxLength": "15",
             "MinLength": "1",
             "Type": "String"
         },
         "WSFCNode2PrivateIP1": {
             "Default": "10.0.64.100",
-            "Description": "Primary private IP for the 2nd WSFC Node located in AZ2",
+            "Description": "Primary private IP for the second WSFC Node located in AZ2",
             "Type": "String"
         },
         "WSFCNode2PrivateIP2": {
             "Default": "10.0.64.101",
-            "Description": "Secondary private IP for WSFC cluster on 2nd WSFC Node",
+            "Description": "Secondary private IP for WSFC cluster on second WSFC Node",
             "Type": "String"
         },
         "WSFCNode2PrivateIP3": {
             "Default": "10.0.64.102",
-            "Description": "Third private IP for Availability Group Listener on 2nd WSFC Node",
+            "Description": "Third private IP for Availability Group Listener on second WSFC Node",
             "Type": "String"
         }
     },
