@@ -4,16 +4,19 @@ global:
   cis3bucket: s3://quickstart-ci-bucket
   regions:
     - ap-northeast-1
-    - ap-northeast-2
+#    - ap-northeast-2 NAT Gateway not available
     - ap-southeast-1
     - ap-southeast-2
     - eu-central-1
     - eu-west-1
-    - sa-east-1
+#    - sa-east-1 NAT Gateway not available
     - us-east-1
     - us-west-1
     - us-west-2
 tests:
-  quickstart-microsoft-sharepointt1:
+  master-streamlined:
     template_file: SharePoint_2016_Master.template
-    parameter_input: SharePoint_2016_Master.json
+    parameter_input: SharePoint_2016_Master-streamlined.json
+  master-traditional:
+    template_file: SharePoint_2016_Master.template
+    parameter_input: SharePoint_2016_Master-traditional.json
