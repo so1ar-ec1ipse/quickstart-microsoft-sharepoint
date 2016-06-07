@@ -511,24 +511,60 @@
             "Properties": {
                 "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/activedirectory/latest/templates/Template_1_AD_2012R2.template",
                 "Parameters": {
-                    "ADServer1InstanceType": {"Ref": "ADServer1InstanceType"},
-                    "ADServer1NetBIOSName": {"Ref": "ADServer1NetBIOSName"},
-                    "ADServer1PrivateIP": {"Ref": "ADServer1PrivateIP"},
-                    "ADServer2InstanceType": {"Ref": "ADServer2InstanceType"},
-                    "ADServer2NetBIOSName": {"Ref": "ADServer2NetBIOSName"},
-                    "ADServer2PrivateIP": {"Ref": "ADServer2PrivateIP"},
-                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
-                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
-                    "DomainDNSName": {"Ref": "DomainDNSName"},
-                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
-                    "KeyPairName": {"Ref": "KeyPairName"},
-                    "PrivateSubnet1CIDR": {"Ref": "PrivateSubnet1CIDR"},
-                    "PrivateSubnet2CIDR": {"Ref": "PrivateSubnet2CIDR"},
-                    "PublicSubnet1CIDR": {"Ref": "PublicSubnet1CIDR"},
-                    "PublicSubnet2CIDR": {"Ref": "PublicSubnet2CIDR"},
-                    "RDGWInstanceType": {"Ref": "RDGWInstanceType"},
-                    "RestoreModePassword": {"Ref": "RestoreModePassword"},
-                    "VPCCIDR": {"Ref": "VPCCIDR"}
+                    "ADServer1InstanceType": {
+                        "Ref": "ADServer1InstanceType"
+                    },
+                    "ADServer1NetBIOSName": {
+                        "Ref": "ADServer1NetBIOSName"
+                    },
+                    "ADServer1PrivateIP": {
+                        "Ref": "ADServer1PrivateIP"
+                    },
+                    "ADServer2InstanceType": {
+                        "Ref": "ADServer2InstanceType"
+                    },
+                    "ADServer2NetBIOSName": {
+                        "Ref": "ADServer2NetBIOSName"
+                    },
+                    "ADServer2PrivateIP": {
+                        "Ref": "ADServer2PrivateIP"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "PrivateSubnet1CIDR": {
+                        "Ref": "PrivateSubnet1CIDR"
+                    },
+                    "PrivateSubnet2CIDR": {
+                        "Ref": "PrivateSubnet2CIDR"
+                    },
+                    "PublicSubnet1CIDR": {
+                        "Ref": "PublicSubnet1CIDR"
+                    },
+                    "PublicSubnet2CIDR": {
+                        "Ref": "PublicSubnet2CIDR"
+                    },
+                    "RDGWInstanceType": {
+                        "Ref": "RDGWInstanceType"
+                    },
+                    "RestoreModePassword": {
+                        "Ref": "RestoreModePassword"
+                    },
+                    "VPCCIDR": {
+                        "Ref": "VPCCIDR"
+                    }
                 }
             }
         },
@@ -538,35 +574,108 @@
             "Properties": {
                 "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/sql/latest/templates/Template_1_SQL_AlwaysOn.template",
                 "Parameters": {
-                    "ADServer1PrivateIp": {"Ref": "ADServer1PrivateIP"},
-                    "ADServer2PrivateIp": {"Ref": "ADServer2PrivateIP"},
-                    "ADServerNetBIOSName1": {"Ref": "ADServer1NetBIOSName"},
-                    "ADServerNetBIOSName2": {"Ref": "ADServer2NetBIOSName"},
-                    "SQLServerVersion": {"Ref": "SQLServerVersion"},
-                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
-                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
-                    "DomainDNSName": {"Ref": "DomainDNSName"},
-                    "DomainMemberSGID": { "Fn::GetAtt": [ "ADStack", "Outputs.DomainMemberSGID" ] },
-                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
-                    "KeyPairName": {"Ref": "KeyPairName"},
-                    "SQLServiceAccount": {"Ref": "SQLServiceAccount"},
-                    "SQLServiceAccountPassword": {"Ref": "SQLServiceAccountPassword"},
-                    "VPC": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCID" ] },
-                    "PrivSub1CIDR": {"Ref": "PrivateSubnet1CIDR"},
-                    "WSFCNode1InstanceType": {"Ref": "WSFCNode1InstanceType"},
-                    "WSFCNode1NetBIOSName": {"Ref": "WSFCNode1NetBIOSName"},
-                    "WSFCNode1PrivateIp": {"Ref": "WSFCNode1PrivateIP1"},
-                    "WSFCNode1PrivateIp2": {"Ref": "WSFCNode1PrivateIP2"},
-                    "WSFCNode1PrivateIp3": {"Ref": "WSFCNode1PrivateIP3"},
-                    "PrivateSubnet1Id": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet1ID" ] },
-                    "PrivSub2CIDR": {"Ref": "PrivateSubnet2CIDR"},
-                    "WSFCNode2InstanceType": {"Ref": "WSFCNode2InstanceType"},
-                    "WSFCNode2NetBIOSName": {"Ref": "WSFCNode2NetBIOSName"},
-                    "WSFCNode2PrivateIp": {"Ref": "WSFCNode2PrivateIP1"},
-                    "WSFCNode2PrivateIp2": {"Ref": "WSFCNode2PrivateIP2"},
-                    "WSFCNode2PrivateIp3": {"Ref": "WSFCNode2PrivateIP3"},
-                    "PrivateSubnet2Id": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet2ID" ] },
-                    "VPCCIDR": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCCIDR" ] }
+                    "ADServer1PrivateIp": {
+                        "Ref": "ADServer1PrivateIP"
+                    },
+                    "ADServer2PrivateIp": {
+                        "Ref": "ADServer2PrivateIP"
+                    },
+                    "ADServerNetBIOSName1": {
+                        "Ref": "ADServer1NetBIOSName"
+                    },
+                    "ADServerNetBIOSName2": {
+                        "Ref": "ADServer2NetBIOSName"
+                    },
+                    "SQLServerVersion": {
+                        "Ref": "SQLServerVersion"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainMemberSGID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.DomainMemberSGID"
+                        ]
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "SQLServiceAccount": {
+                        "Ref": "SQLServiceAccount"
+                    },
+                    "SQLServiceAccountPassword": {
+                        "Ref": "SQLServiceAccountPassword"
+                    },
+                    "VPC": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "PrivSub1CIDR": {
+                        "Ref": "PrivateSubnet1CIDR"
+                    },
+                    "WSFCNode1InstanceType": {
+                        "Ref": "WSFCNode1InstanceType"
+                    },
+                    "WSFCNode1NetBIOSName": {
+                        "Ref": "WSFCNode1NetBIOSName"
+                    },
+                    "WSFCNode1PrivateIp": {
+                        "Ref": "WSFCNode1PrivateIP1"
+                    },
+                    "WSFCNode1PrivateIp2": {
+                        "Ref": "WSFCNode1PrivateIP2"
+                    },
+                    "WSFCNode1PrivateIp3": {
+                        "Ref": "WSFCNode1PrivateIP3"
+                    },
+                    "PrivateSubnet1Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet1ID"
+                        ]
+                    },
+                    "PrivSub2CIDR": {
+                        "Ref": "PrivateSubnet2CIDR"
+                    },
+                    "WSFCNode2InstanceType": {
+                        "Ref": "WSFCNode2InstanceType"
+                    },
+                    "WSFCNode2NetBIOSName": {
+                        "Ref": "WSFCNode2NetBIOSName"
+                    },
+                    "WSFCNode2PrivateIp": {
+                        "Ref": "WSFCNode2PrivateIP1"
+                    },
+                    "WSFCNode2PrivateIp2": {
+                        "Ref": "WSFCNode2PrivateIP2"
+                    },
+                    "WSFCNode2PrivateIp3": {
+                        "Ref": "WSFCNode2PrivateIP3"
+                    },
+                    "PrivateSubnet2Id": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet2ID"
+                        ]
+                    },
+                    "VPCCIDR": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.VPCCIDR"
+                        ]
+                    }
                 }
             }
         },
@@ -576,31 +685,102 @@
             "Properties": {
                 "TemplateURL": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/templates/Template_1_SharePoint_2016.template",
                 "Parameters": {
-                    "ADServer1PrivateIP": {"Ref": "ADServer1PrivateIP"},
-                    "ADServer2PrivateIP": {"Ref": "ADServer2PrivateIP"},
-                    "ADServer1NetBIOSName": {"Ref": "ADServer1NetBIOSName"},
-                    "ADServer2NetBIOSName": {"Ref": "ADServer2NetBIOSName"},
-                    "DomainAdminPassword": {"Ref": "DomainAdminPassword"},
-                    "DomainAdminUser": {"Ref": "DomainAdminUser"},
-                    "DomainDNSName": {"Ref": "DomainDNSName"},
-                    "DomainMemberSGID": { "Fn::GetAtt": [ "ADStack", "Outputs.DomainMemberSGID" ] },
-                    "DomainNetBIOSName": {"Ref": "DomainNetBIOSName"},
-                    "ELBConfiguration": {"Ref": "ELBConfiguration"},
-                    "IncludeOfficeOnlineServer": {"Ref": "IncludeOfficeOnlineServer"},
-                    "KeyPairName": {"Ref": "KeyPairName"},
-                    "OOSInstanceType": {"Ref": "OOSInstanceType"},
-                    "PrivateSubnet1ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet1ID" ] },
-                    "PrivateSubnet2ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PrivateSubnet2ID" ] },
-                    "PublicSubnet1ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PublicSubnet1ID" ] },
-                    "PublicSubnet2ID": { "Fn::GetAtt": [ "ADStack", "Outputs.PublicSubnet2ID" ] },
-                    "SPFarmAccount": {"Ref": "SPFarmAccount"},
-                    "SPFarmAccountPassword": {"Ref": "SPFarmAccountPassword"},
-                    "SPInstanceType": {"Ref": "SPInstanceType"},
-                    "SPISOImageURI": {"Ref": "SPISOImageURI"},
-                    "SPKey": {"Ref": "SPKey"},
-                    "SPTopology": {"Ref": "SPTopology"},
-                    "VPCID": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCID" ] },
-                    "VPCCIDR": { "Fn::GetAtt": [ "ADStack", "Outputs.VPCCIDR" ] }
+                    "ADServer1PrivateIP": {
+                        "Ref": "ADServer1PrivateIP"
+                    },
+                    "ADServer2PrivateIP": {
+                        "Ref": "ADServer2PrivateIP"
+                    },
+                    "ADServer1NetBIOSName": {
+                        "Ref": "ADServer1NetBIOSName"
+                    },
+                    "ADServer2NetBIOSName": {
+                        "Ref": "ADServer2NetBIOSName"
+                    },
+                    "DomainAdminPassword": {
+                        "Ref": "DomainAdminPassword"
+                    },
+                    "DomainAdminUser": {
+                        "Ref": "DomainAdminUser"
+                    },
+                    "DomainDNSName": {
+                        "Ref": "DomainDNSName"
+                    },
+                    "DomainMemberSGID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.DomainMemberSGID"
+                        ]
+                    },
+                    "DomainNetBIOSName": {
+                        "Ref": "DomainNetBIOSName"
+                    },
+                    "ELBConfiguration": {
+                        "Ref": "ELBConfiguration"
+                    },
+                    "IncludeOfficeOnlineServer": {
+                        "Ref": "IncludeOfficeOnlineServer"
+                    },
+                    "KeyPairName": {
+                        "Ref": "KeyPairName"
+                    },
+                    "OOSInstanceType": {
+                        "Ref": "OOSInstanceType"
+                    },
+                    "PrivateSubnet1ID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet1ID"
+                        ]
+                    },
+                    "PrivateSubnet2ID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PrivateSubnet2ID"
+                        ]
+                    },
+                    "PublicSubnet1ID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PublicSubnet1ID"
+                        ]
+                    },
+                    "PublicSubnet2ID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.PublicSubnet2ID"
+                        ]
+                    },
+                    "SPFarmAccount": {
+                        "Ref": "SPFarmAccount"
+                    },
+                    "SPFarmAccountPassword": {
+                        "Ref": "SPFarmAccountPassword"
+                    },
+                    "SPInstanceType": {
+                        "Ref": "SPInstanceType"
+                    },
+                    "SPISOImageURI": {
+                        "Ref": "SPISOImageURI"
+                    },
+                    "SPKey": {
+                        "Ref": "SPKey"
+                    },
+                    "SPTopology": {
+                        "Ref": "SPTopology"
+                    },
+                    "VPCID": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.VPCID"
+                        ]
+                    },
+                    "VPCCIDR": {
+                        "Fn::GetAtt": [
+                            "ADStack",
+                            "Outputs.VPCCIDR"
+                        ]
+                    }
                 }
             }
         }
