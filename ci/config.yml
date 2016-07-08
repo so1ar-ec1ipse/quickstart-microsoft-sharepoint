@@ -1,10 +1,10 @@
 global:
+  marketplace-ami: false
+  owner: quickstart-eng@amazon.com
   qsname: quickstart-microsoft-sharepoint
-  reporting: true
-  cis3bucket: s3://quickstart-ci-bucket
   regions:
     - ap-northeast-1
-#    - ap-northeast-2 NAT Gateway not available
+    - ap-northeast-2
     - ap-south-1
     - ap-southeast-1
     - ap-southeast-2
@@ -14,10 +14,11 @@ global:
     - us-east-1
     - us-west-1
     - us-west-2
+  reporting: true
 tests:
-  master-streamlined:
-    template_file: SharePoint_2016_Master.template
+  streamlined:
     parameter_input: SharePoint_2016_Master-streamlined.json
-  master-traditional:
     template_file: SharePoint_2016_Master.template
+  traditional:
     parameter_input: SharePoint_2016_Master-traditional.json
+    template_file: SharePoint_2016_Master.template
