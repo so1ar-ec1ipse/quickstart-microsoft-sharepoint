@@ -693,11 +693,11 @@
                                                 "Ref": "DomainAdminUser"
                                             },
                                             "',",
-                                            "(ConvertTo-SecureString ",
+                                            "(ConvertTo-SecureString '",
                                             {
                                                 "Ref": "DomainAdminPassword"
                                             },
-                                            " -AsPlainText -Force)))",
+                                            "' -AsPlainText -Force)))",
                                             "\""
                                         ]
                                     ]
