@@ -99,6 +99,11 @@
         "ParameterValue": "m4.xlarge",
         "UsePreviousValue": false
     },
+    {   
+        "ParameterKey": "RDGWCIDR",
+        "ParameterValue": "10.0.0.0/16",
+        "UsePreviousValue": false
+    },
     {
         "ParameterKey": "RestoreModePassword",
         "ParameterValue": "$[alfred_genpass_32]",
