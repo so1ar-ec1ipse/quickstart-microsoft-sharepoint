@@ -5,6 +5,11 @@
         "UsePreviousValue": false
     },
     {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": "$[alfred_getaz_2]",
+        "UsePreviousValue": false
+    },
+    {
         "ParameterKey": "ADServer1NetBIOSName",
         "ParameterValue": "DC1",
         "UsePreviousValue": false
