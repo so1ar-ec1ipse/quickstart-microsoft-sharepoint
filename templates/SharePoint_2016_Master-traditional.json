@@ -161,7 +161,7 @@
     },
     {
         "ParameterKey": "WSFCNode1InstanceType",
-        "ParameterValue": "r3.2xlarge",
+        "ParameterValue": "r4.2xlarge",
         "UsePreviousValue": false
     },
     {
@@ -186,7 +186,7 @@
     },
     {
         "ParameterKey": "WSFCNode2InstanceType",
-        "ParameterValue": "r3.2xlarge",
+        "ParameterValue": "r4.2xlarge",
         "UsePreviousValue": false
     },
     {
