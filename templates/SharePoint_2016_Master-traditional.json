@@ -30,6 +30,11 @@
         "UsePreviousValue": false
     },
     {
+        "ParameterKey": "AvailabilityZones",
+        "ParameterValue": "$[alfred_getaz_2]",
+        "UsePreviousValue": false
+    },
+    {
         "ParameterKey": "DomainAdminPassword",
         "ParameterValue": "$[alfred_genpass_32]",
         "UsePreviousValue": false
