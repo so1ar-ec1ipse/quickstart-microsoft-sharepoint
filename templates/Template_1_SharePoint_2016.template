@@ -9,41 +9,13 @@
                         "default": "Network Configuration"
                     },
                     "Parameters": [
-                        "VPCCIDR",
-                        "VPCID",
+                        "KeyPairName",
                         "PrivateSubnet1ID",
                         "PrivateSubnet2ID",
                         "PublicSubnet1ID",
-                        "PublicSubnet2ID"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "Amazon EC2 Configuration"
-                    },
-                    "Parameters": [
-                        "KeyPairName",
-                        "DomainMemberSGID",
-                        "ADServer1NetBIOSName",
-                        "ADServer1PrivateIP",
-                        "ADServer2NetBIOSName",
-                        "ADServer2PrivateIP",
-                        "WSFCNode1NetBIOSName",
-                        "WSFCNode2NetBIOSName",
-                        "SPInstanceType",
-                        "OOSInstanceType",
-                        "ELBConfiguration"
-                    ]
-                },
-                {
-                    "Label": {
-                        "default": "Microsoft Active Directory Configuration"
-                    },
-                    "Parameters": [
-                        "DomainDNSName",
-                        "DomainNetBIOSName",
-                        "DomainAdminUser",
-                        "DomainAdminPassword"
+                        "PublicSubnet2ID",
+                        "VPCID",
+                        "VPCCIDR"
                     ]
                 },
                 {
@@ -51,12 +23,50 @@
                         "default": "Microsoft SharePoint Configuration"
                     },
                     "Parameters": [
+                        "ELBConfiguration",
+                        "IncludeOfficeOnlineServer",
                         "SPISOImageURI",
                         "SPKey",
                         "SPTopology",
                         "SPFarmAccount",
                         "SPFarmAccountPassword",
-                        "IncludeOfficeOnlineServer"
+                        "SPInstanceType",
+                        "SQLServerAccessSecurityGroupID",
+                        "OOSInstanceType"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "Microsoft Active Directory Configuration"
+                    },
+                    "Parameters": [
+                        "ADServer1NetBIOSName",
+                        "ADServer1PrivateIP",
+                        "ADServer2NetBIOSName",
+                        "ADServer2PrivateIP",
+                        "DomainAdminUser",
+                        "DomainAdminPassword",
+                        "DomainMemberSGID",
+                        "DomainDNSName",
+                        "DomainNetBIOSName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "WSFC Configuration"
+                    },
+                    "Parameters": [
+                        "WSFCNode1NetBIOSName",
+                        "WSFCNode2NetBIOSName"
+                    ]
+                },
+                {
+                    "Label": {
+                        "default": "AWS Quick Start Configuration"
+                    },
+                    "Parameters": [
+                        "QSS3BucketName",
+                        "QSS3KeyPrefix"
                     ]
                 }
             ],
@@ -112,6 +122,12 @@
                 "PublicSubnet2ID": {
                     "default": "Public Subnet 2 ID"
                 },
+                "QSS3BucketName": {
+                    "default": "Quick Start S3 Bucket Name"
+                },
+                "QSS3KeyPrefix": {
+                    "default": "Quick Start S3 Key Prefix"
+                },
                 "SPFarmAccount": {
                     "default": "Farm Account Name"
                 },
@@ -130,17 +146,20 @@
                 "SPTopology": {
                     "default": "Farm Topology"
                 },
-                "VPCID": {
-                    "default": "VPC ID"
-                },
-                "VPCCIDR": {
-                    "default": "VPC CIDR"
+                "SQLServerAccessSecurityGroupID": {
+                    "default": "Allows access to SQL Servers"
                 },
                 "WSFCNode1NetBIOSName": {
                     "default": "WSFC Node 1 NetBIOS Name"
                 },
                 "WSFCNode2NetBIOSName": {
                     "default": "WSFC Node 2 NetBIOS Name"
+                },
+                "VPCID": {
+                    "default": "VPC ID"
+                },
+                "VPCCIDR": {
+                    "default": "VPC CIDR"
                 }
             }
         }
@@ -193,7 +212,7 @@
             "Default": "example.com",
             "Description": "Fully qualified domain name (FQDN) of the forest root domain e.g. corp.example.com",
             "MaxLength": "25",
-            "MinLength": "3",
+            "MinLength": "2",
             "Type": "String"
         },
         "DomainMemberSGID": {
@@ -255,6 +274,20 @@
             "Description": "ID of the public subnet in AZ2 (e.g., subnet-a0246dcd)",
             "Type": "AWS::EC2::Subnet::Id"
         },
+        "QSS3BucketName": {
+            "AllowedPattern": "^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$",
+            "ConstraintDescription": "Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Default": "ianhill-quickstart-development",
+            "Description": "S3 bucket name for the Quick Start assets. Quick Start bucket name can include numbers, lowercase letters, uppercase letters, and hyphens (-). It cannot start or end with a hyphen (-).",
+            "Type": "String"
+        },
+        "QSS3KeyPrefix": {
+            "AllowedPattern": "^[0-9a-zA-Z-/]*$",
+            "ConstraintDescription": "Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Default": "microsoft/sharepoint/latest/",
+            "Description": "S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).",
+            "Type": "String"
+        },
         "SPFarmAccount": {
             "AllowedPattern": "[a-zA-Z0-9]*",
             "Default": "spfarm",
@@ -299,6 +332,10 @@
             "Default": "traditional",
             "Description": "Specify the topology for the SharePoint farm to be deployed. Allowed values are traditional or streamlined",
             "Type": "String"
+        },
+        "SQLServerAccessSecurityGroupID": {
+            "Description": "ID of the SQL Servers Security Group (e.g., sg-7f16e910)",
+            "Type": "AWS::EC2::SecurityGroup::Id"
         },
         "VPCID": {
             "Description": "ID of the VPC (e.g., vpc-0343606e)",
@@ -391,12 +428,59 @@
                 },
                 "internal"
             ]
+        },
+        "GovCloudCondition": {
+            "Fn::Equals": [
+                {
+                    "Ref": "AWS::Region"
+                },
+                "us-gov-west-1"
+            ]
         }
     },
     "Resources": {
+        "SPAPP1WaitCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "SPAPP1",
+            "Properties": {
+                "Handle": {
+                    "Ref": "SPAPP1WaitHandle"
+                },
+                "Timeout": "3600"
+            }
+        },
+        "SPAPP1WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle"
+        },
+        "SPAPP2WaitCondition": {
+            "Type": "AWS::CloudFormation::WaitCondition",
+            "DependsOn": "SPAPP2",
+            "Properties": {
+                "Handle": {
+                    "Ref": "SPAPP2WaitHandle"
+                },
+                "Timeout": "3600"
+            }
+        },
+        "SPAPP2WaitHandle": {
+            "Type": "AWS::CloudFormation::WaitConditionHandle"
+        },
         "SPAPP1": {
             "Type": "AWS::EC2::Instance",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -452,35 +536,175 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                            "C:\\cfn\\scripts\\Add-SPFarmLoginToWSFCNode2.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Add-SPFarmLoginToWSFCNode2.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
-                            },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
-                            },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
-                            },
-                            "C:\\cfn\\scripts\\Add-SPFarmLoginToWSFCNode2.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Add-SPFarmLoginToWSFCNode2.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -517,15 +741,27 @@
                                                     ""
                                                 ]
                                             },
-                                            "\"\n",
-                                            "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
-                                            "\n"
+                                            "\"\n"
                                         ]
                                     ]
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -555,13 +791,9 @@
                                         "",
                                         [
                                             "powershell.exe -Command \"",
-                                            "New-AWSQuickStartResourceSignal -Stack '",
+                                            "New-AWSQuickStartWaitHandle -Handle '",
                                             {
-                                                "Ref": "AWS::StackName"
-                                            },
-                                            "' -Resource 'SPAPP1' -Region '",
-                                            {
-                                                "Ref": "AWS::Region"
+                                                "Ref": "SPAPP1WaitHandle"
                                             },
                                             "'\""
                                         ]
@@ -799,6 +1031,10 @@
                                     ]
                                 },
                                 "waitAfterCompletion": "0"
+                            },
+                            "c-signal-success": {
+                                "command": "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
+                                "waitAfterCompletion": "0"
                             }
                         }
                     }
@@ -847,6 +1083,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -873,18 +1112,25 @@
                         ]
                     }
                 }
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Count": "1",
-                    "Timeout": "PT75M"
-                }
             }
         },
         "SPAPP2": {
             "Type": "AWS::EC2::Instance",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -940,32 +1186,158 @@
                                     ]
                                 }
                             },
-                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
-                            },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
-                            },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
-                            },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Join-Domain.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
+                            "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -1002,15 +1374,27 @@
                                                     ""
                                                 ]
                                             },
-                                            "\"\n",
-                                            "powershell.exe -Command \"Write-AWSQuickStartStatus\"",
-                                            "\n"
+                                            "\"\n"
                                         ]
                                     ]
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -1040,13 +1424,9 @@
                                         "",
                                         [
                                             "powershell.exe -Command \"",
-                                            "New-AWSQuickStartResourceSignal -Stack '",
+                                            "New-AWSQuickStartWaitHandle -Handle '",
                                             {
-                                                "Ref": "AWS::StackName"
-                                            },
-                                            "' -Resource 'SPAPP2' -Region '",
-                                            {
-                                                "Ref": "AWS::Region"
+                                                "Ref": "SPAPP2WaitHandle"
                                             },
                                             "'\""
                                         ]
@@ -1198,6 +1578,10 @@
                             "a-disable-autologon": {
                                 "command": "powershell.exe -Command \"C:\\cfn\\scripts\\Disable-AutoLogon.ps1\"",
                                 "waitAfterCompletion": "0"
+                            },
+                            "b-signal-success": {
+                                "command": "powershell -Command \"Write-AWSQuickStartStatus\"",
+                                "waitAfterCompletion": "0"
                             }
                         }
                     }
@@ -1246,6 +1630,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -1272,19 +1659,26 @@
                         ]
                     }
                 }
-            },
-            "CreationPolicy": {
-                "ResourceSignal": {
-                    "Count": "1",
-                    "Timeout": "PT75M"
-                }
             }
         },
         "SPDCACHE1": {
             "Type": "AWS::EC2::Instance",
             "Condition": "StreamlinedTopologyCondition",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -1341,31 +1735,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -1410,7 +1930,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -1646,6 +2180,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -1685,6 +2222,19 @@
             "Condition": "StreamlinedTopologyCondition",
             "DependsOn": "SPDCACHE1",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -1741,31 +2291,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -1810,7 +2486,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -2046,6 +2736,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -2083,8 +2776,21 @@
         "SPSEARCH1": {
             "Type": "AWS::EC2::Instance",
             "Condition": "StreamlinedTopologyCondition",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -2141,31 +2847,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -2210,7 +3042,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -2446,6 +3292,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -2483,8 +3332,21 @@
         "SPSEARCH2": {
             "Type": "AWS::EC2::Instance",
             "Condition": "StreamlinedTopologyCondition",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -2541,31 +3403,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -2610,7 +3598,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -2846,6 +3848,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -2882,8 +3887,21 @@
         },
         "SPWFE1": {
             "Type": "AWS::EC2::Instance",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -2940,31 +3958,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -3009,7 +4153,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -3245,6 +4403,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -3281,8 +4442,21 @@
         },
         "SPWFE2": {
             "Type": "AWS::EC2::Instance",
-            "DependsOn": "SPAPP1",
+            "DependsOn": "SPAPP1WaitCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -3339,31 +4513,157 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Download-File.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1"
+                            "C:\\cfn\\scripts\\Download-File.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Download-File.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Mount-DiskImage.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1"
+                            "C:\\cfn\\scripts\\Mount-DiskImage.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Mount-DiskImage.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Disable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Disable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
-                            "c:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1"
+                            "C:\\cfn\\scripts\\Enable-AutoLogon.ps1": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Enable-AutoLogon.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016PreReqs.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016PreReqs.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016PreReqs.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Install-SP2016.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/Install-SP2016.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/Install-SP2016.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\InstallSP2016.bat": {
                                 "content": {
@@ -3408,7 +4708,21 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\config2016.xml": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/scripts/config2016.xml"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/config2016.xml",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -3644,6 +4958,9 @@
                     },
                     {
                         "Ref": "DomainMemberSGID"
+                    },
+                    {
+                        "Ref": "SQLServerAccessSecurityGroupID"
                     }
                 ],
                 "KeyName": {
@@ -3682,6 +4999,19 @@
             "Type": "AWS::EC2::Instance",
             "Condition": "IncludeOOSCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -3737,13 +5067,55 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -3911,6 +5283,9 @@
                         }
                     }
                 ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "OfficeOnlineServerSG"
@@ -3958,6 +5333,19 @@
             "Type": "AWS::EC2::Instance",
             "Condition": "IncludeOOSCondition",
             "Metadata": {
+                "AWS::CloudFormation::Authentication": {
+                    "S3AccessCreds": {
+                        "type": "S3",
+                        "roleName": {
+                            "Ref": "SPRole"
+                        },
+                        "buckets": [
+                            {
+                                "Ref": "QSS3BucketName"
+                            }
+                        ]
+                    }
+                },
                 "AWS::CloudFormation::Init": {
                     "configSets": {
                         "config": [
@@ -4013,13 +5401,55 @@
                                 }
                             },
                             "C:\\cfn\\scripts\\Unzip-Archive.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Unzip-Archive.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/modules/AWSQuickStart.zip",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             },
                             "C:\\cfn\\scripts\\Join-Domain.ps1": {
-                                "source": "https://s3.amazonaws.com/quickstart-reference/microsoft/sharepoint/latest/submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1"
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-utilities/scripts/Join-Domain.ps1",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
                             }
                         },
                         "services": {
@@ -4187,6 +5617,9 @@
                         }
                     }
                 ],
+                "IamInstanceProfile": {
+                    "Ref": "SPInstanceProfile"
+                },
                 "SecurityGroupIds": [
                     {
                         "Ref": "OfficeOnlineServerSG"
@@ -4478,6 +5911,36 @@
                         }
                     ]
                 },
+                "Policies": [
+                    {
+                        "PolicyDocument": {
+                            "Version": "2012-10-17",
+                            "Statement": [
+                                {
+                                    "Action": [
+                                        "s3:GetObject"
+                                    ],
+                                    "Resource": {
+                                        "Fn::Sub": [
+                                            "arn:${Partition}:s3:::${QSS3BucketName}/${QSS3KeyPrefix}*",
+                                            {
+                                                "Partition": {
+                                                    "Fn::If": [
+                                                        "GovCloudCondition",
+                                                        "aws-us-gov",
+                                                        "aws"
+                                                    ]
+                                                }
+                                            }
+                                        ]
+                                    },
+                                    "Effect": "Allow"
+                                }
+                            ]
+                        },
+                        "PolicyName": "aws-quick-start-s3-policy"
+                    }
+                ],
                 "ManagedPolicyArns": [
                     "arn:aws:iam::aws:policy/service-role/AmazonEC2RoleforSSM"
                 ],
