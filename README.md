@@ -1,5 +1,17 @@
 # quickstart-microsoft-sharepoint
+## Microsoft SharePoint Server on the AWS Cloud
 
-This Quick Start reference deployment includes architectural considerations and configurations used to build a Microsoft SharePoint Server 2016 environment on the Amazon Web Services (AWS) cloud. We discuss how to build and configure the necessary AWS services, such as Amazon Elastic Compute Cloud (Amazon EC2) and Amazon Virtual Private Cloud (Amazon VPC) to deploy a highly available SharePoint farm across separate AWS Availability Zones.
 
-Deployment Guide: http://docs.aws.amazon.com/quickstart/latest/sharepoint/
+Amazon Web Services (AWS) provides a flexible, secure, affordable, and highly available cloud platform where you can take advantage of the content and collaboration features of Microsoft SharePoint Server.
+
+Use this Quick Start to deploy SharePoint Server 2016 into your AWS account automatically, in accordance with AWS best practices for security and high availability.
+
+You can also use the AWS CloudFormation templates as a starting point for your own implementation.
+
+![Quick Start architecture for SharePoint Server on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/sharepoint-architecture-color.png)
+
+For architectural details, best practices, step-by-step instructions, and customization options, see the 
+[deployment guide](https://fwd.aws/Q8ve9).
+
+To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo.
+If you'd like to submit code for this Quick Start, please review the [AWS Quick Start Contributor's Kit](https://aws-quickstart.github.io/). 
