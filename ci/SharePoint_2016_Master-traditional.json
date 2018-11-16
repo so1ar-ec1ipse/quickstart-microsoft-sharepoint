@@ -31,12 +31,12 @@
     },
     {
         "ParameterKey": "AvailabilityZones",
-        "ParameterValue": "$[alfred_getaz_2]",
+        "ParameterValue": "$[taskcat_getaz_2]",
         "UsePreviousValue": false
     },
     {
         "ParameterKey": "DomainAdminPassword",
-        "ParameterValue": "$[alfred_genpass_32]",
+        "ParameterValue": "$[taskcat_genpass_16]",
         "UsePreviousValue": false
     },
     {
@@ -106,7 +106,7 @@
     },
     {
         "ParameterKey": "RestoreModePassword",
-        "ParameterValue": "$[alfred_genpass_32]",
+        "ParameterValue": "$[taskcat_genpass_16]",
         "UsePreviousValue": false
     },
     {
@@ -116,7 +116,7 @@
     },
     {
         "ParameterKey": "SPFarmAccountPassword",
-        "ParameterValue": "$[alfred_genpass_32]",
+        "ParameterValue": "$[taskcat_genpass_16]",
         "UsePreviousValue": false
     },
     {
@@ -151,7 +151,7 @@
     },
     {
         "ParameterKey": "SQLServiceAccountPassword",
-        "ParameterValue": "$[alfred_genpass_32]",
+        "ParameterValue": "$[taskcat_genpass_16]",
         "UsePreviousValue": false
     },
     {
