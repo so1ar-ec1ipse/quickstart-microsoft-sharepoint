@@ -141,7 +141,7 @@
     },
     {
         "ParameterKey": "SQLServerVersion",
-        "ParameterValue": "2014",
+        "ParameterValue": "2016",
         "UsePreviousValue": false
     },
     {
