@@ -11,7 +11,7 @@
     },
     {
         "ParameterKey": "ADServer1NetBIOSName",
-        "ParameterValue": "DC1",
+        "ParameterValue": "DC-SPS-1",
         "UsePreviousValue": false
     },
     {
@@ -26,7 +26,7 @@
     },
     {
         "ParameterKey": "ADServer2NetBIOSName",
-        "ParameterValue": "DC2",
+        "ParameterValue": "DC-SPS-2",
         "UsePreviousValue": false
     },
     {
@@ -102,11 +102,6 @@
     {   
         "ParameterKey": "RDGWCIDR",
         "ParameterValue": "10.0.0.0/16",
-        "UsePreviousValue": false
-    },
-    {
-        "ParameterKey": "RestoreModePassword",
-        "ParameterValue": "$[taskcat_genpass_16]",
         "UsePreviousValue": false
     },
     {
