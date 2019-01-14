@@ -6,7 +6,7 @@
     },
     {
         "ParameterKey": "ADServer1NetBIOSName",
-        "ParameterValue": "DC-SPT-1",
+        "ParameterValue": "DCSPST1",
         "UsePreviousValue": false
     },
     {
@@ -21,7 +21,7 @@
     },
     {
         "ParameterKey": "ADServer2NetBIOSName",
-        "ParameterValue": "DC-SPT-2",
+        "ParameterValue": "DCSPST2",
         "UsePreviousValue": false
     },
     {
