@@ -859,12 +859,6 @@
                     "ADServer2NetBIOSName": {
                         "Ref": "ADServer2NetBIOSName"
                     },
-                    "PublicSubnet1CIDR": {
-                        "Ref": "PublicSubnet1CIDR"
-                    },
-                    "PublicSubnet2CIDR": {
-                        "Ref": "PublicSubnet2CIDR"
-                    },
                     "DomainAdminPassword": {
                         "Ref": "DomainAdminPassword"
                     },
@@ -879,12 +873,6 @@
                     },
                     "KeyPairName": {
                         "Ref": "KeyPairName"
-                    },
-                    "PrivateSubnet1CIDR": {
-                        "Ref": "PrivateSubnet1CIDR"
-                    },
-                    "PrivateSubnet2CIDR": {
-                        "Ref": "PrivateSubnet2CIDR"
                     },
                     "PrivateSubnet1ID": {
                         "Fn::GetAtt": [

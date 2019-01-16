@@ -41,7 +41,7 @@
     },
     {
         "ParameterKey": "DomainAdminUser",
-        "ParameterValue": "StackAdmin",
+        "ParameterValue": "Admin",
         "UsePreviousValue": false
     },
     {
