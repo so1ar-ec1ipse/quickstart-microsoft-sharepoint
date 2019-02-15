@@ -206,6 +206,6 @@
     },
     {
         "ParameterKey": "QSS3BucketName",
-        "ParameterValue": "aws-quickstart"
+        "ParameterValue": "$[taskcat_autobucket]"
     }
 ]
