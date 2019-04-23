@@ -1510,16 +1510,18 @@ Resources:
             }
 
             var prefix = "${AWS::StackName}".substring(0,8)
+            var id = makeid(4)
             await postResponse(event, context, response.SUCCESS, {
-              setup: (prefix + '-setup-' + makeid(4)),
-              farm: (prefix + '-farm-' + makeid(4)),
-              web: (prefix + '-webapp-' + makeid(4)),
-              svc: (prefix + '-svcapp-' + makeid(4)),
-              crawl: (prefix + '-crawl-' + makeid(4)),
-              sync: (prefix + '-upsync-' + makeid(4)),
-              super: (prefix + '-supusr-' + makeid(4)),
-              reader: (prefix + '-suprdr-' + makeid(4)),
-              db: (prefix + '_' + makeid(4))
+              setup: (prefix + '-setup-' + id),
+              farm: (prefix + '-farm-' + id),
+              web: (prefix + '-webapp-' + id),
+              svc: (prefix + '-svcapp-' + id),
+              crawl: (prefix + '-crawl-' + id),
+              sync: (prefix + '-upsync-' + id),
+              super: (prefix + '-supusr-' + id),
+              reader: (prefix + '-suprdr-' + id),
+              db: (prefix + '_' + id),
+              prefix: id
             });
           };
       Handler: index.handler
@@ -1654,3 +1656,11 @@ Resources:
         GenerateStringKey: "password"
         PasswordLength: 15
         ExcludeCharacters: '"@/\'
+
+Outputs:
+  CentralAdminUrl:
+    Description: The URL to access the Central Admin site for this server
+    Value: !Sub "http://${SPServerNetBIOSName}.${DomainDNSName}:9999"
+  SiteUrl:
+    Description: The URL to access the default site for this server
+    Value: !Sub "http://${SPServerNetBIOSName}.${DomainDNSName}"
