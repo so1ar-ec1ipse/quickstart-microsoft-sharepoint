@@ -34,8 +34,8 @@ Configuration SharePointServer {
     node localhost {
 
         Environment VersionStamp {
-            Name = "QuickStartVersion"
-            Value = "2.0.0"
+            Name = "SPQuickStartPrefix"
+            Value = '${GenerateUsernames.prefix}'
         }
 
         # Putting this before the domain join means that the copy from S3 has time to succeed before the domain join reboot
@@ -553,6 +553,8 @@ $mof = Get-Content "${PSScriptRoot}\MOF\localhost.mof" | Where-Object -FilterScr
     $_ -notlike '@GenerationHost=*' 
 } | Where-Object -FilterScript { 
     [String]::IsNullOrEmpty($_.Trim()) -eq $false
+} | ForEach-Object -Process {
+    return "        $_"
 }
     
 $mof | Out-File -FilePath "${PSScriptRoot}\MOF\localhost.mof" -Force
