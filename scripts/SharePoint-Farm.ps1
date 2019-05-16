@@ -30,12 +30,19 @@ Configuration SharePointServer {
     Import-DscResource -ModuleName xActiveDirectory      -ModuleVersion 2.25.0.0
     Import-DscResource -ModuleName SharePointDsc         -ModuleVersion 3.4.0.0
     Import-DscResource -ModuleName xWebAdministration    -ModuleVersion 2.5.0.0
+    Import-DscResource -ModuleName NetworkingDsc         -ModuleVersion 7.1.0.0
+    Import-DscResource -ModuleName xDnsServer            -ModuleVersion 1.11.0.0
 
     node $ConfigurationData.AllNodes.nodename {
 
-        Environment VersionStamp {
+        Environment PrefixStamp {
             Name = "SPQuickStartPrefix"
             Value = '${GenerateUsernames.prefix}'
+        }
+
+        FirewallProfile DisableDomainFirewall {
+            Name    = "Domain"
+            Enabled = $false
         }
 
         # Putting this before the domain join means that the copy from S3 has time to succeed before the domain join reboot
@@ -67,22 +74,12 @@ Configuration SharePointServer {
             FSFormat = 'NTFS'
         }
 
-        Registry DisableIPv6 
-        {
-            Key       = "HKLM:\SYSTEM\CurrentControlSet\Services\Tcpip6\Parameters"
-            ValueName = "DisabledComponents"
-            ValueData = "ff"
-            ValueType = "Dword"
-            Hex       = $true
-            Ensure    = 'Present'
-        }
-
         Archive UnzipSpInstaller
         {
             Path        = "C:\config\sources\installer.zip"
             Destination = "D:\binaries"
             Ensure      = "Present"
-            DependsOn   = "[Disk]SecondaryDisk", '[Registry]DisableIPv6'
+            DependsOn   = "[Disk]SecondaryDisk"
         }
 
         xCredSSP CredSSPServer 
@@ -104,7 +101,8 @@ Configuration SharePointServer {
             "RSAT-ADDS", 
             "RSAT-AD-AdminCenter", 
             "RSAT-ADDS-Tools", 
-            "RSAT-AD-PowerShell" 
+            "RSAT-AD-PowerShell",
+            "RSAT-DNS-Server"
         ) | ForEach-Object -Process {
             WindowsFeature "Feature-$_"
             { 
@@ -113,7 +111,7 @@ Configuration SharePointServer {
             }
         }
 
-        if ($Node.NodeName -eq "app") {
+        if ($Node.NodeName -eq "farm") {
             $userAccounts = @{
                 "setup" = $SPSetupAccount
                 "farm" = $FarmAccount
@@ -241,21 +239,26 @@ Configuration SharePointServer {
             }
         }
 
-        SPFarm CreateSPFarm
-        {
-            Ensure                   = "Present"
-            DatabaseServer           = '${SPDatabaseName}'
-            FarmConfigDatabaseName   = '${GenerateUsernames.db}_Config'
-            Passphrase               = $Passphrase
-            FarmAccount              = $FarmAccount
-            PsDscRunAsCredential     = $SPSetupAccount
-            AdminContentDatabaseName = '${GenerateUsernames.db}_AdminContent'
-            RunCentralAdmin          = $true
-            IsSingleInstance         = "Yes"
-            DependsOn                = "[Script]SQLPermissions"
+        $runCA = $true
+        if ($Node.NodeName -eq "wfe") {
+            $runCA = $false
         }
 
-        if ($Node.NodeName -eq "app") {
+        SPFarm CreateSPFarm
+        {
+            Ensure                    = "Present"
+            DatabaseServer            = '${SPDatabaseName}'
+            FarmConfigDatabaseName    = '${GenerateUsernames.db}_Config'
+            Passphrase                = $Passphrase
+            FarmAccount               = $FarmAccount
+            PsDscRunAsCredential      = $SPSetupAccount
+            AdminContentDatabaseName  = '${GenerateUsernames.db}_AdminContent'
+            RunCentralAdmin           = $runCA
+            IsSingleInstance          = "Yes"
+            DependsOn                 = "[Script]SQLPermissions"
+        }
+
+        if ($Node.NodeName -eq "farm") {
             SPAlternateUrl CentralAdminAAM
             {
                 WebAppName           = "SharePoint Central Administration v4"
@@ -264,6 +267,17 @@ Configuration SharePointServer {
                 Ensure               = "Present"
                 PsDscRunAsCredential = $SPSetupAccount
                 DependsOn            = "[SPFarm]CreateSPFarm"
+            }
+
+            xDnsRecord CentralAdminDns {
+                Name                 = '${DNSPrefixCentralAdmin}'
+                Zone                 = '${DomainDNSName}'
+                Target               = '${AdminLoadBalancer.DNSName}'
+                DnsServer            = '${DNSServerIP}'
+                Type                 = "CName"
+                Ensure               = "Present"
+                PsDscRunAsCredential = $domainAdminCredential
+                DependsOn            = "[SPAlternateUrl]CentralAdminAAM"
             }
 
             SPManagedAccount ServicePoolManagedAccount
@@ -323,6 +337,15 @@ Configuration SharePointServer {
             }
         }
 
+        Registry CentralAdminLinkUpdate {
+            Key       = "HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Shared Tools\Web Server Extensions\16.0\WSS\"
+            ValueName = "CentralAdministrationURL"
+            Ensure    = "Present"
+            ValueData = 'http://${DNSPrefixCentralAdmin}.${DomainDNSName}'
+            ValueType = "string"
+            DependsOn = "[SPFarm]CreateSPFarm"
+        }
+
         if ($Node.NodeName -eq "wfe") {
             SPDistributedCacheService EnableDistributedCache
             {
@@ -332,6 +355,7 @@ Configuration SharePointServer {
                 ServiceAccount       = '${DomainNetBIOSName}\${GenerateUsernames.svc}'
                 PsDscRunAsCredential = $SPSetupAccount
                 CreateFirewallRules  = $true
+                ServerProvisionOrder = @('${SPServerNetBIOSNamePrefix}3', '${SPServerNetBIOSNamePrefix}4', '${SPServerNetBIOSNamePrefix}5')
                 DependsOn            = @('[SPFarm]CreateSPFarm')
             }
         }
@@ -344,7 +368,7 @@ Configuration SharePointServer {
         # application settings
         #**********************************************************
 
-        if ($Node.NodeName -eq "app") {
+        if ($Node.NodeName -eq "farm") {
             SPWebApplication SharePointSites
             {
                 Name                   = "SharePoint Sites"
@@ -357,6 +381,17 @@ Configuration SharePointServer {
                 Port                   = 80
                 PsDscRunAsCredential   = $SPSetupAccount
                 DependsOn              = "[SPManagedAccount]WebPoolManagedAccount"
+            }
+
+            xDnsRecord MainSiteDns {
+                Name                 = '${DNSPrefixMainSite}'
+                Zone                 = '${DomainDNSName}'
+                Target               = '${SitesLoadBalancer.DNSName}'
+                DnsServer            = '${DNSServerIP}'
+                Type                 = "CName"
+                Ensure               = "Present"
+                PsDscRunAsCredential = $domainAdminCredential
+                DependsOn            = "[SPWebApplication]SharePointSites"
             }
 
             #**********************************************************
@@ -441,6 +476,27 @@ Configuration SharePointServer {
                 DependsOn            = "[SPFarm]CreateSPFarm"
             }
         }
+
+        if ($Node.NodeName -eq "app" -or $Node.NodeName -eq "farm") {
+            xWebSite CentralAdminBindings {
+                Ensure = "Present"
+                Name = "SharePoint Central Administration v4"
+                State = "Started"
+                BindingInfo = @(
+                    MSFT_xWebBindingInformation
+                    {
+                        Protocol = "http"
+                        Port     = 80
+                        HostName = '${DNSPrefixCentralAdmin}.${DomainDNSName}'
+                    }
+                    MSFT_xWebBindingInformation
+                    {
+                        Protocol = "http"
+                        Port     = 9999
+                    }
+                )
+            }
+        }
         
         SPServiceInstance SearchServiceInstance
         {  
@@ -458,7 +514,7 @@ Configuration SharePointServer {
         #**********************************************************
 
         $serviceAppPoolName = "SharePoint Service Applications"
-        if ($Node.NodeName -eq "app") {
+        if ($Node.NodeName -eq "farm") {
             SPServiceAppPool MainServiceAppPool
             {
                 Name                 = $serviceAppPoolName
@@ -521,16 +577,21 @@ Configuration SharePointServer {
             }
         }
 
-        if ($Node.NodeName -eq "app") {
+        if ($Node.NodeName -eq "farm") {
             $finalDependencies = @(
                 "[SPSite]TeamSite",
                 "[SPSearchTopology]SearchTopology"
             )
-        } else {
+        } elseif ($Node.NodeName -eq "wfe") {
             $finalDependencies = @(
                 "[SPDistributedCacheService]EnableDistributedCache"
             )
+        } else {
+            $finalDependencies = @(
+                "[SPFarm]CreateSPFarm"
+            )
         }
+        
 
         Script SignalCFN {
             DependsOn = $finalDependencies
@@ -559,12 +620,16 @@ SharePointServer -OutputPath .\MOF -ConfigurationData @{
         @{
             NodeName = 'wfe'
             PSDscAllowPlainTextPassword = $true
+        },
+        @{
+            NodeName = 'farm'
+            PSDscAllowPlainTextPassword = $true
         }
     )
 }
 
 # Trim content we dont need from the MOF so it can be copied in to CFN
-$mofsToClean = @("${PSScriptRoot}\MOF\app.mof", "${PSScriptRoot}\MOF\wfe.mof")
+$mofsToClean = @("${PSScriptRoot}\MOF\app.mof", "${PSScriptRoot}\MOF\wfe.mof", "${PSScriptRoot}\MOF\farm.mof")
 $mofsToClean | ForEach-Object -Process {
     $mofPath = $_
     $mof = Get-Content $mofPath | Where-Object -FilterScript { 

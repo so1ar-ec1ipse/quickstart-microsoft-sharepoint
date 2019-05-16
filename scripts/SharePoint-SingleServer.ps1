@@ -439,6 +439,14 @@ Configuration SharePointServer {
             PsDscRunAsCredential = $SPSetupAccount
             DependsOn            = "[SPFarm]CreateSPFarm"
         }
+
+        SPServiceInstance CentralAdmin
+        {  
+            Name                 = "Central Administration"
+            Ensure               = "Present"
+            PsDscRunAsCredential = $SPSetupAccount
+            DependsOn            = "[SPFarm]CreateSPFarm"
+        }
         
         #**********************************************************
         # Service applications
@@ -537,7 +545,7 @@ SharePointServer -OutputPath .\MOF -ConfigurationData @{
             PSDscAllowPlainTextPassword = $true
         }
     )
-}
+}x
 
 # Trim content we dont need from the MOF so it can be copied in to CFN
 $mof = Get-Content "${PSScriptRoot}\MOF\localhost.mof" | Where-Object -FilterScript { 

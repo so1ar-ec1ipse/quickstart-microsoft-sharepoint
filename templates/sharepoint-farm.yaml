@@ -19,7 +19,7 @@ Metadata:
           - VPCCIDR
           - Subnet1ID
           - Subnet2ID
-          - Subnet3ID
+          - DNSServerIP
       - Label:
           default: Amazon EC2 Configuration
         Parameters:
@@ -59,8 +59,6 @@ Metadata:
         default: ID of the first subnet
       Subnet2ID:
         default: ID of the second subnet
-      Subnet3ID:
-        default: ID of the third subnet
       SPServerNetBIOSNamePrefix:
         default: SharePoint Server NetBIOS Name
       KeyPairName:
@@ -85,6 +83,8 @@ Metadata:
         default: The name of the database server that will store the SharePoint databases
       SPProductKey:
         default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
+      DNSServerIP:
+        default: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account
 
 Parameters:
   WS2019FULLBASE:
@@ -108,9 +108,6 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   Subnet2ID:
     Description: ID of second subnet SharePoint will be deployed in
-    Type: AWS::EC2::Subnet::Id
-  Subnet3ID:
-    Description: ID of third subnet SharePoint will be deployed in
     Type: AWS::EC2::Subnet::Id
   SPServerNetBIOSNamePrefix:
     AllowedPattern: '[a-zA-Z0-9\-]+'
@@ -192,6 +189,12 @@ Parameters:
     MinLength: 1
     MaxLength: 20
     Default: sharepoint
+  DNSServerIP:
+    Type: String
+    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account
+    MinLength: 8
+    MaxLength: 16
+    Default: 10.0.0.10
 
 Rules:
   SubnetsInVPC:
@@ -311,7 +314,7 @@ Resources:
       - SPServer1
     Properties:
       Handle: !Ref SPServer1WaitConditionHanle
-      Timeout: 9000 
+      Timeout: 10800 
   
   SPServer2WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -418,6 +421,7 @@ Resources:
 
   SPServer2:
     Type: AWS::EC2::Instance
+    DependsOn: SPServer1
     Properties:
       ImageId: !Ref 'WS2019FULLBASE'
       IamInstanceProfile: !Ref 'SharePointServerProfile'
@@ -489,6 +493,7 @@ Resources:
 
   SPServer3:
     Type: AWS::EC2::Instance
+    DependsOn: SPServer1
     Properties:
       ImageId: !Ref 'WS2019FULLBASE'
       IamInstanceProfile: !Ref 'SharePointServerProfile'
@@ -560,6 +565,7 @@ Resources:
 
   SPServer4:
     Type: AWS::EC2::Instance
+    DependsOn: SPServer1
     Properties:
       ImageId: !Ref 'WS2019FULLBASE'
       IamInstanceProfile: !Ref 'SharePointServerProfile'
@@ -631,11 +637,12 @@ Resources:
 
   SPServer5:
     Type: AWS::EC2::Instance
+    DependsOn: SPServer1
     Properties:
       ImageId: !Ref 'WS2019FULLBASE'
       IamInstanceProfile: !Ref 'SharePointServerProfile'
       InstanceType: !Ref 'SPServerInstanceType'
-      SubnetId: !Ref 'Subnet3ID'
+      SubnetId: !Ref 'Subnet2ID'
       Tags:
         - Key: Name
           Value: !Sub "${SPServerNetBIOSNamePrefix}5"
@@ -711,13 +718,18 @@ Resources:
           ToPort: 80
           CidrIp: !Ref VPCCIDR
         - IpProtocol: tcp
-          FromPort: 9999
-          ToPort: 9999
-          CidrIp: !Ref VPCCIDR
-        - IpProtocol: tcp
           FromPort: 3389
           ToPort: 3389
           CidrIp: !Ref VPCCIDR
+
+  SharePointSGIngress:
+    Type: AWS::EC2::SecurityGroupIngress
+    Properties:
+      IpProtocol: -1
+      FromPort: -1
+      ToPort: -1
+      GroupId: !Ref SharePointSG
+      SourceSecurityGroupId:  !Ref SharePointSG
 
   WriteMOFRole:
     Type: AWS::IAM::Role
@@ -780,20 +792,29 @@ Resources:
       Runtime: nodejs8.10
       Timeout: 10
 
-  WriteAppServerMOF:
+  WriteFarmServerMOF:
     Type: Custom::WriteMOFFile
     Properties:
       ServiceToken: !GetAtt WriteMOFFunction.Arn
       Bucket: !Ref DSCBucket
-      Key: !Sub "SP-Farm-App-${AWS::StackName}.mof"
+      Key: !Sub "SP-Farm-Farm-${AWS::StackName}.mof"
       Body: !Sub |
         instance of MSFT_EnvironmentResource as $MSFT_EnvironmentResource1ref
         {
-        ResourceID = "[Environment]VersionStamp";
+        ResourceID = "[Environment]PrefixStamp";
          Value = "${GenerateUsernames.prefix}";
          Name = "SPQuickStartPrefix";
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_FirewallProfile as $MSFT_FirewallProfile1ref
+        {
+        ResourceID = "[FirewallProfile]DisableDomainFirewall";
+         Enabled = "False";
+         Name = "Domain";
+         ModuleName = "NetworkingDsc";
+         ModuleVersion = "7.1.0.0";
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource1ref
@@ -834,21 +855,6 @@ Resources:
          ModuleVersion = "4.6.0.0";
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
-        {
-        ResourceID = "[Registry]DisableIPv6";
-         ValueName = "DisabledComponents";
-         Key = "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters";
-         Ensure = "Present";
-         ValueType = "Dword";
-         ModuleName = "PsDesiredStateConfiguration";
-         ValueData = {
-            "ff"
-        };
-         Hex = True;
-        ModuleVersion = "0.0";
-         ConfigurationName = "SharePointServer";
-        };
         instance of MSFT_ArchiveResource as $MSFT_ArchiveResource1ref
         {
         ResourceID = "[Archive]UnzipSpInstaller";
@@ -858,8 +864,7 @@ Resources:
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
         DependsOn = {
-            "[Disk]SecondaryDisk",
-             "[Registry]DisableIPv6"};
+            "[Disk]SecondaryDisk"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xCredSSP as $MSFT_xCredSSP1ref
@@ -919,6 +924,15 @@ Resources:
         ResourceID = "[WindowsFeature]Feature-RSAT-AD-PowerShell";
          Ensure = "Present";
          Name = "RSAT-AD-PowerShell";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource5ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-DNS-Server";
+         Ensure = "Present";
+         Name = "RSAT-DNS-Server";
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
          ConfigurationName = "SharePointServer";
@@ -1330,9 +1344,30 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential25ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${SPSetupAccount}";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_xDnsRecord as $MSFT_xDnsRecord1ref
+        {
+        ResourceID = "[xDnsRecord]CentralAdminDns";
+         PsDscRunAsCredential = $MSFT_Credential25ref;
+         Type = "CName";
+         DnsServer = "${DNSServerIP}";
+         Name = "${DNSPrefixCentralAdmin}";
+         Target = "${AdminLoadBalancer.DNSName}";
+         ModuleName = "xDnsServer";
+         Zone = "${DomainDNSName}";
+         ModuleVersion = "1.11.0.0";
+         Ensure = "Present";
+        DependsOn = {
+            "[SPAlternateUrl]CentralAdminAAM"};
+         ConfigurationName = "SharePointServer";
         };
         instance of MSFT_Credential as $MSFT_Credential26ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
+        instance of MSFT_Credential as $MSFT_Credential27ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSvcAppAccount}";
@@ -1340,21 +1375,21 @@ Resources:
         instance of MSFT_SPManagedAccount as $MSFT_SPManagedAccount1ref
         {
         ResourceID = "[SPManagedAccount]ServicePoolManagedAccount";
-         PsDscRunAsCredential = $MSFT_Credential25ref;
+         PsDscRunAsCredential = $MSFT_Credential26ref;
          AccountName = "${DomainNetBIOSName}\\${GenerateUsernames.svc}";
          ModuleName = "SharePointDsc";
-         Account = $MSFT_Credential26ref;
+         Account = $MSFT_Credential27ref;
          ModuleVersion = "3.4.0.0";
         DependsOn = {
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential27ref
+        instance of MSFT_Credential as $MSFT_Credential28ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
         };
-        instance of MSFT_Credential as $MSFT_Credential28ref
+        instance of MSFT_Credential as $MSFT_Credential29ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPWebAppAccount}";
@@ -1362,16 +1397,16 @@ Resources:
         instance of MSFT_SPManagedAccount as $MSFT_SPManagedAccount2ref
         {
         ResourceID = "[SPManagedAccount]WebPoolManagedAccount";
-         PsDscRunAsCredential = $MSFT_Credential27ref;
+         PsDscRunAsCredential = $MSFT_Credential28ref;
          AccountName = "${DomainNetBIOSName}\\${GenerateUsernames.web}";
          ModuleName = "SharePointDsc";
-         Account = $MSFT_Credential28ref;
+         Account = $MSFT_Credential29ref;
          ModuleVersion = "3.4.0.0";
         DependsOn = {
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential29ref
+        instance of MSFT_Credential as $MSFT_Credential30ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1386,7 +1421,7 @@ Resources:
          DownloadErrorReportingUpdatesEnabled = False;
          ScriptErrorReportingEnabled = True;
          LogSpaceInGB = 5;
-         PsDscRunAsCredential = $MSFT_Credential29ref;
+         PsDscRunAsCredential = $MSFT_Credential30ref;
          ScriptErrorReportingRequireAuth = True;
          IsSingleInstance = "Yes";
          EventLogFloodProtectionTriggerPeriod = 2;
@@ -1405,7 +1440,7 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential30ref
+        instance of MSFT_Credential as $MSFT_Credential31ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1413,7 +1448,7 @@ Resources:
         instance of MSFT_SPUsageApplication as $MSFT_SPUsageApplication1ref
         {
         ResourceID = "[SPUsageApplication]UsageApplication";
-         PsDscRunAsCredential = $MSFT_Credential30ref;
+         PsDscRunAsCredential = $MSFT_Credential31ref;
          UsageLogCutTime = 5;
          UsageLogMaxFileSizeKB = 1024;
          DatabaseName = "${GenerateUsernames.db}_Usage";
@@ -1425,7 +1460,7 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential31ref
+        instance of MSFT_Credential as $MSFT_Credential32ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1433,7 +1468,7 @@ Resources:
         instance of MSFT_SPStateServiceApp as $MSFT_SPStateServiceApp1ref
         {
         ResourceID = "[SPStateServiceApp]StateServiceApp";
-         PsDscRunAsCredential = $MSFT_Credential31ref;
+         PsDscRunAsCredential = $MSFT_Credential32ref;
          DatabaseName = "${GenerateUsernames.db}_State";
          Name = "State Service Application";
          ModuleName = "SharePointDsc";
@@ -1442,7 +1477,23 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential32ref
+        instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
+        {
+        ResourceID = "[Registry]CentralAdminLinkUpdate";
+         ValueName = "CentralAdministrationURL";
+         Key = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Shared Tools\\Web Server Extensions\\16.0\\WSS\\";
+         Ensure = "Present";
+         ValueType = "String";
+         ModuleName = "PsDesiredStateConfiguration";
+         ValueData = {
+            "http://${DNSPrefixCentralAdmin}.${DomainDNSName}"
+        };
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential33ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1450,7 +1501,7 @@ Resources:
         instance of MSFT_SPWebApplication as $MSFT_SPWebApplication1ref
         {
         HostHeader = "${DNSPrefixMainSite}.${DomainDNSName}";
-         PsDscRunAsCredential = $MSFT_Credential32ref;
+         PsDscRunAsCredential = $MSFT_Credential33ref;
          Name = "SharePoint Sites";
          ResourceID = "[SPWebApplication]SharePointSites";
          DatabaseName = "${GenerateUsernames.db}_Content";
@@ -1465,6 +1516,27 @@ Resources:
             "[SPManagedAccount]WebPoolManagedAccount"};
          ConfigurationName = "SharePointServer";
         };
+        instance of MSFT_Credential as $MSFT_Credential34ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_xDnsRecord as $MSFT_xDnsRecord2ref
+        {
+        ResourceID = "[xDnsRecord]MainSiteDns";
+         PsDscRunAsCredential = $MSFT_Credential34ref;
+         Type = "CName";
+         DnsServer = "${DNSServerIP}";
+         Name = "${DNSPrefixMainSite}";
+         Target = "${SitesLoadBalancer.DNSName}";
+         ModuleName = "xDnsServer";
+         Zone = "${DomainDNSName}";
+         ModuleVersion = "1.11.0.0";
+         Ensure = "Present";
+        DependsOn = {
+            "[SPWebApplication]SharePointSites"};
+         ConfigurationName = "SharePointServer";
+        };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource4ref
         {
         ResourceID = "[Script]RebootOnFirstRunOfWebApp";
@@ -1477,7 +1549,7 @@ Resources:
             "[SPWebApplication]SharePointSites"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential33ref
+        instance of MSFT_Credential as $MSFT_Credential35ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1485,7 +1557,7 @@ Resources:
         instance of MSFT_SPCacheAccounts as $MSFT_SPCacheAccounts1ref
         {
         ResourceID = "[SPCacheAccounts]WebAppCacheAccounts";
-         PsDscRunAsCredential = $MSFT_Credential33ref;
+         PsDscRunAsCredential = $MSFT_Credential35ref;
          WebAppUrl = "http://${DNSPrefixMainSite}.${DomainDNSName}";
          ModuleName = "SharePointDsc";
          SuperReaderAlias = "${DomainNetBIOSName}\\${GenerateUsernames.reader}";
@@ -1495,7 +1567,7 @@ Resources:
             "[SPWebApplication]SharePointSites"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential34ref
+        instance of MSFT_Credential as $MSFT_Credential36ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1504,7 +1576,7 @@ Resources:
         {
         ResourceID = "[SPSite]TeamSite";
          Url = "http://${DNSPrefixMainSite}.${DomainDNSName}";
-         PsDscRunAsCredential = $MSFT_Credential34ref;
+         PsDscRunAsCredential = $MSFT_Credential36ref;
          OwnerAlias = "${DomainNetBIOSName}\\${GenerateUsernames.farm}";
          Name = "Example SharePoint Site";
          ModuleName = "SharePointDsc";
@@ -1515,7 +1587,7 @@ Resources:
              "[Script]RebootOnFirstRunOfWebApp"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential35ref
+        instance of MSFT_Credential as $MSFT_Credential37ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1523,7 +1595,7 @@ Resources:
         instance of MSFT_SPServiceInstance as $MSFT_SPServiceInstance1ref
         {
         ResourceID = "[SPServiceInstance]ClaimsToWindowsTokenServiceInstance";
-         PsDscRunAsCredential = $MSFT_Credential35ref;
+         PsDscRunAsCredential = $MSFT_Credential37ref;
          Ensure = "Present";
          Name = "Claims to Windows Token Service";
          ModuleName = "SharePointDsc";
@@ -1532,7 +1604,32 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential36ref
+        instance of MSFT_xWebBindingInformation as $MSFT_xWebBindingInformation1ref
+        {
+        Port = 80;
+         Protocol = "http";
+         HostName = "${DNSPrefixCentralAdmin}.${DomainDNSName}";
+        };
+        instance of MSFT_xWebBindingInformation as $MSFT_xWebBindingInformation2ref
+        {
+        Protocol = "http";
+         Port = 9999;
+        };
+        instance of MSFT_xWebsite as $MSFT_xWebsite2ref
+        {
+        ResourceID = "[xWebsite]CentralAdminBindings";
+         State = "Started";
+         Ensure = "Present";
+         Name = "SharePoint Central Administration v4";
+         ModuleName = "xWebAdministration";
+         BindingInfo = {
+            $MSFT_xWebBindingInformation1ref,
+            $MSFT_xWebBindingInformation2ref
+        };
+         ModuleVersion = "2.5.0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential38ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1540,7 +1637,7 @@ Resources:
         instance of MSFT_SPServiceInstance as $MSFT_SPServiceInstance2ref
         {
         ResourceID = "[SPServiceInstance]SearchServiceInstance";
-         PsDscRunAsCredential = $MSFT_Credential36ref;
+         PsDscRunAsCredential = $MSFT_Credential38ref;
          Ensure = "Present";
          Name = "SharePoint Server Search";
          ModuleName = "SharePointDsc";
@@ -1549,7 +1646,7 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential37ref
+        instance of MSFT_Credential as $MSFT_Credential39ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1557,7 +1654,7 @@ Resources:
         instance of MSFT_SPServiceAppPool as $MSFT_SPServiceAppPool1ref
         {
         ResourceID = "[SPServiceAppPool]MainServiceAppPool";
-         PsDscRunAsCredential = $MSFT_Credential37ref;
+         PsDscRunAsCredential = $MSFT_Credential39ref;
          ServiceAccount = "${DomainNetBIOSName}\\${GenerateUsernames.svc}";
          Name = "SharePoint Service Applications";
          ModuleName = "SharePointDsc";
@@ -1566,7 +1663,7 @@ Resources:
             "[SPFarm]CreateSPFarm"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential38ref
+        instance of MSFT_Credential as $MSFT_Credential40ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1574,7 +1671,7 @@ Resources:
         instance of MSFT_SPSecureStoreServiceApp as $MSFT_SPSecureStoreServiceApp1ref
         {
         ResourceID = "[SPSecureStoreServiceApp]SecureStoreServiceApp";
-         PsDscRunAsCredential = $MSFT_Credential38ref;
+         PsDscRunAsCredential = $MSFT_Credential40ref;
          AuditingEnabled = True;
          AuditlogMaxSize = 30;
          ApplicationPool = "SharePoint Service Applications";
@@ -1586,7 +1683,7 @@ Resources:
             "[SPServiceAppPool]MainServiceAppPool"};
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_Credential as $MSFT_Credential39ref
+        instance of MSFT_Credential as $MSFT_Credential41ref
         {
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
@@ -1594,48 +1691,10 @@ Resources:
         instance of MSFT_SPManagedMetaDataServiceApp as $MSFT_SPManagedMetaDataServiceApp1ref
         {
         ResourceID = "[SPManagedMetaDataServiceApp]ManagedMetadataServiceApp";
-         PsDscRunAsCredential = $MSFT_Credential39ref;
+         PsDscRunAsCredential = $MSFT_Credential41ref;
          ApplicationPool = "SharePoint Service Applications";
          DatabaseName = "${GenerateUsernames.db}_MMS";
          Name = "Managed Metadata Service Application";
-         ModuleName = "SharePointDsc";
-         ModuleVersion = "3.4.0.0";
-        DependsOn = {
-            "[SPServiceAppPool]MainServiceAppPool"};
-         ConfigurationName = "SharePointServer";
-        };
-        instance of MSFT_Credential as $MSFT_Credential40ref
-        {
-        Password = "ThisWillLoadAtRunTime";
-         UserName = "${SPSetupAccount}";
-        };
-        instance of MSFT_SPBCSServiceApp as $MSFT_SPBCSServiceApp1ref
-        {
-        ResourceID = "[SPBCSServiceApp]BCSServiceApp";
-         PsDscRunAsCredential = $MSFT_Credential40ref;
-         ApplicationPool = "SharePoint Service Applications";
-         DatabaseName = "${GenerateUsernames.db}_BCS";
-         Name = "BCS Service Application";
-         ModuleName = "SharePointDsc";
-         ModuleVersion = "3.4.0.0";
-         DatabaseServer = "${SPDatabaseName}";
-        DependsOn = {
-            "[SPServiceAppPool]MainServiceAppPool",
-             "[SPSecureStoreServiceApp]SecureStoreServiceApp"};
-         ConfigurationName = "SharePointServer";
-        };
-        instance of MSFT_Credential as $MSFT_Credential41ref
-        {
-        Password = "ThisWillLoadAtRunTime";
-         UserName = "${SPSetupAccount}";
-        };
-        instance of MSFT_SPSearchServiceApp as $MSFT_SPSearchServiceApp1ref
-        {
-        ResourceID = "[SPSearchServiceApp]SearchServiceApp";
-         PsDscRunAsCredential = $MSFT_Credential41ref;
-         ApplicationPool = "SharePoint Service Applications";
-         DatabaseName = "${GenerateUsernames.db}_Search";
-         Name = "Search Service Application";
          ModuleName = "SharePointDsc";
          ModuleVersion = "3.4.0.0";
         DependsOn = {
@@ -1647,13 +1706,51 @@ Resources:
         Password = "ThisWillLoadAtRunTime";
          UserName = "${SPSetupAccount}";
         };
+        instance of MSFT_SPBCSServiceApp as $MSFT_SPBCSServiceApp1ref
+        {
+        ResourceID = "[SPBCSServiceApp]BCSServiceApp";
+         PsDscRunAsCredential = $MSFT_Credential42ref;
+         ApplicationPool = "SharePoint Service Applications";
+         DatabaseName = "${GenerateUsernames.db}_BCS";
+         Name = "BCS Service Application";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+         DatabaseServer = "${SPDatabaseName}";
+        DependsOn = {
+            "[SPServiceAppPool]MainServiceAppPool",
+             "[SPSecureStoreServiceApp]SecureStoreServiceApp"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential43ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
+        instance of MSFT_SPSearchServiceApp as $MSFT_SPSearchServiceApp1ref
+        {
+        ResourceID = "[SPSearchServiceApp]SearchServiceApp";
+         PsDscRunAsCredential = $MSFT_Credential43ref;
+         ApplicationPool = "SharePoint Service Applications";
+         DatabaseName = "${GenerateUsernames.db}_Search";
+         Name = "Search Service Application";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+        DependsOn = {
+            "[SPServiceAppPool]MainServiceAppPool"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential44ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
         instance of MSFT_SPSearchTopology as $MSFT_SPSearchTopology1ref
         {
         Crawler = {
             "${SPServerNetBIOSNamePrefix}1",
             "${SPServerNetBIOSNamePrefix}2"
         };
-         PsDscRunAsCredential = $MSFT_Credential42ref;
+         PsDscRunAsCredential = $MSFT_Credential44ref;
          ResourceID = "[SPSearchTopology]SearchTopology";
          FirstPartitionDirectory = "D:\\search";
          ContentProcessing = {
@@ -1706,20 +1803,29 @@ Resources:
                                 Name="SharePointServer";
                             };
 
-  WriteWFEServerMOF:
+  WriteAppServerMOF:
     Type: Custom::WriteMOFFile
     Properties:
       ServiceToken: !GetAtt WriteMOFFunction.Arn
       Bucket: !Ref DSCBucket
-      Key: !Sub "SP-Farm-WFE-${AWS::StackName}.mof"
+      Key: !Sub "SP-Farm-App-${AWS::StackName}.mof"
       Body: !Sub |
         instance of MSFT_EnvironmentResource as $MSFT_EnvironmentResource1ref
         {
-        ResourceID = "[Environment]VersionStamp";
+        ResourceID = "[Environment]PrefixStamp";
          Value = "${GenerateUsernames.prefix}";
          Name = "SPQuickStartPrefix";
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_FirewallProfile as $MSFT_FirewallProfile1ref
+        {
+        ResourceID = "[FirewallProfile]DisableDomainFirewall";
+         Enabled = "False";
+         Name = "Domain";
+         ModuleName = "NetworkingDsc";
+         ModuleVersion = "7.1.0.0";
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource1ref
@@ -1760,21 +1866,6 @@ Resources:
          ModuleVersion = "4.6.0.0";
          ConfigurationName = "SharePointServer";
         };
-        instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
-        {
-        ResourceID = "[Registry]DisableIPv6";
-         ValueName = "DisabledComponents";
-         Key = "HKLM:\\SYSTEM\\CurrentControlSet\\Services\\Tcpip6\\Parameters";
-         Ensure = "Present";
-         ValueType = "Dword";
-         ModuleName = "PsDesiredStateConfiguration";
-         ValueData = {
-            "ff"
-        };
-         Hex = True;
-        ModuleVersion = "0.0";
-         ConfigurationName = "SharePointServer";
-        };
         instance of MSFT_ArchiveResource as $MSFT_ArchiveResource1ref
         {
         ResourceID = "[Archive]UnzipSpInstaller";
@@ -1784,8 +1875,7 @@ Resources:
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
         DependsOn = {
-            "[Disk]SecondaryDisk",
-             "[Registry]DisableIPv6"};
+            "[Disk]SecondaryDisk"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xCredSSP as $MSFT_xCredSSP1ref
@@ -1845,6 +1935,15 @@ Resources:
         ResourceID = "[WindowsFeature]Feature-RSAT-AD-PowerShell";
          Ensure = "Present";
          Name = "RSAT-AD-PowerShell";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource5ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-DNS-Server";
+         Ensure = "Present";
+         Name = "RSAT-DNS-Server";
          ModuleName = "PsDesiredStateConfiguration";
         ModuleVersion = "0.0";
          ConfigurationName = "SharePointServer";
@@ -2042,6 +2141,455 @@ Resources:
             "[Script]SQLPermissions"};
          ConfigurationName = "SharePointServer";
         };
+        instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
+        {
+        ResourceID = "[Registry]CentralAdminLinkUpdate";
+         ValueName = "CentralAdministrationURL";
+         Key = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Shared Tools\\Web Server Extensions\\16.0\\WSS\\";
+         Ensure = "Present";
+         ValueType = "String";
+         ModuleName = "PsDesiredStateConfiguration";
+         ValueData = {
+            "http://${DNSPrefixCentralAdmin}.${DomainDNSName}"
+        };
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential8ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
+        instance of MSFT_SPServiceInstance as $MSFT_SPServiceInstance1ref
+        {
+        ResourceID = "[SPServiceInstance]ClaimsToWindowsTokenServiceInstance";
+         PsDscRunAsCredential = $MSFT_Credential8ref;
+         Ensure = "Present";
+         Name = "Claims to Windows Token Service";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebBindingInformation as $MSFT_xWebBindingInformation1ref
+        {
+        Port = 80;
+         Protocol = "http";
+         HostName = "${DNSPrefixCentralAdmin}.${DomainDNSName}";
+        };
+        instance of MSFT_xWebBindingInformation as $MSFT_xWebBindingInformation2ref
+        {
+        Protocol = "http";
+         Port = 9999;
+        };
+        instance of MSFT_xWebsite as $MSFT_xWebsite2ref
+        {
+        ResourceID = "[xWebsite]CentralAdminBindings";
+         State = "Started";
+         Ensure = "Present";
+         Name = "SharePoint Central Administration v4";
+         ModuleName = "xWebAdministration";
+         BindingInfo = {
+            $MSFT_xWebBindingInformation1ref,
+            $MSFT_xWebBindingInformation2ref
+        };
+         ModuleVersion = "2.5.0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential9ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
+        instance of MSFT_SPServiceInstance as $MSFT_SPServiceInstance2ref
+        {
+        ResourceID = "[SPServiceInstance]SearchServiceInstance";
+         PsDscRunAsCredential = $MSFT_Credential9ref;
+         Ensure = "Present";
+         Name = "SharePoint Server Search";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_ScriptResource as $MSFT_ScriptResource4ref
+        {
+        ResourceID = "[Script]SignalCFN";
+         GetScript = " return @{} ";
+         TestScript = "\n                $value = Get-ItemProperty -Path HKLM:\\SOFTWARE\\Amazon\\QuickStart -ErrorAction SilentlyContinue\n                if ($null -eq $value) { return $false }\n                if ($value.SignalSent -eq $true) { return $true }\n                return $false\n            ";
+         SetScript = "\n                Start-Process -FilePath \"cfn-signal.exe\" -ArgumentList @(\"-s\", \"true\", (Get-ItemProperty -Path HKLM:\\SOFTWARE\\Amazon\\QuickStart).SignalUrl) -PassThru -Wait\n                New-Item -Path HKLM:\\SOFTWARE\\Amazon\\QuickStart -ErrorAction SilentlyContinue\n                Set-ItemProperty -Path HKLM:\\SOFTWARE\\Amazon\\QuickStart -Name SignalSent -Value $true\n            ";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of OMI_ConfigurationDocument
+                            {
+         Version="2.0.0";
+                                MinimumCompatibleVersion = "2.0.0";
+                                CompatibleVersionAdditionalProperties= {"Omi_BaseResource:ConfigurationName"};
+                                Name="SharePointServer";
+                            };
+
+  WriteWFEServerMOF:
+    Type: Custom::WriteMOFFile
+    Properties:
+      ServiceToken: !GetAtt WriteMOFFunction.Arn
+      Bucket: !Ref DSCBucket
+      Key: !Sub "SP-Farm-WFE-${AWS::StackName}.mof"
+      Body: !Sub |
+        instance of MSFT_EnvironmentResource as $MSFT_EnvironmentResource1ref
+        {
+        ResourceID = "[Environment]PrefixStamp";
+         Value = "${GenerateUsernames.prefix}";
+         Name = "SPQuickStartPrefix";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_FirewallProfile as $MSFT_FirewallProfile1ref
+        {
+        ResourceID = "[FirewallProfile]DisableDomainFirewall";
+         Enabled = "False";
+         Name = "Domain";
+         ModuleName = "NetworkingDsc";
+         ModuleVersion = "7.1.0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_ScriptResource as $MSFT_ScriptResource1ref
+        {
+        ResourceID = "[Script]WaitForBinaries";
+         GetScript = " return @{} ";
+         TestScript = "\n                return (Get-Item C:\\config\\sources\\installer.zip -ErrorAction SilentlyContinue).Length -ne 0\n            ";
+         SetScript = "\n                $count = 0\n                while ((Get-Item C:\\config\\sources\\installer.zip -ErrorAction SilentlyContinue).Length -eq 0 -and $count -lt 10) {\n                    $count++\n                    Start-Sleep -Seconds 30\n                }\n            ";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential1ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_Computer as $MSFT_Computer1ref
+        {
+        ResourceID = "[Computer]DomainJoin";
+         Credential = $MSFT_Credential1ref;
+         DomainName = "${DomainDNSName}";
+         Name = "{tag:Name}";
+         ModuleName = "ComputerManagementDsc";
+         ModuleVersion = "6.2.0.0";
+        DependsOn = {
+            "[Script]WaitForBinaries"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFTDSC_Disk as $MSFTDSC_Disk1ref
+        {
+        ResourceID = "[Disk]SecondaryDisk";
+         PartitionStyle = "MBR";
+         DiskId = "1";
+         FSFormat = "NTFS";
+         DriveLetter = "D";
+         ModuleName = "StorageDsc";
+         ModuleVersion = "4.6.0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_ArchiveResource as $MSFT_ArchiveResource1ref
+        {
+        ResourceID = "[Archive]UnzipSpInstaller";
+         Path = "C:\\config\\sources\\installer.zip";
+         Ensure = "Present";
+         Destination = "D:\\binaries";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[Disk]SecondaryDisk"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xCredSSP as $MSFT_xCredSSP1ref
+        {
+        ResourceID = "[xCredSSP]CredSSPServer";
+         Role = "Server";
+         Ensure = "Present";
+         ModuleName = "xCredSSP";
+         ModuleVersion = "1.0.1";
+        DependsOn = {
+            "[Computer]DomainJoin"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xCredSSP as $MSFT_xCredSSP2ref
+        {
+        ResourceID = "[xCredSSP]CredSSPClient";
+         Role = "Client";
+         Ensure = "Present";
+         ModuleName = "xCredSSP";
+         ModuleVersion = "1.0.1";
+         DelegateComputers = {
+            "*.${DomainDNSName}"
+        };
+        DependsOn = {
+            "[Computer]DomainJoin"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource1ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-ADDS";
+         Ensure = "Present";
+         Name = "RSAT-ADDS";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource2ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-AD-AdminCenter";
+         Ensure = "Present";
+         Name = "RSAT-AD-AdminCenter";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource3ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-ADDS-Tools";
+         Ensure = "Present";
+         Name = "RSAT-ADDS-Tools";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource4ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-AD-PowerShell";
+         Ensure = "Present";
+         Name = "RSAT-AD-PowerShell";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RoleResource as $MSFT_RoleResource5ref
+        {
+        ResourceID = "[WindowsFeature]Feature-RSAT-DNS-Server";
+         Ensure = "Present";
+         Name = "RSAT-DNS-Server";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential2ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_GroupResource as $MSFT_GroupResource1ref
+        {
+        ResourceID = "[Group]LocalAdministrators";
+         MembersToInclude = {
+            "${DomainNetBIOSName}\\${GenerateUsernames.setup}"
+        };
+         Ensure = "Present";
+         GroupName = "Administrators";
+         ModuleName = "PsDesiredStateConfiguration";
+         Credential = $MSFT_Credential2ref;
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[Computer]DomainJoin"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_SPInstallPrereqs as $MSFT_SPInstallPrereqs1ref
+        {
+        ResourceID = "[SPInstallPrereqs]InstallPrereqs";
+         OnlineMode = True;
+         Ensure = "Present";
+         IsSingleInstance = "Yes";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+         InstallerPath = "D:\\binaries\\prerequisiteinstaller.exe";
+        DependsOn = {
+            "[Group]LocalAdministrators"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool1ref
+        {
+        ResourceID = "[xWebAppPool]RemoveDotNet2Pool";
+         Ensure = "Absent";
+         Name = ".NET v2.0";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool2ref
+        {
+        ResourceID = "[xWebAppPool]RemoveDotNet2ClassicPool";
+         Ensure = "Absent";
+         Name = ".NET v2.0 Classic";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool3ref
+        {
+        ResourceID = "[xWebAppPool]RemoveDotNet45Pool";
+         Ensure = "Absent";
+         Name = ".NET v4.5";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool4ref
+        {
+        ResourceID = "[xWebAppPool]RemoveDotNet45ClassicPool";
+         Ensure = "Absent";
+         Name = ".NET v4.5 Classic";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool5ref
+        {
+        ResourceID = "[xWebAppPool]RemoveClassicDotNetPool";
+         Ensure = "Absent";
+         Name = "Classic .NET AppPool";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebAppPool as $MSFT_xWebAppPool6ref
+        {
+        ResourceID = "[xWebAppPool]RemoveDefaultAppPool";
+         Ensure = "Absent";
+         Name = "DefaultAppPool";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_xWebsite as $MSFT_xWebsite1ref
+        {
+        ResourceID = "[xWebsite]RemoveDefaultWebSite";
+         PhysicalPath = "C:\\inetpub\\wwwroot";
+         Ensure = "Absent";
+         Name = "Default Web Site";
+         ModuleName = "xWebAdministration";
+         ModuleVersion = "2.5.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_SPInstall as $MSFT_SPInstall1ref
+        {
+        ResourceID = "[SPInstall]InstallSharePoint";
+         ProductKey = "${SPProductKey}";
+         Ensure = "Present";
+         BinaryDir = "D:\\binaries";
+         IsSingleInstance = "Yes";
+         ModuleName = "SharePointDsc";
+         ModuleVersion = "3.4.0.0";
+        DependsOn = {
+            "[SPInstallPrereqs]InstallPrereqs"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential3ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_ScriptResource as $MSFT_ScriptResource2ref
+        {
+        ResourceID = "[Script]SetMAXDOP";
+         PsDscRunAsCredential = $MSFT_Credential3ref;
+         GetScript = "return @{}";
+         TestScript = "\n                $conn = new-object system.data.SqlClient.SQLConnection(\"Data Source=`${SPDatabaseName}; Integrated Security=SSPI; Initial Catalog=master\")\n                $cmd = new-object system.data.sqlclient.sqlcommand('EXEC sp_configure ''show advanced options'', 1; RECONFIGURE; EXEC sp_configure ''max degree of parallelism'';',$conn)\n                $conn.Open()\n                $a = New-Object System.Data.sqlclient.sqlDataAdapter $cmd\n                $ds = New-Object System.Data.DataSet\n                $a.Fill($ds) | Out-Null\n                $conn.Close()\n                if ($ds.Tables[0].Rows.Count -ne 1) {return $false}\n                if ($ds.Tables[0].Rows[0].run_value -ne 1) {return $false}\n                return $true\n            ";
+         SetScript = "\n                $conn = new-object system.data.SqlClient.SQLConnection(\"Data Source=`${SPDatabaseName}; Integrated Security=SSPI; Initial Catalog=master\")\n                $cmd = new-object system.data.sqlclient.sqlcommand('EXEC sp_configure ''show advanced options'', 1; RECONFIGURE; EXEC sp_configure ''max degree of parallelism'', 1; RECONFIGURE;',$conn)\n                $conn.Open()\n                $cmd.ExecuteNonQuery()\n                $conn.Close()\n            ";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPInstall]InstallSharePoint"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential4ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${ADAdminSecretArn}";
+        };
+        instance of MSFT_ScriptResource as $MSFT_ScriptResource3ref
+        {
+        ResourceID = "[Script]SQLPermissions";
+         PsDscRunAsCredential = $MSFT_Credential4ref;
+         GetScript = "return @{}";
+         TestScript = "\n                $conn = new-object system.data.SqlClient.SQLConnection(\"Data Source=`${SPDatabaseName}; Integrated Security=SSPI; Initial Catalog=master\")\n                $cmd = new-object system.data.sqlclient.sqlcommand('SELECT spU.name,MAX(CASE WHEN srm.role_principal_id = 4 THEN 1 END) AS securityadmin,MAX(CASE WHEN srm.role_principal_id = 9 THEN 1 END) AS dbcreator FROM sys.server_principals AS spR JOIN sys.server_role_members AS srm ON spR.principal_id = srm.role_principal_id JOIN sys.server_principals AS spU ON srm.member_principal_id = spU.principal_id WHERE spR.[type] = ''R'' AND spU.name = ''${DomainNetBIOSName}\\${GenerateUsernames.setup}'' GROUP BY spU.name',$conn)\n                $conn.Open()\n                $a = New-Object System.Data.sqlclient.sqlDataAdapter $cmd\n                $ds = New-Object System.Data.DataSet\n                $a.Fill($ds) | Out-Null\n                $conn.Close()\n                if ($ds.Tables[0].Rows.Count -ne 1) {return $false}\n                if ($ds.Tables[0].Rows[0].securityadmin -ne 1) {return $false}\n                if ($ds.Tables[0].Rows[0].dbcreator -ne 1) {return $false}\n                return $true\n            ";
+         SetScript = "\n                $conn = new-object system.data.SqlClient.SQLConnection(\"Data Source=`${SPDatabaseName}; Integrated Security=SSPI; Initial Catalog=master\")\n                $cmd = new-object system.data.sqlclient.sqlcommand('CREATE LOGIN [${DomainNetBIOSName}\\${GenerateUsernames.setup}] FROM WINDOWS; EXEC sp_addsrvrolemember ''${DomainNetBIOSName}\\${GenerateUsernames.setup}'', ''dbcreator''; EXEC sp_addsrvrolemember ''${DomainNetBIOSName}\\${GenerateUsernames.setup}'', ''securityadmin''; GRANT CONNECT SQL TO [${DomainNetBIOSName}\\${GenerateUsernames.setup}];',$conn)\n                $conn.Open()\n                $cmd.ExecuteNonQuery()\n                $conn.Close()\n            ";
+         ModuleName = "PsDesiredStateConfiguration";
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPInstall]InstallSharePoint"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_Credential as $MSFT_Credential5ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPSetupAccount}";
+        };
+        instance of MSFT_Credential as $MSFT_Credential6ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPPassPhrase}";
+        };
+        instance of MSFT_Credential as $MSFT_Credential7ref
+        {
+        Password = "ThisWillLoadAtRunTime";
+         UserName = "${SPFarmAccount}";
+        };
+        instance of MSFT_SPFarm as $MSFT_SPFarm1ref
+        {
+        IsSingleInstance = "Yes";
+         Ensure = "Present";
+         FarmConfigDatabaseName = "${GenerateUsernames.db}_Config";
+         PsDscRunAsCredential = $MSFT_Credential5ref;
+         ResourceID = "[SPFarm]CreateSPFarm";
+         DatabaseServer = "${SPDatabaseName}";
+         Passphrase = $MSFT_Credential6ref;
+         RunCentralAdmin = False;
+         ModuleVersion = "3.4.0.0";
+         ModuleName = "SharePointDsc";
+         FarmAccount = $MSFT_Credential7ref;
+         AdminContentDatabaseName = "${GenerateUsernames.db}_AdminContent";
+        DependsOn = {
+            "[Script]SQLPermissions"};
+         ConfigurationName = "SharePointServer";
+        };
+        instance of MSFT_RegistryResource as $MSFT_RegistryResource1ref
+        {
+        ResourceID = "[Registry]CentralAdminLinkUpdate";
+         ValueName = "CentralAdministrationURL";
+         Key = "HKEY_LOCAL_MACHINE\\SOFTWARE\\Microsoft\\Shared Tools\\Web Server Extensions\\16.0\\WSS\\";
+         Ensure = "Present";
+         ValueType = "String";
+         ModuleName = "PsDesiredStateConfiguration";
+         ValueData = {
+            "http://${DNSPrefixCentralAdmin}.${DomainDNSName}"
+        };
+        ModuleVersion = "0.0";
+        DependsOn = {
+            "[SPFarm]CreateSPFarm"};
+         ConfigurationName = "SharePointServer";
+        };
         instance of MSFT_Credential as $MSFT_Credential8ref
         {
         Password = "ThisWillLoadAtRunTime";
@@ -2050,6 +2598,11 @@ Resources:
         instance of MSFT_SPDistributedCacheService as $MSFT_SPDistributedCacheService1ref
         {
         ResourceID = "[SPDistributedCacheService]EnableDistributedCache";
+         ServerProvisionOrder = {
+            "${SPServerNetBIOSNamePrefix}3",
+            "${SPServerNetBIOSNamePrefix}4",
+            "${SPServerNetBIOSNamePrefix}5"
+        };
          PsDscRunAsCredential = $MSFT_Credential8ref;
          Ensure = "Present";
          ServiceAccount = "${DomainNetBIOSName}\\${GenerateUsernames.svc}";
@@ -2167,6 +2720,52 @@ Resources:
                                 Name="SharePointServer";
                             };
 
+  SPFarmServerDSCAssoication:
+    Type: AWS::SSM::Association
+    DependsOn:
+     - WriteAppServerMOF
+    Properties: 
+      AssociationName: SharePointFarmFarm
+      Name: AWS-ApplyDSCMofs
+      Targets:
+        - Key: InstanceIds
+          Values:
+            - !Ref SPServer1
+      Parameters:
+        MofsToApply: 
+          - !Sub "s3:${DSCBucket}:SP-Farm-Farm-${AWS::StackName}.mof"
+        ServicePath:
+          - default
+        MofOperationMode:
+          - Apply
+        ComplianceType:
+          - Custom:QSSPFarmFarm
+        ReportBucketName:
+          - ""
+        StatusBucketName:
+          - ""
+        ModuleSourceBucketName:
+          - "brfarn-release-staging" #TODO: set this back to default after SPDSC3.4 ships - "NONE"
+        AllowPSGalleryModuleSource:
+          - "True"
+        ProxyUri:
+          - ""
+        RebootBehavior:
+          - "Immediately"
+        UseComputerNameForReporting:
+          - "False"
+        EnableVerboseLogging:
+          - "False"
+        EnableDebugLogging:
+          - "False"
+        PreRebootScript:
+          - ""
+      ScheduleExpression: cron(0/30 * * * ? *)
+      OutputLocation:
+        S3Location: 
+          OutputS3BucketName: !Ref DSCBucket
+          OutputS3KeyPrefix: 'logs/'
+
   SPAppServerDSCAssoication:
     Type: AWS::SSM::Association
     DependsOn:
@@ -2177,7 +2776,6 @@ Resources:
       Targets:
         - Key: InstanceIds
           Values:
-            - !Ref SPServer1
             - !Ref SPServer2
       Parameters:
         MofsToApply: 
@@ -2283,8 +2881,7 @@ Resources:
     Properties:
       Code:
         ZipFile: !Sub >
-          var AWS = require('aws-sdk'), s3 = new AWS.S3();
-          const response = require("cfn-response");
+          var AWS = require('aws-sdk'), response = require("cfn-response");
 
           exports.handler = async (event, context) => {
             console.log(JSON.stringify(event));
@@ -2455,6 +3052,79 @@ Resources:
         GenerateStringKey: "password"
         PasswordLength: 15
         ExcludeCharacters: '"@/\'
+
+  SitesLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: network
+      Scheme: internal
+      Subnets:
+        - !Ref Subnet1ID
+        - !Ref Subnet2ID
+
+  SitesLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref SitesLoadBalancer
+      Port: 80
+      Protocol: TCP
+      DefaultActions:
+        - TargetGroupArn: !Ref WebFrontEndTargetGroup
+          Type: forward
+
+  WebFrontEndTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPort: 80
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      Protocol: TCP
+      TargetType: instance
+      Port: 80
+      VpcId: !Ref VPCID
+      Targets:
+        - Id: !Ref SPServer3
+        - Id: !Ref SPServer4
+        - Id: !Ref SPServer5
+
+  AdminLoadBalancer:
+    Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+    Properties:
+      Type: network
+      Scheme: internal
+      Subnets:
+        - !Ref Subnet1ID
+        - !Ref Subnet2ID
+
+  AdminLoadBalancerListener:
+    Type: AWS::ElasticLoadBalancingV2::Listener
+    Properties:
+      LoadBalancerArn: !Ref AdminLoadBalancer
+      Port: 80
+      Protocol: TCP
+      DefaultActions:
+        - TargetGroupArn: !Ref BackEndTargetGroup
+          Type: forward
+
+  BackEndTargetGroup:
+    Type: AWS::ElasticLoadBalancingV2::TargetGroup
+    Properties:
+      HealthCheckEnabled: true
+      HealthCheckIntervalSeconds: 30
+      HealthCheckPort: 80
+      HealthCheckProtocol: TCP
+      HealthCheckTimeoutSeconds: 10
+      HealthyThresholdCount: 3
+      Protocol: TCP
+      TargetType: instance
+      Port: 80
+      VpcId: !Ref VPCID
+      Targets:
+        - Id: !Ref SPServer1
+        - Id: !Ref SPServer2
 
 Outputs:
   CentralAdminUrl:
