@@ -1441,7 +1441,7 @@ Resources:
         StatusBucketName:
           - ""
         ModuleSourceBucketName:
-          - "brfarn-release-staging" #TODO: set this back to default after SPDSC3.4 ships - "NONE"
+          - "NONE"
         AllowPSGalleryModuleSource:
           - "True"
         ProxyUri:
