@@ -314,7 +314,7 @@ Resources:
       - SPServer1
     Properties:
       Handle: !Ref SPServer1WaitConditionHanle
-      Timeout: 10800 
+      Timeout: 14400 
   
   SPServer2WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
