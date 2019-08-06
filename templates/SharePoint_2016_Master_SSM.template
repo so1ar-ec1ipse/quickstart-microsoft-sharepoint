@@ -322,11 +322,7 @@
                 "m4.large",
                 "m4.xlarge",
                 "m4.2xlarge",
-                "m4.4xlarge",
-                "m5.large",
-                "m5.xlarge",
-                "m5.2xlarge",
-                "m5.4xlarge"
+                "m4.4xlarge"
             ],
             "Default": "m4.xlarge",
             "Description": "Amazon EC2 instance type for the first Active Directory Instance",
@@ -350,11 +346,7 @@
                 "m4.large",
                 "m4.xlarge",
                 "m4.2xlarge",
-                "m4.4xlarge",
-                "m5.large",
-                "m5.xlarge",
-                "m5.2xlarge",
-                "m5.4xlarge"
+                "m4.4xlarge"
             ],
             "Default": "m4.xlarge",
             "Description": "Amazon EC2 instance type for the second Active Directory Instance",
@@ -658,15 +650,13 @@
         },
         "WSFCNode1InstanceType": {
             "AllowedValues": [
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
                 "r4.xlarge", 
                 "r4.2xlarge", 
                 "r4.4xlarge", 
-                "r4.8xlarge",
-                "r5.large",
-                "r5.xlarge",
-                "r5.2xlarge",
-                "r5.4xlarge",
-                "r5.12xlarge"
+                "r4.8xlarge"
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
             "Default": "r4.xlarge",
@@ -698,15 +688,13 @@
         },
         "WSFCNode2InstanceType": {
             "AllowedValues": [
+                "r3.xlarge",
+                "r3.2xlarge",
+                "r3.4xlarge",
                 "r4.xlarge", 
                 "r4.2xlarge", 
                 "r4.4xlarge", 
-                "r4.8xlarge",
-                "r5.large",
-                "r5.xlarge",
-                "r5.2xlarge",
-                "r5.4xlarge",
-                "r5.12xlarge"
+                "r4.8xlarge"
             ],
             "ConstraintDescription": "Only EBS Optimized instance types r3.xlarge, r3.2xlarge, r3.4xlarge allowed",
             "Default": "r4.xlarge",
@@ -840,7 +828,7 @@
             "Properties": {
                 "TemplateURL": {
                     "Fn::Sub": [
-                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-1.template",
+                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-1-ssm.template",
                         {
                             "QSS3Region": {
                                 "Fn::If": [
@@ -1014,7 +1002,6 @@
                     ]
                 },
                 "Parameters": {
-                    "ADScenarioType": "Microsoft AD on Amazon EC2",
                     "DomainAdminPassword": {
                         "Ref": "DomainAdminPassword"
                     },
