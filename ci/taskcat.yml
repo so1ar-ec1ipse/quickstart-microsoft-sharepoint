@@ -16,13 +16,13 @@ global:
     - us-west-2
   reporting: true
 tests:
-  streamlined:
-    parameter_input: SharePoint_2016_Master-streamlined.json
-    regions:
+#  streamlined:
+#    parameter_input: SharePoint_2016_Master-streamlined.json
+#    regions:
 #      - eu-west-1
 #      - ca-central-1
-      - us-east-1
-    template_file: SharePoint_2016_Master.template
+#      - us-east-1
+#    template_file: SharePoint_2016_Master.template
   traditional:
     parameter_input: SharePoint_2016_Master-traditional.json
     regions:

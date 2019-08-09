@@ -5744,6 +5744,30 @@
                     },
                     {
                         "IpProtocol": "tcp",
+                        "FromPort": "5985",
+                        "ToPort": "5985",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "5986",
+                        "ToPort": "5986",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
+                        "FromPort": "443",
+                        "ToPort": "443",
+                        "SourceSecurityGroupId": {
+                            "Ref": "SPServersSG"
+                        }
+                    },
+                    {
+                        "IpProtocol": "tcp",
                         "FromPort": "32843",
                         "ToPort": "32846",
                         "SourceSecurityGroupId": {
