@@ -521,6 +521,23 @@
                                 },
                                 "authentication": "S3AccessCreds"
                             },
+                            "C:\\cfn\\scripts\\spfarm_login.sql": {
+                                "source": {
+                                    "Fn::Sub": [
+                                        "https://${QSS3BucketName}.${QSS3Region}.amazonaws.com/${QSS3KeyPrefix}scripts/spfarm_login.sql",
+                                        {
+                                            "QSS3Region": {
+                                                "Fn::If": [
+                                                    "GovCloudCondition",
+                                                    "s3-us-gov-west-1",
+                                                    "s3"
+                                                ]
+                                            }
+                                        }
+                                    ]
+                                },
+                                "authentication": "S3AccessCreds"
+                            },
                             "C:\\cfn\\modules\\AWSQuickStart.zip": {
                                 "source": {
                                     "Fn::Sub": [

@@ -1187,6 +1187,12 @@
                     "KeyPairName": {
                         "Ref": "KeyPairName"
                     },
+                    "WSFCNode1NetBIOSName": {
+                        "Ref": "WSFCNode1NetBIOSName"
+                    },
+                    "WSFCNode2NetBIOSName": {
+                        "Ref": "WSFCNode2NetBIOSName"
+                    },
                     "OOSInstanceType": {
                         "Ref": "OOSInstanceType"
                     },

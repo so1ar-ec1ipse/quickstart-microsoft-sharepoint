@@ -38,22 +38,8 @@ try {
     $scriptBlock = {
         param ($DomainNetBIOSName, $SPFarmAccount)
 
-        $sb = New-Object System.Text.StringBuilder
-
-        $null = $sb.AppendLine("USE [master]")
-        $null = $sb.AppendLine("GO")
-        $null = $sb.AppendLine("IF NOT EXISTS (SELECT name FROM master.dbo.syslogins WHERE name = N'$DomainNetBIOSName\$SPFarmAccount')")
-        $null = $sb.AppendLine("BEGIN")
-        $null = $sb.AppendLine("CREATE LOGIN [$DomainNetBIOSName\$SPFarmAccount] FROM WINDOWS WITH DEFAULT_DATABASE=[master]")
-        $null = $sb.AppendLine("END")
-        $null = $sb.AppendLine("GO")
-        $null = $sb.AppendLine("ALTER SERVER ROLE [dbcreator] ADD MEMBER [$DomainNetBIOSName\$SPFarmAccount]")
-        $null = $sb.AppendLine("GO")
-        $null = $sb.AppendLine("ALTER SERVER ROLE [securityadmin] ADD MEMBER [$DomainNetBIOSName\$SPFarmAccount]")
-        $null = $sb.AppendLine("GO")
-
-        Set-Content -Path c:\cfn\scripts\spfarm_login.sql -Value $sb.ToString()
-        Invoke-SqlCmd -inputfile c:\cfn\scripts\spfarm_login.sql
+        Invoke-SqlCmd -Query "USE [master];CREATE LOGIN [$DomainNetBIOSName\$SPFarmAccount] FROM WINDOWS WITH DEFAULT_DATABASE=[master];ALTER SERVER ROLE [dbcreator] ADD MEMBER [$DomainNetBIOSName\$SPFarmAccount];ALTER SERVER ROLE [securityadmin] ADD MEMBER [$DomainNetBIOSName\$SPFarmAccount]"
+        #Invoke-SqlCmd -inputfile c:\cfn\scripts\spfarm_login.sql
     }
 
     Invoke-Command -ScriptBlock $scriptBlock -ComputerName $WSFCNode2NetBIOSName -Credential $cred -ArgumentList $DomainNetBIOSName, $SPFarmAccount
