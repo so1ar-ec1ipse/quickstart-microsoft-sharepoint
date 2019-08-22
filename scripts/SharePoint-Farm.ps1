@@ -244,6 +244,19 @@ Configuration SharePointServer {
             $runCA = $false
         }
 
+        $role = ""
+        switch ($Node.NodeName) {
+            "farm" { 
+                $role = "ApplicationWithSearch"
+             }
+             "app" { 
+                $role = "ApplicationWithSearch"
+             }
+             "wfe" { 
+                $role = "WebFrontEndWithDistributedCache"
+             }
+        }
+
         SPFarm CreateSPFarm
         {
             Ensure                    = "Present"
@@ -255,9 +268,12 @@ Configuration SharePointServer {
             AdminContentDatabaseName  = '${GenerateUsernames.db}_AdminContent'
             RunCentralAdmin           = $runCA
             IsSingleInstance          = "Yes"
+            ServerRole                = $role
             DependsOn                 = "[Script]SQLPermissions"
         }
 
+
+        
         if ($Node.NodeName -eq "farm") {
             SPAlternateUrl CentralAdminAAM
             {
@@ -299,22 +315,6 @@ Configuration SharePointServer {
                 PsDscRunAsCredential                        = $SPSetupAccount
                 LogPath                                     = "D:\ULS"
                 LogSpaceInGB                                = 5
-                AppAnalyticsAutomaticUploadEnabled          = $false
-                CustomerExperienceImprovementProgramEnabled = $true
-                DaysToKeepLogs                              = 7
-                DownloadErrorReportingUpdatesEnabled        = $false
-                ErrorReportingAutomaticUploadEnabled        = $false
-                ErrorReportingEnabled                       = $false
-                EventLogFloodProtectionEnabled              = $true
-                EventLogFloodProtectionNotifyInterval       = 5
-                EventLogFloodProtectionQuietPeriod          = 2
-                EventLogFloodProtectionThreshold            = 5
-                EventLogFloodProtectionTriggerPeriod        = 2
-                LogCutInterval                              = 15
-                LogMaxDiskSpaceUsageEnabled                 = $true
-                ScriptErrorReportingDelay                   = 30
-                ScriptErrorReportingEnabled                 = $true
-                ScriptErrorReportingRequireAuth             = $true
                 IsSingleInstance                            = "Yes"
                 DependsOn                                   = "[SPFarm]CreateSPFarm"
             }
@@ -322,9 +322,7 @@ Configuration SharePointServer {
             {
                 Name                  = "Usage Service Application"
                 DatabaseName          = '${GenerateUsernames.db}_Usage'
-                UsageLogCutTime       = 5
                 UsageLogLocation      = "D:\UsageLogs"
-                UsageLogMaxFileSizeKB = 1024
                 PsDscRunAsCredential  = $SPSetupAccount
                 DependsOn             = "[SPFarm]CreateSPFarm"
             }
@@ -344,20 +342,6 @@ Configuration SharePointServer {
             ValueData = 'http://${DNSPrefixCentralAdmin}.${DomainDNSName}'
             ValueType = "string"
             DependsOn = "[SPFarm]CreateSPFarm"
-        }
-
-        if ($Node.NodeName -eq "wfe") {
-            SPDistributedCacheService EnableDistributedCache
-            {
-                Name                 = "AppFabricCachingService"
-                Ensure               = "Present"
-                CacheSizeInMB        = 1024
-                ServiceAccount       = '${DomainNetBIOSName}\${GenerateUsernames.svc}'
-                PsDscRunAsCredential = $SPSetupAccount
-                CreateFirewallRules  = $true
-                ServerProvisionOrder = @('${SPServerNetBIOSNamePrefix}3', '${SPServerNetBIOSNamePrefix}4', '${SPServerNetBIOSNamePrefix}5')
-                DependsOn            = @('[SPFarm]CreateSPFarm')
-            }
         }
 
         #**********************************************************
@@ -424,57 +408,6 @@ Configuration SharePointServer {
                 PsDscRunAsCredential   = $SPSetupAccount
                 DependsOn              = "[SPWebApplication]SharePointSites"
             }
-
-            SPSite TeamSite
-            {
-                Url                      = 'http://${DNSPrefixMainSite}.${DomainDNSName}'
-                OwnerAlias               = '${DomainNetBIOSName}\${GenerateUsernames.farm}'
-                Name                     = "Example SharePoint Site"
-                Template                 = "STS#0"
-                PsDscRunAsCredential     = $SPSetupAccount
-                DependsOn                = @("[SPWebApplication]SharePointSites", "[Script]RebootOnFirstRunOfWebApp")
-            }
-        }
-
-        #**********************************************************
-        # Service instances
-        #
-        # This section describes which services should be running
-        # and not running on the server
-        #**********************************************************
-
-        SPServiceInstance ClaimsToWindowsTokenServiceInstance
-        {  
-            Name                 = "Claims to Windows Token Service"
-            Ensure               = "Present"
-            PsDscRunAsCredential = $SPSetupAccount
-            DependsOn            = "[SPFarm]CreateSPFarm"
-        }   
-
-        if ($Node.NodeName -eq "wfe") {
-            SPServiceInstance SecureStoreServiceInstance
-            {  
-                Name                 = "Secure Store Service"
-                Ensure               = "Present"
-                PsDscRunAsCredential = $SPSetupAccount
-                DependsOn            = "[SPFarm]CreateSPFarm"
-            }
-            
-            SPServiceInstance ManagedMetadataServiceInstance
-            {  
-                Name                 = "Managed Metadata Web Service"
-                Ensure               = "Present"
-                PsDscRunAsCredential = $SPSetupAccount
-                DependsOn            = "[SPFarm]CreateSPFarm"
-            }
-
-            SPServiceInstance BCSServiceInstance
-            {  
-                Name                 = "Business Data Connectivity Service"
-                Ensure               = "Present"
-                PsDscRunAsCredential = $SPSetupAccount
-                DependsOn            = "[SPFarm]CreateSPFarm"
-            }
         }
 
         if ($Node.NodeName -eq "app" -or $Node.NodeName -eq "farm") {
@@ -496,14 +429,6 @@ Configuration SharePointServer {
                     }
                 )
             }
-        }
-        
-        SPServiceInstance SearchServiceInstance
-        {  
-            Name                 = "SharePoint Server Search"
-            Ensure               = "Present"
-            PsDscRunAsCredential = $SPSetupAccount
-            DependsOn            = "[SPFarm]CreateSPFarm"
         }
         
         #**********************************************************
@@ -569,8 +494,8 @@ Configuration SharePointServer {
                 Crawler                 = @('${SPServerNetBIOSNamePrefix}1', '${SPServerNetBIOSNamePrefix}2')
                 ContentProcessing       = @('${SPServerNetBIOSNamePrefix}1', '${SPServerNetBIOSNamePrefix}2')
                 AnalyticsProcessing     = @('${SPServerNetBIOSNamePrefix}1', '${SPServerNetBIOSNamePrefix}2')
-                QueryProcessing         = @('${SPServerNetBIOSNamePrefix}3', '${SPServerNetBIOSNamePrefix}4', '${SPServerNetBIOSNamePrefix}5')
-                IndexPartition          = @('${SPServerNetBIOSNamePrefix}3', '${SPServerNetBIOSNamePrefix}4', '${SPServerNetBIOSNamePrefix}5')
+                QueryProcessing         = @('${SPServerNetBIOSNamePrefix}1', '${SPServerNetBIOSNamePrefix}2')
+                IndexPartition          = @('${SPServerNetBIOSNamePrefix}1', '${SPServerNetBIOSNamePrefix}2')
                 FirstPartitionDirectory = "D:\search"
                 PsDscRunAsCredential    = $SPSetupAccount
                 DependsOn               = "[SPSearchServiceApp]SearchServiceApp"
@@ -579,12 +504,11 @@ Configuration SharePointServer {
 
         if ($Node.NodeName -eq "farm") {
             $finalDependencies = @(
-                "[SPSite]TeamSite",
                 "[SPSearchTopology]SearchTopology"
             )
         } elseif ($Node.NodeName -eq "wfe") {
             $finalDependencies = @(
-                "[SPDistributedCacheService]EnableDistributedCache"
+                "[SPFarm]CreateSPFarm"
             )
         } else {
             $finalDependencies = @(
