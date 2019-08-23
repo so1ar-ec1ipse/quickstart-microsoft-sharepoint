@@ -154,7 +154,7 @@ Parameters:
     Type: String
   ADAdminUserName:
     AllowedPattern: '^[0-9a-zA-Z\\0-9a-zA-Z-]*$'
-    Description: The username of an account with rights to the domain, as DOMAIN\username
+    Description: The username of an account with rights to the domain (without the domain name)
     MaxLength: '255'
     MinLength: '1'
     Type: String
@@ -170,7 +170,7 @@ Parameters:
     Description: The security group that will allow access to the domain controllers to allow domain join and other actions
   SQLAdminUserName:
     AllowedPattern: '^[0-9a-zA-Z\\0-9a-zA-Z-]*$'
-    Description: The username of an account with rights to the SQL Server, as DOMAIN\username
+    Description: The username of an account with rights to the SQL Server (without the domain name)
     MaxLength: '255'
     MinLength: '1'
     Type: String
@@ -3589,14 +3589,14 @@ Resources:
     Properties:
       Name: !Sub '/aws-quickstart-sharepoint/${AWS::StackName}/ADAdmin'
       Description: Account with permissions to act on Active Directory
-      SecretString: !Sub '{"username":"${ADAdminUserName}","password":"${ADAdminPassword}"}'
+      SecretString: !Sub '{"username":"${DomainNetBIOSName}\\${ADAdminUserName}","password":"${ADAdminPassword}"}'
 
   SQLAdminSecret:
     Type: AWS::SecretsManager::Secret
     Properties:
       Name: !Sub '/aws-quickstart-sharepoint/${AWS::StackName}/SQLAdmin'
       Description: Account with permissions to act on SQL Server
-      SecretString: !Sub '{"username":"${SQLAdminUserName}","password":"${SQLAdminPassword}"}'
+      SecretString: !Sub '{"username":"${DomainNetBIOSName}\\${SQLAdminUserName}","password":"${SQLAdminPassword}"}'
 
   SPSetupAccount:
     Type: AWS::SecretsManager::Secret
