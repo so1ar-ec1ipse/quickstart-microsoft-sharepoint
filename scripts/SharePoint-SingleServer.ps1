@@ -20,9 +20,9 @@ Configuration SharePointServer {
     $CrawlAccount              = New-Object -TypeName "System.Management.Automation.PSCredential" `
                                             -ArgumentList @('${SPCrawlAccount}', $password)
     $domainAdminCredential     = New-Object -TypeName "System.Management.Automation.PSCredential" `
-                                            -ArgumentList @('${ADAdminSecretArn}', $password)
+                                            -ArgumentList @('${ADAdminSecret}', $password)
     $sqlAdminCredential        = New-Object -TypeName "System.Management.Automation.PSCredential" `
-                                            -ArgumentList @('${ADAdminSecretArn}', $password)
+                                            -ArgumentList @('${SQLAdminSecret}', $password)
 
     Import-DscResource -ModuleName xCredSSP              -ModuleVersion 1.0.1
     Import-DscResource -ModuleName ComputerManagementDsc -ModuleVersion 6.2.0.0
