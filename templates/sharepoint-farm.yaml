@@ -32,13 +32,16 @@ Metadata:
         Parameters:
           - DomainDNSName
           - DomainNetBIOSName
-          - ADAdminSecretArn
+          - ADAdminUserName
+          - ADAdminPassword
           - ADMemberSecurityGroup
       - Label:
           default: Microsoft SQL Server Configuration
         Parameters:
           - SQLServerAccessSecurityGroup
           - SPDatabaseName
+          - SQLAdminUserName
+          - SQLAdminPassword
       - Label:
           default: Microsoft SharePoint Configuration
         Parameters:
@@ -70,8 +73,14 @@ Metadata:
         default: Domain DNS Name
       DomainNetBIOSName:
         default: Domain NetBIOS Name
-      ADAdminSecretArn:
-        default: ARN of a secret that has domain admin credentials
+      ADAdminUserName:
+        default: Username of AD administrator
+      ADAdminPassword:
+        default: Password of the AD administrator
+      SQLAdminUserName:
+        default: Username of SQL administrator
+      SQLAdminPassword:
+        default: Password of the SQL administrator
       ADMemberSecurityGroup:
         default: ID of the security group that allows domain members to join the domain
       SQLServerAccessSecurityGroup:
@@ -143,19 +152,33 @@ Parameters:
     MaxLength: '15'
     MinLength: '1'
     Type: String
-  ADAdminSecretArn:
-    Description: The ARN of the credential in Secrets Manager that will allow domain joining and account creation
+  ADAdminUserName:
+    AllowedPattern: '[a-zA-Z0-9\-]+'
+    Description: The username of an account with rights to the domain, as DOMAIN\username
     MaxLength: '255'
-    MinLength: '2'
+    MinLength: '1'
     Type: String
+  ADAdminPassword:
+    Description: The password of the AD Admin Account
+    MaxLength: '255'
+    MinLength: '1'
+    Type: String
+    NoEcho: true
   ADMemberSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: The security group that will allow access to the domain controllers to allow domain join and other actions
-  SQLAdminSecretArn:
-    Description: The name of the credential in Secrets Manager for an account with sysadmin rights on the SQL Server
+  SQLAdminUserName:
+    AllowedPattern: '[a-zA-Z0-9\-]+'
+    Description: The username of an account with rights to the SQL Server, as DOMAIN\username
     MaxLength: '255'
-    MinLength: '2'
+    MinLength: '1'
     Type: String
+  SQLAdminPassword:
+    Description: The password of the SQL Admin Account
+    MaxLength: '255'
+    MinLength: '1'
+    Type: String
+    NoEcho: true
   SQLServerAccessSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: The security group that will allow communication with the SQL Servers
@@ -252,8 +275,8 @@ Resources:
                   - secretsmanager:GetSecretValue
                   - secretsmanager:DescribeSecret
                 Resource:
-                  - !Ref ADAdminSecretArn
-                  - !Ref SQLAdminSecretArn
+                  - !Ref ADAdminSecret
+                  - !Ref SQLAdminSecret
                   - !Ref SPSetupAccount
                   - !Ref SPFarmAccount
                   - !Ref SPWebAppAccount
@@ -748,7 +771,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential1ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_Computer as $MSFT_Computer1ref
         {
@@ -863,7 +886,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential3ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser1ref
         {
@@ -887,7 +910,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential5ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser2ref
         {
@@ -911,7 +934,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential7ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser3ref
         {
@@ -935,7 +958,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential9ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser4ref
         {
@@ -959,7 +982,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential11ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser5ref
         {
@@ -983,7 +1006,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential13ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser6ref
         {
@@ -1007,7 +1030,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential15ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser7ref
         {
@@ -1031,7 +1054,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential17ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xADUser as $MSFT_xADUser8ref
         {
@@ -1050,7 +1073,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential18ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_GroupResource as $MSFT_GroupResource1ref
         {
@@ -1174,7 +1197,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential19ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource2ref
         {
@@ -1192,7 +1215,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential20ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource3ref
         {
@@ -1263,7 +1286,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential25ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xDnsRecord as $MSFT_xDnsRecord1ref
         {
@@ -1420,7 +1443,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential34ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_xDnsRecord as $MSFT_xDnsRecord2ref
         {
@@ -1685,7 +1708,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential1ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_Computer as $MSFT_Computer1ref
         {
@@ -1795,7 +1818,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential2ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_GroupResource as $MSFT_GroupResource1ref
         {
@@ -1919,7 +1942,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential3ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource2ref
         {
@@ -1937,7 +1960,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential4ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource3ref
         {
@@ -2085,7 +2108,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential1ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_Computer as $MSFT_Computer1ref
         {
@@ -2195,7 +2218,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential2ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_GroupResource as $MSFT_GroupResource1ref
         {
@@ -2319,7 +2342,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential3ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource2ref
         {
@@ -2337,7 +2360,7 @@ Resources:
         instance of MSFT_Credential as $MSFT_Credential4ref
         {
         Password = "ThisWillLoadAtRunTime";
-         UserName = "${ADAdminSecretArn}";
+         UserName = "${ADAdminSecret}";
         };
         instance of MSFT_ScriptResource as $MSFT_ScriptResource3ref
         {
@@ -2630,6 +2653,20 @@ Resources:
     Type: Custom::DataLookupFunction
     Properties:
       ServiceToken: !GetAtt GenerateUsernamesFunction.Arn
+
+  ADAdminSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub '/aws-quickstart-sharepoint/${AWS::StackName}/ADAdmin'
+      Description: Account with permissions to act on Active Directory
+      SecretString: !Sub '{"username":"${ADAdminUserName}","password":"${ADAdminPassword}"}'
+
+  SQLAdminSecret:
+    Type: AWS::SecretsManager::Secret
+    Properties:
+      Name: !Sub '/aws-quickstart-sharepoint/${AWS::StackName}/SQLAdmin'
+      Description: Account with permissions to act on SQL Server
+      SecretString: !Sub '{"username":"${SQLAdminUserName}","password":"${SQLAdminPassword}"}'
 
   SPSetupAccount:
     Type: AWS::SecretsManager::Secret
