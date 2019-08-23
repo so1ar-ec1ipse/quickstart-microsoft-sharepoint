@@ -382,17 +382,6 @@ Configuration SharePointServer {
             DependsOn              = "[SPWebApplication]SharePointSites"
         }
 
-        SPSite TeamSite
-        {
-            Url                      = 'http://{tag:Name}.${DomainDNSName}'
-            OwnerAlias               = '${DomainNetBIOSName}\${GenerateUsernames.farm}'
-            Name                     = "Example SharePoint Site"
-            Template                 = "STS#0"
-            PsDscRunAsCredential     = $SPSetupAccount
-            DependsOn                = @("[SPWebApplication]SharePointSites", "[Script]RebootOnFirstRunOfWebApp")
-        }
-
-
         #**********************************************************
         # Service instances
         #
@@ -519,7 +508,6 @@ Configuration SharePointServer {
 
         Script SignalCFN {
             DependsOn = @(
-                "[SPSite]TeamSite",
                 "[SPSearchTopology]SearchTopology"
             )
             GetScript = { return @{} }

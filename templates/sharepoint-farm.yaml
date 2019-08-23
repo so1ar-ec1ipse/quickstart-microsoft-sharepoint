@@ -3795,6 +3795,3 @@ Outputs:
   CentralAdminUrl:
     Description: The URL to access the Central Admin site for this server
     Value: !Sub "http://${DNSPrefixCentralAdmin}.${DomainDNSName}"
-  SiteUrl:
-    Description: The URL to access the default site for this server
-    Value: !Sub "http://${DNSPrefixMainSite}.${DomainDNSName}"
