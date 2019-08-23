@@ -153,30 +153,32 @@ Parameters:
     MinLength: '1'
     Type: String
   ADAdminUserName:
-    AllowedPattern: '[a-zA-Z0-9\-]+'
+    AllowedPattern: '^[0-9a-zA-Z\\0-9a-zA-Z-]*$'
     Description: The username of an account with rights to the domain, as DOMAIN\username
     MaxLength: '255'
     MinLength: '1'
     Type: String
   ADAdminPassword:
+    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     Description: The password of the AD Admin Account
-    MaxLength: '255'
-    MinLength: '1'
+    MaxLength: '32'
+    MinLength: '8'
     Type: String
     NoEcho: true
   ADMemberSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
     Description: The security group that will allow access to the domain controllers to allow domain join and other actions
   SQLAdminUserName:
-    AllowedPattern: '[a-zA-Z0-9\-]+'
+    AllowedPattern: '^[0-9a-zA-Z\\0-9a-zA-Z-]*$'
     Description: The username of an account with rights to the SQL Server, as DOMAIN\username
     MaxLength: '255'
     MinLength: '1'
     Type: String
   SQLAdminPassword:
+    AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     Description: The password of the SQL Admin Account
-    MaxLength: '255'
-    MinLength: '1'
+    MaxLength: '32'
+    MinLength: '8'
     Type: String
     NoEcho: true
   SQLServerAccessSecurityGroup:
