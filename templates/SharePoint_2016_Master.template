@@ -1075,6 +1075,9 @@
                     "WSFCNode2PrivateIP3": {
                         "Ref": "WSFCNode2PrivateIP3"
                     },
+                    "WSFCFileServerPrivateIP": {
+                        "Ref": "WSFCFileServerPrivateIP"
+                    },
                     "PrivateSubnet1ID": {
                         "Fn::GetAtt": [
                             "VPCStack",
