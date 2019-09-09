@@ -78,21 +78,17 @@
                         "default": "WSFC Configuration"
                     },
                     "Parameters": [
-                        "WSFCFileServerInstanceType",
-                        "WSFCFileServerNetBIOSName",
                         "WSFCFileServerPrivateIP",
                         "WSFCNode1InstanceType",
                         "WSFCNode1NetBIOSName",
                         "WSFCNode1PrivateIP1",
                         "WSFCNode1PrivateIP2",
                         "WSFCNode1PrivateIP3",
-                        "DedicatedHostIDNode1",
                         "WSFCNode2InstanceType",
                         "WSFCNode2NetBIOSName",
                         "WSFCNode2PrivateIP1",
                         "WSFCNode2PrivateIP2",
                         "WSFCNode2PrivateIP3",
-                        "DedicatedHostIDNode2",
                         "WSFCNode3InstanceType",
                         "WSFCNode3NetBIOSName",
                         "WSFCNode3PrivateIP1",
@@ -254,12 +250,6 @@
                 },
                 "VPCCIDR": {
                     "default": "VPC CIDR"
-                },
-                "WSFCFileServerInstanceType": {
-                    "default": "File Server Instance Type"
-                },
-                "WSFCFileServerNetBIOSName": {
-                    "default": "File Server NetBIOS Name"
                 },
                 "WSFCFileServerPrivateIP": {
                     "default": "File Server Private IP Address"
@@ -656,6 +646,12 @@
             "Description": "CIDR Block for the VPC",
             "Type": "String"
         },
+        "WSFCFileServerPrivateIP": {
+            "AllowedPattern": "^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$",
+            "Default": "10.0.0.200",
+            "Description": "Primary private IP for the fileserver located in Availability Zone 1",
+            "Type": "String"
+        },
         "WSFCNode1InstanceType": {
             "AllowedValues": [
                 "r4.xlarge", 
@@ -1045,6 +1041,9 @@
                     "SQLLicenseProvided": {
                         "Ref": "SQLLicenseProvided"
                     },
+                    "WSFCFileServerPrivateIP": {
+                        "Ref": "WSFCFileServerPrivateIP"
+                    },
                     "WSFCNode1InstanceType": {
                         "Ref": "WSFCNode1InstanceType"
                     },
@@ -1074,9 +1073,6 @@
                     },
                     "WSFCNode2PrivateIP3": {
                         "Ref": "WSFCNode2PrivateIP3"
-                    },
-                    "WSFCFileServerPrivateIP": {
-                        "Ref": "WSFCFileServerPrivateIP"
                     },
                     "PrivateSubnet1ID": {
                         "Fn::GetAtt": [
