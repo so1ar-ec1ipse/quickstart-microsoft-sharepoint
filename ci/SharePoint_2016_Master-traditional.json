@@ -1,7 +1,7 @@
 [
     {
         "ParameterKey": "ADServer1InstanceType",
-        "ParameterValue": "m4.xlarge",
+        "ParameterValue": "m5.large",
         "UsePreviousValue": false
     },
     {
@@ -16,7 +16,7 @@
     },
     {
         "ParameterKey": "ADServer2InstanceType",
-        "ParameterValue": "m4.xlarge",
+        "ParameterValue": "m5.large",
         "UsePreviousValue": false
     },
     {
@@ -66,7 +66,7 @@
     },
     {
         "ParameterKey": "KeyPairName",
-        "ParameterValue": "cikey",
+        "ParameterValue": "$[taskcat_getkeypair]",
         "UsePreviousValue": false
     },
     {
@@ -156,12 +156,12 @@
     },
     {
         "ParameterKey": "WSFCNode1InstanceType",
-        "ParameterValue": "r4.2xlarge",
+        "ParameterValue": "r5.2xlarge",
         "UsePreviousValue": false
     },
     {
         "ParameterKey": "WSFCNode1NetBIOSName",
-        "ParameterValue": "WSFCNode1",
+        "ParameterValue": "SPTWSFC1",
         "UsePreviousValue": false
     },
     {
@@ -181,12 +181,12 @@
     },
     {
         "ParameterKey": "WSFCNode2InstanceType",
-        "ParameterValue": "r4.2xlarge",
+        "ParameterValue": "r5.2xlarge",
         "UsePreviousValue": false
     },
     {
         "ParameterKey": "WSFCNode2NetBIOSName",
-        "ParameterValue": "WSFCNode2",
+        "ParameterValue": "SPTWSFCN2",
         "UsePreviousValue": false
     },
     {
