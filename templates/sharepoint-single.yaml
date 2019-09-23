@@ -48,10 +48,6 @@ Metadata:
     ParameterLabels:
       WS2019FULLBASE:
         default: SSM Parameter to grab the latest AMI ID
-      QSS3BucketName:
-        default: Quick Start S3 Bucket Name
-      QSS3KeyPrefix:
-        default: Quick Start S3 Key Prefix
       SPServerInstanceType:
         default: SharePoint Server Instance Type
       SubnetID:

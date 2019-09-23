@@ -760,8 +760,6 @@ Resources:
         KeyPairName: !Ref 'KeyPairName'
         SPDatabaseName: !Ref 'SPDatabaseName'
         SubnetID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3KeyPrefix: !Ref 'QSS3KeyPrefix'
         SPProductKey: !Ref 'SPProductKey'
         SQLServerAccessSecurityGroupID: !GetAtt 'SQLStack.Outputs.SQLServerAccessSecurityGroupID'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
