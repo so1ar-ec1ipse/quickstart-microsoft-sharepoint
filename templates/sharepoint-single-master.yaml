@@ -204,7 +204,7 @@ Metadata:
       SPBinaryKey:
         default: The path (key) to the installer zip file in the S3 bucket
       SPDatabaseName:
-        default: The name of the database server that will store the SharePoint databases
+        default: The name of the SQL AlwaysOn Availability Group on which to store databases
       SPProductKey:
         default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
       WS2019FULLBASE:
@@ -591,7 +591,7 @@ Parameters:
   SPDatabaseName:
     Type: String
     Default: SQLAG1
-    Description: The name of the SQL Server to store databases on
+    Description: The name of the SQL AlwaysOn Availability Group on which to store databases
     MinLength: 3
     MaxLength: 128
   SPProductKey:
