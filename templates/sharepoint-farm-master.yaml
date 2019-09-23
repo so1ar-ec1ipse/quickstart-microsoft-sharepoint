@@ -56,6 +56,7 @@ Metadata:
           - Volume3Size
           - Volume3Type
           - Volume3Iops
+          - AvailabiltyGroupName
       - Label:
           default: WSFC Configuration
         Parameters:
@@ -142,6 +143,8 @@ Metadata:
         default: Service Account Password
       SQLLicenseProvided:
         default: Amazon-Provided SQL Server License
+      AvailabiltyGroupName:
+        default: Availability group name
       Volume1Iops:
         default: Data Volume IOPS
       Volume1Size:
@@ -214,14 +217,6 @@ Metadata:
         default: ID of the subnet
       SPServerNetBIOSName:
         default: SharePoint Server NetBIOS Name
-      SPBinaryBucket:
-        default: The name of the bucket that contains your SharePoint binaries
-      SPBinaryKey:
-        default: The path (key) to the installer zip file in the S3 bucket
-      SPDatabaseName:
-        default: The name of the database server that will store the SharePoint databases
-      SPProductKey:
-        default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
 Parameters:
   AvailabilityZones:
     Description: 'List of Availability Zones to use for the subnets in the VPC. Note:
@@ -406,6 +401,13 @@ Parameters:
     Default: 'no'
     Description: License SQL Server from AWS Marketplace
     Type: String
+  AvailabiltyGroupName:
+    AllowedPattern: '[a-zA-Z0-9\-]+'
+    Default: "SQLAG1"
+    Description: "NetBIOS name of the availability group (up to 15 characters)."
+    MaxLength: '15'
+    MinLength: '1'
+    Type: "String"
   Volume1Iops:
     Default: '1000'
     Description: Iops for the SQL Data drive (only used when volume type is io1)
@@ -717,6 +719,7 @@ Resources:
         SQLServiceAccount: !Ref 'SQLServiceAccount'
         SQLServiceAccountPassword: !Ref 'SQLServiceAccountPassword'
         SQLLicenseProvided: !Ref 'SQLLicenseProvided'
+        AvailabiltyGroupName: !Ref 'AvailabiltyGroupName'
         WSFCNode1InstanceType: !Ref 'WSFCNode1InstanceType'
         WSFCNode1NetBIOSName: !Ref 'WSFCNode1NetBIOSName'
         WSFCNode1PrivateIP1: !Ref 'WSFCNode1PrivateIP1'
