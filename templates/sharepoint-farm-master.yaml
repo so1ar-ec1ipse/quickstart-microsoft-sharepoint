@@ -23,6 +23,8 @@ Metadata:
           - SPBinaryBucket
           - SPBinaryKey
           - SPProductKey
+          - SQLAdminUserName
+          - SQLAdminPassword
           - DNSPrefixCentralAdmin
           - DNSPrefixMainSite
       - Label:
@@ -143,6 +145,10 @@ Metadata:
         default: Service Account Password
       SQLLicenseProvided:
         default: Amazon-Provided SQL Server License
+      SQLAdminUserName:
+        default: Username of SQL administrator
+      SQLAdminPassword:
+        default: Password of the SQL administrator
       AvailabiltyGroupName:
         default: Availability group name
       Volume1Iops:
@@ -762,12 +768,15 @@ Resources:
         ADMemberSecurityGroup: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         KeyPairName: !Ref 'KeyPairName'
         SPDatabaseName: !Ref 'SPDatabaseName'
-        SubnetID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        Subnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+        Subnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
         SPProductKey: !Ref 'SPProductKey'
-        SQLServerAccessSecurityGroupID: !GetAtt 'SQLStack.Outputs.SQLServerAccessSecurityGroupID'
+        SQLServerAccessSecurityGroup: !GetAtt 'SQLStack.Outputs.SQLServerAccessSecurityGroupID'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
         SPBinaryBucket: !Ref 'SPBinaryBucket'
         SPBinaryKey: !Ref 'SPBinaryKey'
         DNSPrefixCentralAdmin: !Ref 'DNSPrefixCentralAdmin'
         DNSPrefixMainSite: !Ref 'DNSPrefixMainSite'
+        SQLAdminUserName: !Ref 'SQLServiceAccount'
+        SQLAdminPassword: !Ref 'SQLServiceAccountPassword'

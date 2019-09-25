@@ -23,6 +23,8 @@ Metadata:
           - SPBinaryBucket
           - SPBinaryKey
           - SPProductKey
+          - SQLAdminUserName
+          - SQLAdminPassword
       - Label:
           default: Microsoft Active Directory Configuration
         Parameters:
@@ -141,6 +143,10 @@ Metadata:
         default: Service Account Password
       SQLLicenseProvided:
         default: Amazon-Provided SQL Server License
+      SQLAdminUserName:
+        default: Username of SQL administrator
+      SQLAdminPassword:
+        default: Password of the SQL administrator
       AvailabiltyGroupName:
         default: Availability group name
       Volume1Iops:
@@ -744,8 +750,10 @@ Resources:
         SPDatabaseName: !Ref 'SPDatabaseName'
         SubnetID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         SPProductKey: !Ref 'SPProductKey'
-        SQLServerAccessSecurityGroupID: !GetAtt 'SQLStack.Outputs.SQLServerAccessSecurityGroupID'
+        SQLServerAccessSecurityGroup: !GetAtt 'SQLStack.Outputs.SQLServerAccessSecurityGroupID'
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
         SPBinaryBucket: !Ref 'SPBinaryBucket'
         SPBinaryKey: !Ref 'SPBinaryKey'
+        SQLAdminUserName: !Ref 'SQLServiceAccount'
+        SQLAdminPassword: !Ref 'SQLServiceAccountPassword'
