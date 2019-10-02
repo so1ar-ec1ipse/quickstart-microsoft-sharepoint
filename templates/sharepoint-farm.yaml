@@ -499,7 +499,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3-${AWS::Region}.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer3:
@@ -571,7 +571,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3-${AWS::Region}.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer4:
@@ -643,7 +643,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3-${AWS::Region}.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SharePointSG:
@@ -1120,7 +1120,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveDotNet2Pool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool3ref
@@ -1131,7 +1131,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveDotNet2ClassicPool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool4ref
@@ -1142,7 +1142,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveDotNet45Pool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool5ref
@@ -1153,7 +1153,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveDotNet45ClassicPool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool6ref
@@ -1164,7 +1164,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveClassicDotNetPool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebsite as $MSFT_xWebsite1ref
@@ -1176,7 +1176,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebAppPool]RemoveDefaultAppPool"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_SPInstall as $MSFT_SPInstall1ref
@@ -1189,7 +1189,7 @@ Resources:
          ModuleName = "SharePointDSC";
          ModuleVersion = "3.4.0.0";
         DependsOn = {
-            "[SPInstallPrereqs]InstallPrereqs"};
+            "[xWebsite]RemoveDefaultWebSite"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_Credential as $MSFT_Credential19ref

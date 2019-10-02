@@ -27,6 +27,7 @@ Metadata:
           - SQLAdminPassword
           - DNSPrefixCentralAdmin
           - DNSPrefixMainSite
+          - DNSServerIP
       - Label:
           default: Microsoft Active Directory Configuration
         Parameters:
@@ -211,8 +212,6 @@ Metadata:
         default: The name of the bucket that contains your SharePoint binaries
       SPBinaryKey:
         default: The path (key) to the installer zip file in the S3 bucket
-      SPDatabaseName:
-        default: The name of the SQL AlwaysOn Availability Group on which to store databases
       SPProductKey:
         default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
       WS2019FULLBASE:
@@ -221,8 +220,8 @@ Metadata:
         default: SharePoint Server Instance Type
       SubnetID:
         default: ID of the subnet
-      SPServerNetBIOSName:
-        default: SharePoint Server NetBIOS Name
+      DNSServerIP:
+        default: DNS Server IP
 Parameters:
   AvailabilityZones:
     Description: 'List of Availability Zones to use for the subnets in the VPC. Note:
@@ -581,13 +580,6 @@ Parameters:
     Description: Third private IP for Availability Group Listener on optional third
       WSFC Node
     Type: String
-  SPServerNetBIOSName:
-    AllowedPattern: '[a-zA-Z0-9\-]+'
-    Default: SP1
-    Description: NetBIOS name of the SharePoint server (up to 15 characters)
-    MaxLength: '15'
-    MinLength: '1'
-    Type: String
   SPBinaryBucket:
     Type: String
     MinLength: 2
@@ -596,12 +588,6 @@ Parameters:
     Type: String
     MinLength: 2
     MaxLength: 255
-  SPDatabaseName:
-    Type: String
-    Default: SQLAG1
-    Description: The name of the SQL AlwaysOn Availability Group on which to store databases
-    MinLength: 3
-    MaxLength: 128
   SPProductKey:
     Type: String
     Description: The product key to use with SharePoint
@@ -767,7 +753,6 @@ Resources:
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
         ADMemberSecurityGroup: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         KeyPairName: !Ref 'KeyPairName'
-        SPDatabaseName: !Ref 'SPDatabaseName'
         Subnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
         Subnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
         SPProductKey: !Ref 'SPProductKey'
@@ -780,3 +765,5 @@ Resources:
         DNSPrefixMainSite: !Ref 'DNSPrefixMainSite'
         SQLAdminUserName: !Ref 'SQLServiceAccount'
         SQLAdminPassword: !Ref 'SQLServiceAccountPassword'
+        DNSServerIP: !Ref 'DNSServerIP'
+        SPDatabaseName: !Ref 'AvailabiltyGroupName'
