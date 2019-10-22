@@ -1,8 +1,7 @@
 [
     {
         "ParameterKey": "KeyPairName",
-        "ParameterValue": "cikey",
-        "UsePreviousValue": false
+        "ParameterValue": "$[taskcat_getkeypair]"
     },
     {
         "ParameterKey": "AvailabilityZones",
@@ -11,12 +10,12 @@
     },
     {
         "ParameterKey": "SPBinaryBucket",
-        "ParameterValue": "quickstart-ci-media",
+        "ParameterValue": "davmayd2",
         "UsePreviousValue": false
     },
     {
         "ParameterKey": "SPBinaryKey",
-        "ParameterValue": "microsoft/sharepoint/2019/installer-2019.zip",
+        "ParameterValue": "installer-2019.zip",
         "UsePreviousValue": false
     },
     {
@@ -27,6 +26,11 @@
     {
         "ParameterKey": "DomainAdminPassword",
         "ParameterValue": "$[taskcat_genpass_16]",
+        "UsePreviousValue": false
+    },
+    {
+        "ParameterKey": "SQLServiceAccount",
+        "ParameterValue": "sqlsa",
         "UsePreviousValue": false
     },
     {

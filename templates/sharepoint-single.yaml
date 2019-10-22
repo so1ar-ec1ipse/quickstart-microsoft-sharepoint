@@ -294,7 +294,7 @@ Resources:
       - SharePointServer
     Properties:
       Handle: !Ref SharePointServerWaitConditionHanle
-      Timeout: 7200 
+      Timeout: "7200"
 
   SharePointServer:
     Type: AWS::EC2::Instance
@@ -309,11 +309,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
