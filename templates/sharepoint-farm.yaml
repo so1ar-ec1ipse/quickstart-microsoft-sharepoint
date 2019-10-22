@@ -53,6 +53,10 @@ Metadata:
     ParameterLabels:
       WS2019FULLBASE:
         default: SSM Parameter to grab the latest AMI ID
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
       SPServerInstanceType:
         default: SharePoint Server Instance Type
       Subnet1ID:
@@ -333,7 +337,7 @@ Resources:
       - SPServer1
     Properties:
       Handle: !Ref SPServer1WaitConditionHanle
-      Timeout: "14400"
+      Timeout: 14400 
   
   SPServer2WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -341,7 +345,7 @@ Resources:
       - SPServer2
     Properties:
       Handle: !Ref SPServer2WaitConditionHanle
-      Timeout: "14400"
+      Timeout: 14400 
 
   SPServer3WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -349,7 +353,7 @@ Resources:
       - SPServer3
     Properties:
       Handle: !Ref SPServer3WaitConditionHanle
-      Timeout: "14400"
+      Timeout: 14400 
 
   SPServer4WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -357,7 +361,7 @@ Resources:
       - SPServer4
     Properties:
       Handle: !Ref SPServer4WaitConditionHanle
-      Timeout: "14400"
+      Timeout: 14400 
 
   SPServer1:
     Type: AWS::EC2::Instance
@@ -372,11 +376,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 80
+            VolumeSize: '80'
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: 100
+            VolumeSize: '100'
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -444,11 +448,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 80
+            VolumeSize: '80'
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: 100
+            VolumeSize: '100'
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -516,11 +520,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 80
+            VolumeSize: '80'
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: 100
+            VolumeSize: '100'
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -588,11 +592,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 80
+            VolumeSize: '80'
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: 100
+            VolumeSize: '100'
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -664,7 +668,7 @@ Resources:
   SharePointSGIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      IpProtocol: "-1"
+      IpProtocol: -1
       FromPort: -1
       ToPort: -1
       GroupId: !Ref SharePointSG
@@ -1120,7 +1124,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveDotNet2Pool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool3ref
@@ -1131,7 +1135,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveDotNet2ClassicPool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool4ref
@@ -1142,7 +1146,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveDotNet45Pool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool5ref
@@ -1153,7 +1157,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveDotNet45ClassicPool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebAppPool as $MSFT_xWebAppPool6ref
@@ -1164,7 +1168,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveClassicDotNetPool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_xWebsite as $MSFT_xWebsite1ref
@@ -1176,7 +1180,7 @@ Resources:
          ModuleName = "xWebAdministration";
          ModuleVersion = "2.5.0.0";
         DependsOn = {
-            "[xWebAppPool]RemoveDefaultAppPool"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_SPInstall as $MSFT_SPInstall1ref
@@ -1189,7 +1193,7 @@ Resources:
          ModuleName = "SharePointDSC";
          ModuleVersion = "3.4.0.0";
         DependsOn = {
-            "[xWebsite]RemoveDefaultWebSite"};
+            "[SPInstallPrereqs]InstallPrereqs"};
          ConfigurationName = "SharePointServer";
         };
         instance of MSFT_Credential as $MSFT_Credential19ref
@@ -2813,7 +2817,7 @@ Resources:
     Properties:
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: 30
-      HealthCheckPort: "80"
+      HealthCheckPort: 80
       HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3
@@ -2849,7 +2853,7 @@ Resources:
     Properties:
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: 30
-      HealthCheckPort: "80"
+      HealthCheckPort: 80
       HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3

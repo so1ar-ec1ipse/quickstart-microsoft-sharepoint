@@ -48,6 +48,10 @@ Metadata:
     ParameterLabels:
       WS2019FULLBASE:
         default: SSM Parameter to grab the latest AMI ID
+      QSS3BucketName:
+        default: Quick Start S3 Bucket Name
+      QSS3KeyPrefix:
+        default: Quick Start S3 Key Prefix
       SPServerInstanceType:
         default: SharePoint Server Instance Type
       SubnetID:
@@ -294,7 +298,7 @@ Resources:
       - SharePointServer
     Properties:
       Handle: !Ref SharePointServerWaitConditionHanle
-      Timeout: "7200"
+      Timeout: 7200 
 
   SharePointServer:
     Type: AWS::EC2::Instance
@@ -309,11 +313,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: 80
+            VolumeSize: '80'
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: 100
+            VolumeSize: '100'
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
