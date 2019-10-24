@@ -16,27 +16,6 @@ global:
     - us-west-2
   reporting: true
 tests:
-<<<<<<< HEAD
-  single:
-    parameter_input: SharePoint_2019_Single.json
-    regions:
-    - ap-northeast-1
-    - ap-northeast-2
-    - ap-south-1
-    - ap-southeast-1
-    - ap-southeast-2
-    - eu-central-1
-    template_file: sharePoint-single-master.yaml
-  farm:
-    parameter_input: SharePoint_2019_Farm.json
-    regions:
-    - eu-west-1
-    - sa-east-1
-    - us-east-1
-    - us-west-1
-    - us-west-2
-    template_file: sharepoint-farm-master.yaml
-=======
   streamlined:
     parameter_input: SharePoint_2016_Master-streamlined.json
     regions:
@@ -52,4 +31,3 @@ tests:
 #      - eu-central-1
       - us-east-1
     template_file: SharePoint_2016_Master.template
->>>>>>> 7e81f24e8baf021eda6667193ac07f777e3cee9c
