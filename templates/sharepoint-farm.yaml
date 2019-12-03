@@ -111,18 +111,18 @@ Parameters:
       - m5.xlarge
       - m5.2xlarge
     Default: m4.xlarge
-    Description: Amazon EC2 instance type for the SharePoint Server
+    Description: Amazon EC2 instance type for the SharePoint servers
     Type: String
   Subnet1ID:
-    Description: ID of first subnet SharePoint will be deployed in
+    Description: ID of first subnet into which SharePoint will be deployed
     Type: AWS::EC2::Subnet::Id
   Subnet2ID:
-    Description: ID of second subnet SharePoint will be deployed in
+    Description: ID of second subnet into which SharePoint will be deployed
     Type: AWS::EC2::Subnet::Id
   SPServerNetBIOSNamePrefix:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: SP
-    Description: NetBIOS name prefix of the SharePoint server (up to 14 characters)
+    Description: NetBIOS name prefix of the SharePoint servers (up to 14 characters)
     MaxLength: '14'
     MinLength: '1'
     Type: String

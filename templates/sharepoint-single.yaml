@@ -105,7 +105,7 @@ Parameters:
     Description: Amazon EC2 instance type for the SharePoint Server
     Type: String
   SubnetID:
-    Description: ID of subnet SharePoint will be deployed in
+    Description: ID of subnet into which SharePoint will be deployed
     Type: AWS::EC2::Subnet::Id
   SPServerNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
