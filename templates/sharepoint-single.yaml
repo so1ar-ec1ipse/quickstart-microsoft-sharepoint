@@ -15,6 +15,7 @@ Metadata:
       - Label:
           default: Network Configuration
         Parameters:
+          - KeyPairName
           - VPCID
           - VPCCIDR
           - SubnetID
@@ -109,7 +110,7 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   SPServerNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
-    Default: SP1
+    Default: SPServer
     Description: NetBIOS name of the SharePoint server (up to 15 characters)
     MaxLength: '15'
     MinLength: '1'

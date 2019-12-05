@@ -84,7 +84,7 @@ Metadata:
       ADMemberSecurityGroup:
         default: ID of the security group that allows domain members to join the domain
       SQLServerAccessSecurityGroup:
-        default: ID of the security group that will allow communication with the SQL Servers
+        default: ID of the security group that will allow communication with the server or servers running MS SQL
       SPBinaryBucket:
         default: The name of the bucket that contains your SharePoint binaries
       SPBinaryKey:
@@ -121,7 +121,7 @@ Parameters:
     Type: AWS::EC2::Subnet::Id
   SPServerNetBIOSNamePrefix:
     AllowedPattern: '[a-zA-Z0-9\-]+'
-    Default: SP
+    Default: SPServer
     Description: NetBIOS name prefix of the SharePoint servers (up to 14 characters)
     MaxLength: '14'
     MinLength: '1'
@@ -183,7 +183,7 @@ Parameters:
     NoEcho: true
   SQLServerAccessSecurityGroup:
     Type: AWS::EC2::SecurityGroup::Id
-    Description: The security group that will allow communication with the SQL Servers
+    Description: The security group that will allow communication with the server or servers running MS SQL
   SPBinaryBucket:
     Type: String
     MinLength: 2
