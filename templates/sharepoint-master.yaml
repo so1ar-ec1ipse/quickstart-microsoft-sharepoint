@@ -203,7 +203,7 @@ Metadata:
       SPProductKey:
         default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
       WS2019FULLBASE:
-        default: SSM Parameter to grab the latest AMI ID
+        default: Windows Server 2019 full base AMI
       SPServerInstanceType:
         default: SharePoint Server Instance Type
       SubnetID:

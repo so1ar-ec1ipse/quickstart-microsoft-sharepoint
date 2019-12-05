@@ -48,7 +48,7 @@ Metadata:
           - SPProductKey
     ParameterLabels:
       WS2019FULLBASE:
-        default: SSM Parameter to grab the latest AMI ID
+        default: Windows Server 2019 full base AMI
       QSS3BucketName:
         default: Quick Start S3 Bucket Name
       QSS3KeyPrefix:
@@ -92,6 +92,7 @@ Parameters:
   WS2019FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
+    Description: Windows Server 2019 full base AMI
   SPServerInstanceType:
     AllowedValues:
       - t2.xlarge
