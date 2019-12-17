@@ -10,12 +10,12 @@
     },
     {
         "ParameterKey": "SPBinaryBucket",
-        "ParameterValue": "davmayd2",
+        "ParameterValue": "quickstart-ci-media",
         "UsePreviousValue": false
     },
     {
         "ParameterKey": "SPBinaryKey",
-        "ParameterValue": "installer-2019.zip",
+        "ParameterValue": "microsoft/sharepoint/2019/installer-2019.zip",
         "UsePreviousValue": false
     },
     {
