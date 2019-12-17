@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >-
-  This template deploys SharePoint 2019 by deploying VPC, AD, SQL, and SharePoint
+  This template deploys SharePoint 2019 by deploying VPC, Active Directory, SQL Server, and SharePoint
   CloudFormation stacks. **WARNING** This template creates Amazon EC2 Windows instance
   and related resources. You will be billed for the AWS resources used if you create
   a stack from this template.
@@ -8,7 +8,7 @@ Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
-          default: Network Configuration
+          default: Network configuration
         Parameters:
           - KeyPairName
           - AvailabilityZones
@@ -18,7 +18,7 @@ Metadata:
           - PublicSubnet2CIDR
           - VPCCIDR
       - Label:
-          default: Microsoft SharePoint Configuration
+          default: Microsoft SharePoint configuration
         Parameters:
           - SPBinaryBucket
           - SPBinaryKey
@@ -31,7 +31,7 @@ Metadata:
           - DNSPrefixMainSite
           - DNSServerIP
       - Label:
-          default: Microsoft Active Directory Configuration
+          default: Microsoft Active Directory configuration
         Parameters:
           - ADServer1InstanceType
           - ADServer1NetBIOSName
@@ -44,7 +44,7 @@ Metadata:
           - DomainDNSName
           - DomainNetBIOSName
       - Label:
-          default: Microsoft SQL Server Configuration
+          default: Microsoft SQL Server configuration
         Parameters:
           - HostType
           - DedicatedHostAMI
@@ -63,7 +63,7 @@ Metadata:
           - Volume3Iops
           - AvailabiltyGroupName
       - Label:
-          default: WSFC Configuration
+          default: WSFC configuration
         Parameters:
           - WSFCFileServerInstanceType
           - WSFCFileServerNetBIOSName
@@ -81,13 +81,13 @@ Metadata:
           - WSFCNode2PrivateIP3
           - DedicatedHostIDNode2
       - Label:
-          default: Microsoft Remote Desktop Gateway Configuration
+          default: Microsoft Remote Desktop Gateway configuration
         Parameters:
           - NumberOfRDGWHosts
           - RDGWCIDR
           - RDGWInstanceType
       - Label:
-          default: AWS Quick Start Configuration
+          default: AWS Quick Start configuration
         Parameters:
           - QSS3BucketName
           - QSS3KeyPrefix
@@ -95,131 +95,130 @@ Metadata:
       AvailabilityZones:
         default: Availability Zones
       ADServer1InstanceType:
-        default: Domain Controller 1 Instance Type
+        default: Domain controller 1 instance type
       ADServer1NetBIOSName:
-        default: Domain Controller 1 NetBIOS Name
+        default: Domain controller 1 NetBIOS name
       ADServer1PrivateIP:
-        default: Domain Controller 1 Private IP Address
+        default: Domain controller 1 private IP address
       ADServer2InstanceType:
-        default: Domain Controller 2 Instance Type
+        default: Domain controller 2 instance type
       ADServer2NetBIOSName:
-        default: Domain Controller 2 NetBIOS Name
+        default: Domain controller 2 NetBIOS name
       ADServer2PrivateIP:
-        default: Domain Controller 2 Private IP Address
+        default: Domain controller 2 private IP address
       DomainAdminPassword:
-        default: Domain Admin Password
+        default: Domain admin password
       DomainAdminUser:
-        default: Domain Admin User Name
+        default: Domain admin user name
       DomainDNSName:
-        default: Domain DNS Name
+        default: Domain DNS name
       DomainNetBIOSName:
-        default: Domain NetBIOS Name
+        default: Domain NetBIOS name
       KeyPairName:
-        default: Key Pair Name
+        default: Key pair mame
       NumberOfRDGWHosts:
-        default: Number of RDGW hosts
+        default: Number of RD Gateway hosts
       PrivateSubnet1CIDR:
-        default: Private Subnet 1 CIDR
+        default: Private subnet 1 CIDR
       PrivateSubnet2CIDR:
-        default: Private Subnet 2 CIDR
+        default: Private subnet 2 CIDR
       PublicSubnet1CIDR:
-        default: Public Subnet 1 CIDR
+        default: Public subnet 1 CIDR
       PublicSubnet2CIDR:
-        default: Public Subnet 2 CIDR
+        default: Public subnet 2 CIDR
       QSS3BucketName:
-        default: Quick Start S3 Bucket Name
+        default: Quick Start S3 bucket name
       QSS3KeyPrefix:
-        default: Quick Start S3 Key Prefix
+        default: Quick Start S3 key prefix
       RDGWCIDR:
-        default: Allowed Remote Desktop Gateway External Access CIDR
+        default: Allowed RD Gateway external access CIDR
       RDGWInstanceType:
-        default: Remote Desktop Gateway Server Instance Type
+        default: RD Gateway server instance type
       SPServerNetBIOSName:
-        default: SP Server NetBIOS Name
+        default: SharePoint Server NetBIOS name
       SQLServerVersion:
         default: Version
       SQLServiceAccount:
-        default: Service Account Name
+        default: Service account name
       SQLServiceAccountPassword:
-        default: Service Account Password
+        default: Service account password
       SQLLicenseProvided:
-        default: Amazon-Provided SQL Server License
+        default: Amazon-provided SQL Server license
       SQLAdminUserName:
-        default: Username of SQL administrator
+        default: User name of SQL administrator
       SQLAdminPassword:
         default: Password of the SQL administrator
       AvailabiltyGroupName:
         default: Availability group name
       Volume1Iops:
-        default: Data Volume IOPS
+        default: Data volume IOPS
       Volume1Size:
-        default: Data Volume Size
+        default: Data volume size
       Volume1Type:
-        default: Data Volume Type
+        default: Data volume type
       Volume2Iops:
-        default: Logs Volume IOPS
+        default: Logs volume IOPS
       Volume2Size:
-        default: Logs Volume Size
+        default: Logs volume size
       Volume2Type:
-        default: Logs Volume Type
+        default: Logs volume type
       Volume3Iops:
-        default: TempDB Volume IOPS
+        default: TempDB volume IOPS
       Volume3Size:
-        default: TempDB Volume Size
+        default: TempDB volume size
       Volume3Type:
-        default: TempDB Volume Type
+        default: TempDB volume type
       VPCCIDR:
         default: VPC CIDR
       WSFCFileServerInstanceType:
-        default: File Server Instance Type
+        default: File server instance type
       WSFCFileServerNetBIOSName:
-        default: File Server NetBIOS Name
+        default: File server NetBIOS name
       WSFCFileServerPrivateIP:
-        default: File Server Private IP Address
+        default: File server private IP address
       WSFCNode1InstanceType:
-        default: WSFC Node 1 Instance Type
+        default: WSFC node 1 instance type
       WSFCNode1NetBIOSName:
-        default: WSFC Node 1 NetBIOS Name
+        default: WSFC node 1 NetBIOS name
       WSFCNode1PrivateIP1:
-        default: WSFC Node 1 Private IP Address 1
+        default: WSFC node 1 private IP address 1
       WSFCNode1PrivateIP2:
-        default: WSFC Node 1 Private IP Address 2
+        default: WSFC node 1 private IP address 2
       WSFCNode1PrivateIP3:
-        default: WSFC Node 1 Private IP Address 3
+        default: WSFC node 1 private IP address 3
       WSFCNode2InstanceType:
-        default: WSFC Node 2 Instance Type
+        default: WSFC node 2 instance type
       WSFCNode2NetBIOSName:
-        default: WSFC Node 2 NetBIOS Name
+        default: WSFC node 2 NetBIOS name
       WSFCNode2PrivateIP1:
-        default: WSFC Node 2 Private IP Address 1
+        default: WSFC node 2 private IP address 1
       WSFCNode2PrivateIP2:
-        default: WSFC Node 2 Private IP Address 2
+        default: WSFC node 2 private IP address 2
       WSFCNode2PrivateIP3:
-        default: WSFC Node 2 Private IP Address 3
+        default: WSFC Node 2 private IP address 3
       SPBinaryBucket:
-        default: The name of the bucket that contains your SharePoint binaries
+        default: SharePoint binary bucket
       SPBinaryKey:
-        default: The path (key) to the installer zip file in the S3 bucket
+        default: SharePoint binary key
       SPProductKey:
-        default: The product key to use to license SharePoint (defaults to SP2019 Enterprise Trial)
+        default: SharePoint product key
       WS2019FULLBASE:
         default: Windows Server 2019 full base AMI
       SPServerInstanceType:
-        default: SharePoint Server Instance Type
+        default: SharePoint Server instance type
       SubnetID:
-        default: ID of the subnet
+        default: Subnet ID
       Farm:
         default: Farm
       DNSPrefixCentralAdmin:
-        default: DNS Prefix Central Admin
+        default: DNS name central admin
       DNSPrefixMainSite:
-        default: DNS Prefix Main Site
+        default: DNS name main site
       DNSServerIP:
-        default: DNS Server IP
+        default: DNS server IP address
 Parameters:
   AvailabilityZones:
-    Description: 'List of Availability Zones to use for the subnets in the VPC. Note:
-      The logical order is preserved and only 2 AZs are used for this deployment.'
+    Description: 'List of Availability Zones to use for the subnets in the VPC. Only two Availability Zones are used for this deployment, and the logical order is preserved.'
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ADServer1InstanceType:
     AllowedValues:
@@ -232,19 +231,18 @@ Parameters:
       - m5.2xlarge
       - m5.4xlarge
     Default: m4.xlarge
-    Description: Amazon EC2 instance type for the first Active Directory Instance
+    Description: EC2 instance type for the first Active Directory instance.
     Type: String
   ADServer1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: DC1
-    Description: NetBIOS name of the first AD Server (up to 15 characters)
+    Description: NetBIOS name of the first Active Directory server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ADServer1PrivateIP:
     Default: 10.0.0.10
-    Description: Fixed private IP for the first Active Directory server located in
-      AZ1
+    Description: Fixed private IP address for the first Active Directory server located in Availability Zone 1.
     Type: String
   ADServer2InstanceType:
     AllowedValues:
@@ -257,24 +255,23 @@ Parameters:
       - m5.2xlarge
       - m5.4xlarge
     Default: m4.xlarge
-    Description: Amazon EC2 instance type for the second Active Directory Instance
+    Description: EC2 instance type for the second Active Directory instance.
     Type: String
   ADServer2NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: DC2
-    Description: NetBIOS name of the second AD Server (up to 15 characters)
+    Description: NetBIOS name of the second Active Directory server (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   ADServer2PrivateIP:
     Default: 10.0.64.10
-    Description: Fixed private IP for the second Active Directory server located in
-      AZ2
+    Description: Fixed private IP address for the second Active Directory server located in Availability Zone 2.
     Type: String
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
     Description: Password for the domain admin user. Must be at least 8 characters
-      containing letters, numbers and symbols
+      and contain letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
     NoEcho: 'true'
@@ -283,15 +280,14 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]*'
     Default: StackAdmin
     Description: User name for the account that will be added as Domain Administrator.
-      This is separate from the default "Administrator" account
+      This is separate from the default Administrator account.
     MaxLength: '25'
     MinLength: '5'
     Type: String
   DomainDNSName:
     AllowedPattern: '[a-zA-Z0-9\-]+\..+'
     Default: example.com
-    Description: Fully qualified domain name (FQDN) of the forest root domain e.g.
-      example.com
+    Description: Fully qualified domain name (FQDN) of the forest root domain.
     MaxLength: '25'
     MinLength: '2'
     Type: String
@@ -299,13 +295,13 @@ Parameters:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: example
     Description: NetBIOS name of the domain (up to 15 characters) for users of earlier
-      versions of Windows e.g. EXAMPLE
+      versions of Windows.
     MaxLength: '15'
     MinLength: '1'
     Type: String
   KeyPairName:
-    Description: Public/private key pairs allow you to securely connect to your instance
-      after it launches
+    Description: Public/private key pair that allows you to securely connect to your instance
+      after it launches.
     Type: AWS::EC2::KeyPair::KeyName
   NumberOfRDGWHosts:
     AllowedValues:
@@ -314,27 +310,27 @@ Parameters:
       - '3'
       - '4'
     Default: '1'
-    Description: Enter the number of Remote Desktop Gateway hosts to create
+    Description: The number of RD Gateway hosts to create (up to four).
     Type: String
   PrivateSubnet1CIDR:
     AllowedPattern: '[a-zA-Z0-9]+\..+'
     Default: 10.0.0.0/19
-    Description: CIDR block for the AD Server tier located in AZ1.
+    Description: CIDR block for the Active Directory Server tier located in Availability Zone 1.
     Type: String
   PrivateSubnet2CIDR:
     AllowedPattern: '[a-zA-Z0-9]+\..+'
     Default: 10.0.64.0/19
-    Description: CIDR block for the AD Server tier located in AZ2.
+    Description: CIDR block for the Active Directory Server tier located in Availability Zone 2.
     Type: String
   PublicSubnet1CIDR:
     AllowedPattern: '[a-zA-Z0-9]+\..+'
     Default: 10.0.32.0/20
-    Description: CIDR Block for the Public DMZ Subnet located in AZ1
+    Description: CIDR block for the public (DMZ) subnet located in Availability Zone 1.
     Type: String
   PublicSubnet2CIDR:
     AllowedPattern: '[a-zA-Z0-9]+\..+'
     Default: 10.0.96.0/20
-    Description: CIDR Block for the Public DMZ Subnet located in AZ2
+    Description: CIDR block for the public (DMZ) subnet located in Availability Zone 2.
     Type: String
   QSS3BucketName:
     AllowedPattern: ^[0-9a-zA-Z]+([0-9a-zA-Z-]*[0-9a-zA-Z])*$
@@ -358,7 +354,7 @@ Parameters:
   RDGWCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/([0-9]|[1-2][0-9]|3[0-2]))$
     ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/x
-    Description: Allowed CIDR Block for external access to the Remote Desktop Gateways
+    Description: Allowed CIDR block for external access to the RD Gateway hosts.
     Type: String
   RDGWInstanceType:
     AllowedValues:
@@ -370,12 +366,12 @@ Parameters:
       - m5.2xlarge
       - m5.4xlarge
     Default: m4.xlarge
-    Description: Amazon EC2 instance type for the Remote Desktop Gatweway Instance
+    Description: EC2 instance type for the RD Gateway instance.
     Type: String
   SPServerNetBIOSName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: SPServer
-    Description: NetBIOS name or name prefix of the SharePoint server(s) (up to 14 characters)
+    Description: NetBIOS name (single-server deployment) or name prefix (farm deployment) of the SharePoint server or servers (up to 14 characters).
     MaxLength: '14'
     MinLength: '1'
     Type: String
@@ -384,21 +380,20 @@ Parameters:
       - '2016'
       - '2017'
     Default: '2017'
-    Description: Version of SQL Server to install on WSFC Nodes. Options include either
-      "2016" or "2017"
+    Description: Version of SQL Server to install on WSFC nodes. Choose 2016 or 2017.
     Type: String
   SQLServiceAccount:
     AllowedPattern: '[a-zA-Z0-9]*'
     Default: sqlsa
-    Description: User name for the SQL Server Service Account. This Account is a Domain
+    Description: User name for the SQL Server service account. This account is a Domain
       User.
     MaxLength: '25'
     MinLength: '5'
     Type: String
   SQLServiceAccountPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: Password for the SQL Service account. Must be at least 8 characters
-      containing letters, numbers and symbols
+    Description: Password for the SQL Server service account. Must be at least 8 characters
+      and contain letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
     NoEcho: 'true'
@@ -408,7 +403,7 @@ Parameters:
       - 'yes'
       - 'no'
     Default: 'no'
-    Description: License SQL Server from AWS Marketplace
+    Description: Choose yes to license SQL Server from AWS Marketplace. Choose no to provide your own license post-deployment.
     Type: String
   AvailabiltyGroupName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
@@ -419,13 +414,13 @@ Parameters:
     Type: "String"
   Volume1Iops:
     Default: '1000'
-    Description: Iops for the SQL Data drive (only used when volume type is io1)
+    Description: IOPS for the SQL Data drive (use only when volume type is io1).
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
   Volume1Size:
     Default: '500'
-    Description: Volume size for the SQL Data drive, in GiB
+    Description: Volume size for the SQL Data drive, in GiB.
     MaxValue: '16000'
     MinValue: '100'
     Type: Number
@@ -434,17 +429,17 @@ Parameters:
       - gp2
       - io1
     Default: gp2
-    Description: Volume type for the SQL Data drive
+    Description: Volume type for the SQL Data drive.
     Type: String
   Volume2Iops:
     Default: '1000'
-    Description: Iops for the SQL Logs drive (only used when volume type is io1)
+    Description: IOPS for the SQL Logs drive (use only when volume type is io1).
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
   Volume2Size:
     Default: '500'
-    Description: Volume size for the SQL Logs drive, in GiB
+    Description: Volume size for the SQL Logs drive, in GiB.
     MaxValue: '16000'
     MinValue: '100'
     Type: Number
@@ -453,17 +448,17 @@ Parameters:
       - gp2
       - io1
     Default: gp2
-    Description: Volume type for the SQL Logs drive
+    Description: Volume type for the SQL Logs drive.
     Type: String
   Volume3Iops:
     Default: '1000'
-    Description: Iops for the SQL TempDB drive (only used when volume type is io1)
+    Description: IOPS for the SQL TempDB drive (only used when volume type is io1).
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
   Volume3Size:
     Default: '500'
-    Description: Volume size for the SQL TempDB drive, in GiB
+    Description: Volume size for the SQL TempDB drive, in GiB.
     MaxValue: '16000'
     MinValue: '100'
     Type: Number
@@ -472,12 +467,12 @@ Parameters:
       - gp2
       - io1
     Default: gp2
-    Description: Volume type for the SQL TempDB drive
+    Description: Volume type for the SQL TempDB drive.
     Type: String
   VPCCIDR:
     AllowedPattern: '[a-zA-Z0-9]+\..+'
     Default: 10.0.0.0/16
-    Description: CIDR Block for the VPC
+    Description: CIDR Block for the VPC.
     Type: String
   WSFCNode1InstanceType:
     AllowedValues:
@@ -493,26 +488,26 @@ Parameters:
     ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
       r3.4xlarge allowed
     Default: r4.xlarge
-    Description: Amazon EC2 instance type for the first WSFC Node
+    Description: EC2 instance type for the first WSFC node.
     Type: String
   WSFCNode1NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: WSFCNode1
-    Description: NetBIOS name of the first WSFC Node (up to 15 characters)
+    Description: NetBIOS name of the first WSFC node (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   WSFCNode1PrivateIP1:
     Default: 10.0.0.100
-    Description: Primary private IP for the first WSFC Node located in AZ1
+    Description: Primary private IP address for the first WSFC node located in Availability Zone 1.
     Type: String
   WSFCNode1PrivateIP2:
     Default: 10.0.0.101
-    Description: Secondary private IP for WSFC cluster on first WSFC Node
+    Description: Secondary private IP address for the WSFC cluster on the first WSFC node.
     Type: String
   WSFCNode1PrivateIP3:
     Default: 10.0.0.102
-    Description: Third private IP for Availability Group Listener on first WSFC Node
+    Description: Third private IP address for the availability group listener on the first WSFC node.
     Type: String
   WSFCNode2InstanceType:
     AllowedValues:
@@ -528,26 +523,26 @@ Parameters:
     ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
       r3.4xlarge allowed
     Default: r4.xlarge
-    Description: Amazon EC2 instance type for the second WSFC Node
+    Description: EC2 instance type for the second WSFC node.
     Type: String
   WSFCNode2NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: WSFCNode2
-    Description: NetBIOS name of the second WSFC Node (up to 15 characters)
+    Description: NetBIOS name of the second WSFC node (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: String
   WSFCNode2PrivateIP1:
     Default: 10.0.64.100
-    Description: Primary private IP for the second WSFC Node located in AZ2
+    Description: Primary private IP address for the second WSFC node located in Availability Zone 2.
     Type: String
   WSFCNode2PrivateIP2:
     Default: 10.0.64.101
-    Description: Secondary private IP for WSFC cluster on second WSFC Node
+    Description: Secondary private IP address for the WSFC cluster on the second WSFC node.
     Type: String
   WSFCNode2PrivateIP3:
     Default: 10.0.64.102
-    Description: Third private IP for Availability Group Listener on second WSFC Node
+    Description: Third private IP for the availability group listener on the second WSFC node.
     Type: String
   WSFCFileServerInstanceType:
     AllowedValues:
@@ -559,12 +554,12 @@ Parameters:
       - t3.large
       - m5.large
     Default: m5.large
-    Description: Amazon EC2 instance type for a fileserver for witness and replication folders.
+    Description: EC2 instance type for a file server for witness and replication folders.
     Type: String
   WSFCFileServerPrivateIP:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])$
     Default: 10.0.0.200
-    Description: Primary private IP for the fileserver located in Availability Zone 1.
+    Description: Primary private IP for the file server located in Availability Zone 1.
     Type: String
   SPBinaryBucket:
     Type: String
@@ -576,7 +571,7 @@ Parameters:
     MaxLength: 255
   SPProductKey:
     Type: String
-    Description: The product key to use with SharePoint
+    Description: The product key to use with SharePoint.
     MinLength: 29
     MaxLength: 29
     Default: M692G-8N2JP-GG8B2-2W2P7-YY7J6 # Default SharePoint 2019 Enterprise Trial Key
@@ -586,23 +581,23 @@ Parameters:
     - "Deploy a single SharePoint server"
     ConstraintDescription: If no is selected, other DNS Prefix values will be ignored
     Default: "Deploy a SharePoint farm"
-    Description: Choose whether you want to deploy a SharePoint farm or a single SharePoint server
+    Description: Choose whether you want to deploy a SharePoint farm or a single SharePoint server.
     Type: String
   DNSPrefixCentralAdmin:
     Type: String
-    Description: The domain name to use for central admin (without the domain suffix, use 'admin' not 'admin.domain.com')
+    Description: The domain name to use for central admin (without the domain suffix; use 'admin' not 'admin.domain.com').
     MinLength: 1
     MaxLength: 20
     Default: spadmin
   DNSPrefixMainSite:
     Type: String
-    Description: The domain name to use for the main SharePoint site (without the domain suffix, use 'site' not 'site.domain.com')
+    Description: The domain name to use for the main SharePoint site (without the domain suffix; use 'site' not 'site.domain.com').
     MinLength: 1
     MaxLength: 20
     Default: sharepoint
   DNSServerIP:
     Type: String
-    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account
+    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account.
     MinLength: 8
     MaxLength: 16
     Default: 10.0.0.10
