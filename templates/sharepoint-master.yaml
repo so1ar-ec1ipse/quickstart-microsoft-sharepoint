@@ -402,7 +402,7 @@ Parameters:
     AllowedValues:
       - 'yes'
       - 'no'
-    Default: 'no'
+    Default: 'yes'
     Description: Choose yes to license SQL Server from AWS Marketplace. Choose no to provide your own license post-deployment.
     Type: String
   AvailabiltyGroupName:
