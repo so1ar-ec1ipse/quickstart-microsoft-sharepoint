@@ -8,7 +8,7 @@ Use this Quick Start to deploy SharePoint Server 2019 into your AWS account auto
 
 You can also use the AWS CloudFormation templates as a starting point for your own implementation.
 
-![Quick Start architecture for SharePoint Server on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/sharepoint-architecture-color.png)
+![Quick Start architecture for SharePoint Server on AWS](https://d0.awsstatic.com/partner-network/QuickStart/datasheets/sharepoint-2019-architecture.png)
 
 For architectural details, best practices, step-by-step instructions, and customization options, see the 
 [deployment guide](https://fwd.aws/Q8ve9).
