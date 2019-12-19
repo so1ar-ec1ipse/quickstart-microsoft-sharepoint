@@ -5,29 +5,29 @@ global:
   regions:
     - ap-northeast-1
     - ap-northeast-2
- #   - ap-south-1
+    - ap-south-1
     - ap-southeast-1
     - ap-southeast-2
     - eu-central-1
-#   - eu-west-1
-#    - sa-east-1 NAT Gateway not available
+    - eu-west-1
+    - sa-east-1
     - us-east-1
     - us-west-1
     - us-west-2
   reporting: true
 tests:
-  streamlined:
-    parameter_input: SharePoint_2016_Master-streamlined.json
+  farm:
+    parameter_input: SharePoint_2019_Farm.json
     regions:
-      - eu-west-1
+#      - eu-west-1
 #      - ca-central-1
-      - us-east-2
-    template_file: SharePoint_2016_Master.template
-  traditional:
-    parameter_input: SharePoint_2016_Master-traditional.json
+      - us-east-1
+    template_file: sharepoint-master.yaml
+  single:
+    parameter_input: SharePoint_2019_Single.json
     regions:
       - ap-southeast-1
       - us-west-1
 #      - eu-central-1
-      - us-east-1
-    template_file: SharePoint_2016_Master.template
+      - us-east-2
+    template_file: sharepoint-master.yaml

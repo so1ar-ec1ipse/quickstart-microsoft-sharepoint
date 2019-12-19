@@ -4,7 +4,7 @@
 
 Amazon Web Services (AWS) provides a flexible, secure, affordable, and highly available cloud platform where you can take advantage of the content and collaboration features of Microsoft SharePoint Server.
 
-Use this Quick Start to deploy SharePoint Server 2016 into your AWS account automatically, in accordance with AWS best practices for security and high availability.
+Use this Quick Start to deploy SharePoint Server 2019 into your AWS account automatically, in accordance with AWS best practices for security and high availability.
 
 You can also use the AWS CloudFormation templates as a starting point for your own implementation.
 
