@@ -41,5 +41,9 @@
     {
         "ParameterKey": "QSS3BucketName",
         "ParameterValue": "$[taskcat_autobucket]"
+    },
+    {
+        "ParameterKey": "Farm",
+        "ParameterValue": "Deploy a SharePoint farm"
     }
 ]

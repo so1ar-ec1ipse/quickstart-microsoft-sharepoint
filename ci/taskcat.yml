@@ -26,8 +26,8 @@ tests:
   single:
     parameter_input: SharePoint_2019_Single.json
     regions:
-      - ap-southeast-1
-      - us-west-1
+#      - ap-southeast-1
+#      - us-west-1
 #      - eu-central-1
       - us-east-2
     template_file: sharepoint-master.yaml
