@@ -100,7 +100,7 @@ Parameters:
       - m4.2xlarge
       - m5.xlarge
       - m5.2xlarge
-    Default: m4.xlarge
+    Default: m5.xlarge
     Description: EC2 instance type for the SharePoint server.
     Type: String
   SubnetID:

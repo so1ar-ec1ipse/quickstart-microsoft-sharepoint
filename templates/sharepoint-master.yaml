@@ -115,7 +115,7 @@ Metadata:
       DomainNetBIOSName:
         default: Domain NetBIOS name
       KeyPairName:
-        default: Key pair mame
+        default: Key pair name
       NumberOfRDGWHosts:
         default: Number of RD Gateway hosts
       PrivateSubnet1CIDR:
@@ -485,9 +485,8 @@ Parameters:
       - r5.2xlarge
       - r5.4xlarge
       - r5.12xlarge
-    ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
-      r3.4xlarge allowed
-    Default: r4.xlarge
+    ConstraintDescription: Only Amazon EBS-optimized instance types are allowed.
+    Default: r5.xlarge
     Description: EC2 instance type for the first WSFC node.
     Type: String
   WSFCNode1NetBIOSName:
@@ -520,9 +519,8 @@ Parameters:
       - r5.2xlarge
       - r5.4xlarge
       - r5.12xlarge
-    ConstraintDescription: Only EBS Optimized instance types r3.xlarge, r3.2xlarge,
-      r3.4xlarge allowed
-    Default: r4.xlarge
+    ConstraintDescription: Only Amazon EBS-optimized instance types are allowed.
+    Default: r5.xlarge
     Description: EC2 instance type for the second WSFC node.
     Type: String
   WSFCNode2NetBIOSName:
