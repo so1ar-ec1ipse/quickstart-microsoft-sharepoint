@@ -1,0 +1,54 @@
+project:
+  name: quickstart-microsoft-sharepoint
+  owner: quickstart-eng@amazon.com
+  package_lambda: false
+  regions:
+  - ap-northeast-1
+  - ap-northeast-2
+  - ap-south-1
+  - ap-southeast-1
+  - ap-southeast-2
+  - eu-central-1
+  - eu-west-1
+  - us-east-1
+  - us-east-2
+  - us-west-1
+  - us-west-2
+  s3_bucket: ''
+tests:
+  sharepoint-farm:
+    parameters:
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminUser: admin
+      DomainAdminPassword: $[taskcat_genpass_16]
+      Farm: Deploy a SharePoint farm
+      KeyPairName: $[taskcat_getkeypair]
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      RDGWCIDR: 10.0.0.0/16
+      SPBinaryBucket: quickstart-ci-media
+      SPBinaryKey: microsoft/sharepoint/2019/installer-2019.zip
+      SQLServiceAccount: sqlsa
+      SQLServiceAccountPassword: $[taskcat_genpass_16]
+    regions:
+    - us-east-1
+    s3_bucket: ''
+    template: templates/sharepoint-master.template
+  sharepoint-single:
+    parameters:
+      AvailabilityZones: $[taskcat_getaz_2]
+      DomainAdminUser: admin
+      DomainAdminPassword: $[taskcat_genpass_16]
+      Farm: Deploy a single SharePoint server
+      KeyPairName: $[taskcat_getkeypair]
+      QSS3BucketName: $[taskcat_autobucket]
+      QSS3BucketRegion: $[taskcat_current_region]
+      RDGWCIDR: 10.0.0.0/16
+      SPBinaryBucket: quickstart-ci-media
+      SPBinaryKey: microsoft/sharepoint/2019/installer-2019.zip
+      SQLServiceAccount: sqlsa
+      SQLServiceAccountPassword: $[taskcat_genpass_16]
+    regions:
+    - us-east-1
+    s3_bucket: ''
+    template: templates/sharepoint-master.template
