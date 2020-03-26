@@ -29,5 +29,5 @@ tests:
 #      - ap-southeast-1
 #      - us-west-1
 #      - eu-central-1
-      - us-east-2
+      - us-west-2
     template_file: sharepoint-master.yaml
