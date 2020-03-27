@@ -33,7 +33,7 @@ tests:
     regions:
     - us-east-1
     s3_bucket: ''
-    template: templates/sharepoint-master.template
+    template: templates/sharepoint-master.yaml
   sharepoint-single:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
@@ -51,4 +51,4 @@ tests:
     regions:
     - us-west-2
     s3_bucket: ''
-    template: templates/sharepoint-master.template
+    template: templates/sharepoint-master.yaml
