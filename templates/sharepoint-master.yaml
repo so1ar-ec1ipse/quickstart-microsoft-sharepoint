@@ -222,6 +222,8 @@ Parameters:
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ADServer1InstanceType:
     AllowedValues:
+      - t2.large
+      - t3.large
       - m4.large
       - m4.xlarge
       - m4.2xlarge
@@ -230,7 +232,7 @@ Parameters:
       - m5.xlarge
       - m5.2xlarge
       - m5.4xlarge
-    Default: m4.xlarge
+    Default: m5.xlarge
     Description: EC2 instance type for the first Active Directory instance.
     Type: String
   ADServer1NetBIOSName:
@@ -246,6 +248,8 @@ Parameters:
     Type: String
   ADServer2InstanceType:
     AllowedValues:
+      - t2.large
+      - t3.large
       - m4.large
       - m4.xlarge
       - m4.2xlarge
@@ -254,7 +258,7 @@ Parameters:
       - m5.xlarge
       - m5.2xlarge
       - m5.4xlarge
-    Default: m4.xlarge
+    Default: m5.xlarge
     Description: EC2 instance type for the second Active Directory instance.
     Type: String
   ADServer2NetBIOSName:
