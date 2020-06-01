@@ -2799,7 +2799,7 @@ Resources:
   SitesLoadBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
     Properties:
-      Type: network
+      Type: application
       Scheme: internal
       Subnets:
         - !Ref Subnet1ID
@@ -2810,7 +2810,7 @@ Resources:
     Properties:
       LoadBalancerArn: !Ref SitesLoadBalancer
       Port: 80
-      Protocol: TCP
+      Protocol: HTTP
       DefaultActions:
         - TargetGroupArn: !Ref WebFrontEndTargetGroup
           Type: forward
@@ -2821,10 +2821,10 @@ Resources:
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: 30
       HealthCheckPort: 80
-      HealthCheckProtocol: TCP
+      HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3
-      Protocol: TCP
+      Protocol: HTTP
       TargetType: instance
       Port: 80
       VpcId: !Ref VPCID
