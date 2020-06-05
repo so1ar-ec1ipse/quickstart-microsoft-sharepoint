@@ -46,6 +46,7 @@ Metadata:
           default: Microsoft SharePoint configuration
         Parameters:
           - SPBinaryBucket
+          - SPBinaryBucketRegion
           - SPBinaryKey
           - SPProductKey
           - DNSPrefixCentralAdmin
@@ -87,6 +88,8 @@ Metadata:
         default: Security group ID
       SPBinaryBucket:
         default: SharePoint binary bucket
+      SPBinaryBucketRegion:
+        default: SharePoint binary bucket region
       SPBinaryKey:
         default: SharePoint binary key
       SPDatabaseName:
@@ -190,6 +193,12 @@ Parameters:
     Description: The name of the bucket that contains your SharePoint binaries.
     MinLength: 2
     MaxLength: 255
+  SPBinaryBucketRegion:
+    Type: String
+    Description: The region in which the SharePoint binary S3 bucket is hosted
+    MinLength: 2
+    MaxLength: 16
+    Default: us-east-1
   SPBinaryKey:
     Type: String
     Description: The path (key) to the installer .zip file in the S3 bucket.
@@ -434,7 +443,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer2:
@@ -506,7 +515,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer3:
@@ -578,7 +587,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer4:
@@ -650,7 +659,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SharePointSG:
