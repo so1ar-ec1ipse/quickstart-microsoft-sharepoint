@@ -26,8 +26,8 @@ tests:
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
       RDGWCIDR: 10.0.0.0/16
-      SPBinaryBucket: quickstart-ci-media
-      SPBinaryKey: microsoft/sharepoint/2019/installer-2019.zip
+      SPBinaryBucket: override
+      SPBinaryKey: override
       SQLServiceAccount: sqlsa
       SQLServiceAccountPassword: $[taskcat_genpass_16]
     regions:
