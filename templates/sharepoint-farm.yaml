@@ -1,6 +1,6 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  QS(0023) - This template deploys a SharePoint 2016 multiple-server topology
+  This template deploys a SharePoint 2016 multiple-server topology
   farm with two Front-End servers and two Application servers or a streamlined
   topology farm with two Web Front End servers, two Application servers, two
   Database servers, and two Active Directory servers. This template is intended to be
