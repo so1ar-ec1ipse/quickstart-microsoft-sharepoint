@@ -29,6 +29,7 @@ tests:
       SPBinaryBucket: override
       SPBinaryKey: override
       SPBinaryBucketRegion: override
+      SQLServerVersion: 2016
       SQLServiceAccount: sqlsa
       SQLServiceAccountPassword: $[taskcat_genpass_16]
     regions:
