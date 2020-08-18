@@ -28,6 +28,8 @@ tests:
       RDGWCIDR: 10.0.0.0/16
       SPBinaryBucket: override
       SPBinaryKey: override
+      SPBinaryBucketRegion: override
+      SQLServerVersion: 2016
       SQLServiceAccount: sqlsa
       SQLServiceAccountPassword: $[taskcat_genpass_16]
     regions:

@@ -1,13 +1,13 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
-  QS(0023) - This template deploys a SharePoint 2016 multiple-server topology
+  This template deploys a SharePoint 2016 multiple-server topology
   farm with two Front-End servers and two Application servers or a streamlined
   topology farm with two Web Front End servers, two Application servers, two
   Database servers, and two Active Directory servers. This template is intended to be
   installed into an existing VPC that was built using the sample reference architecture
   titled "Implementing Active Directory Domain Services in the AWS Cloud" **WARNING**
   This template creates Amazon EC2 Windows instance and related resources. You will be
-  billed for the AWS resources used if you create a stack from this template.
+  billed for the AWS resources used if you create a stack from this template. (qs-1qtrn51tc)
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -46,6 +46,7 @@ Metadata:
           default: Microsoft SharePoint configuration
         Parameters:
           - SPBinaryBucket
+          - SPBinaryBucketRegion
           - SPBinaryKey
           - SPProductKey
           - DNSPrefixCentralAdmin
@@ -87,6 +88,8 @@ Metadata:
         default: Security group ID
       SPBinaryBucket:
         default: SharePoint binary bucket
+      SPBinaryBucketRegion:
+        default: SharePoint binary bucket region
       SPBinaryKey:
         default: SharePoint binary key
       SPDatabaseName:
@@ -190,6 +193,12 @@ Parameters:
     Description: The name of the bucket that contains your SharePoint binaries.
     MinLength: 2
     MaxLength: 255
+  SPBinaryBucketRegion:
+    Type: String
+    Description: The region in which the SharePoint binary S3 bucket is hosted
+    MinLength: 2
+    MaxLength: 16
+    Default: us-east-1
   SPBinaryKey:
     Type: String
     Description: The path (key) to the installer .zip file in the S3 bucket.
@@ -434,7 +443,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer2:
@@ -506,7 +515,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer3:
@@ -578,7 +587,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SPServer4:
@@ -650,7 +659,7 @@ Resources:
         downloadBinaries:
           files:
             "C:\\config\\sources\\installer.zip":
-              source: !Sub https://${SPBinaryBucket}.s3.amazonaws.com/${SPBinaryKey}
+              source: !Sub https://${SPBinaryBucket}.s3.${SPBinaryBucketRegion}.${AWS::URLSuffix}/${SPBinaryKey}
               authentication: S3AccessCreds
 
   SharePointSG:

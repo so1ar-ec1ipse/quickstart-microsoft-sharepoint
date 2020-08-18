@@ -3,7 +3,7 @@ Description: >-
   This template deploys SharePoint 2019 by deploying VPC, Active Directory, SQL Server, and SharePoint
   CloudFormation stacks. **WARNING** This template creates Amazon EC2 Windows instance
   and related resources. You will be billed for the AWS resources used if you create
-  a stack from this template.
+  a stack from this template. (qs-1qup6ragb)
 Metadata:
   AWS::CloudFormation::Interface:
     ParameterGroups:
@@ -21,6 +21,7 @@ Metadata:
           default: Microsoft SharePoint configuration
         Parameters:
           - SPBinaryBucket
+          - SPBinaryBucketRegion
           - SPBinaryKey
           - SPProductKey
           - SQLAdminUserName
@@ -201,6 +202,8 @@ Metadata:
         default: WSFC Node 2 private IP address 3
       SPBinaryBucket:
         default: SharePoint binary bucket
+      SPBinaryBucketRegion:
+        default: SharePoint binary bucket region
       SPBinaryKey:
         default: SharePoint binary key
       SPProductKey:
@@ -574,6 +577,12 @@ Parameters:
     Type: String
     MinLength: 2
     MaxLength: 255
+  SPBinaryBucketRegion:
+    Type: String
+    Description: The region in which the SharePoint binary S3 bucket is hosted
+    MinLength: 2
+    MaxLength: 16
+    Default: us-east-1
   SPBinaryKey:
     Type: String
     MinLength: 2
@@ -766,6 +775,7 @@ Resources:
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
         SPBinaryBucket: !Ref 'SPBinaryBucket'
+        SPBinaryBucketRegion: !Ref 'SPBinaryBucketRegion'
         SPBinaryKey: !Ref 'SPBinaryKey'
         SPServerNetBIOSNamePrefix: !Ref 'SPServerNetBIOSName'
         DNSPrefixCentralAdmin: !Ref 'DNSPrefixCentralAdmin'
@@ -799,6 +809,7 @@ Resources:
         VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
         VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
         SPBinaryBucket: !Ref 'SPBinaryBucket'
+        SPBinaryBucketRegion: !Ref 'SPBinaryBucketRegion'
         SPBinaryKey: !Ref 'SPBinaryKey'
         SQLAdminUserName: !Ref 'SQLServiceAccount'
         SQLAdminPassword: !Ref 'SQLServiceAccountPassword'
