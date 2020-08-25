@@ -7,6 +7,8 @@ Description: >
   billed for the AWS resources used if you create a stack from this template. (qs-1qtrn4fjk)
 
 Metadata:
+  QuickStartDocumentation:
+    EntrypointName: "Deploy a single SharePoint server into an existing VPC"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
