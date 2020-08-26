@@ -1029,9 +1029,11 @@ configuration.</p>
 <div class="paragraph">
 <p>Based on these best practices, the VPC Quick Start deploys the following base-level VPC framework to support the SharePoint Server 2019 infrastructure:</p>
 </div>
-<div id="architecture2" class="paragraph">
-<div class="title">VPC architecture on the AWS cloud</div>
-<p><span class="image"><img src="images/image3.png" alt="Architecture2" width="648" height="427"></span></p>
+<div id="architecture2" class="imageblock">
+<div class="content">
+<a class="image" href="images/image3.png"><img src="images/image3.png" alt="Architecture2" width="648" height="427"></a>
+</div>
+<div class="title">Figure 2. VPC architecture on the AWS cloud</div>
 </div>
 <div class="paragraph">
 <p>As shown in Figure 2, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.</p>
@@ -1045,9 +1047,11 @@ configuration.</p>
 <div class="paragraph">
 <p>To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (Active Directory DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability.</p>
 </div>
-<div id="architecture3" class="paragraph">
-<div class="title">Domain controllers in each Availability Zone</div>
-<p><span class="image"><img src="images/image4.png" alt="Architecture3" width="648" height="373"></span></p>
+<div id="architecture3" class="imageblock">
+<div class="content">
+<a class="image" href="images/image4.png"><img src="images/image4.png" alt="Architecture3" width="648" height="373"></a>
+</div>
+<div class="title">Figure 3. Domain controllers in each Availability Zone</div>
 </div>
 <div class="paragraph">
 <p>Notice that in Figure 3, we’ve now included a domain controller in the Active Directory tier in each Availability Zone.</p>
@@ -1077,9 +1081,11 @@ configuration.</p>
 <div class="paragraph">
 <p>The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This allows you to reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.</p>
 </div>
-<div id="architecture4" class="paragraph">
-<div class="title">NAT gateways and Remote Desktop Gateways in public subnets</div>
-<p><span class="image"><img src="images/image5.png" alt="Architecture4" width="648" height="378"></span></p>
+<div id="architecture4" class="imageblock">
+<div class="content">
+<a class="image" href="images/image5.png"><img src="images/image5.png" alt="Architecture4" width="648" height="378"></a>
+</div>
+<div class="title">Figure 4. NAT gateways and Remote Desktop Gateways in public subnets</div>
 </div>
 <div class="paragraph">
 <p>The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in the <a href="https://fwd.aws/5VrKP">Quick Start for Remote Desktop Gateway on AWS</a>. After you have launched your SharePoint infrastructure using a deployment option in this guide, you will initially connect to your instances using a standard RDP TCP port 3389 connection. You can then follow the steps in the <a href="https://fwd.aws/5VrKP">Quick Start for Remote Desktop Gateway</a> to secure future connections via HTTPS.</p>
@@ -1479,7 +1485,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <p>Monitor the status of the stack. When the status is <strong>CREATE_COMPLETE</strong>, the SharePoint deployment is ready.</p>
 </li>
 <li>
-<p>Use the values displayed in the <strong>Outputs</strong> tab for the stack, as shown in <a href="#cfn_outputs">SharePoint outputs after successful deployment</a>, to view the created resources.</p>
+<p>Use the values displayed in the <strong>Outputs</strong> tab for the stack, as shown in <a href="#cfn_outputs">Figure 5</a>, to view the created resources.</p>
 </li>
 </ol>
 </div>
@@ -1487,7 +1493,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="content">
 <a class="image" href="images/cfn_outputs.png"><img src="images/cfn_outputs.png" alt="cfn_outputs" width="648" height="439"></a>
 </div>
-<div class="title">Figure 2. SharePoint outputs after successful deployment</div>
+<div class="title">Figure 5. SharePoint outputs after successful deployment</div>
 </div>
 </div>
 </div>
@@ -1513,9 +1519,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy1" class="paragraph">
-<div class="title">Creating site collections</div>
-<p><span class="image"><img src="images/image17.png" alt="PostDeploy1" width="283" height="151"></span></p>
+<div id="PostDeploy1" class="imageblock">
+<div class="content">
+<a class="image" href="images/image17.png"><img src="images/image17.png" alt="PostDeploy1" width="283" height="151"></a>
+</div>
+<div class="title">Figure 6. Creating site collections</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="3">
@@ -1524,9 +1532,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy2" class="paragraph">
-<div class="title">Creating a team site</div>
-<p><span class="image"><img src="images/image18.png" alt="PostDeploy2" width="648" height="562"></span></p>
+<div id="PostDeploy2" class="imageblock">
+<div class="content">
+<a class="image" href="images/image18.png"><img src="images/image18.png" alt="PostDeploy2" width="648" height="562"></a>
+</div>
+<div class="title">Figure 7. Creating a team site</div>
 </div>
 <div class="paragraph">
 <p>You will also need to define a <strong>Primary Site Collection Administrator</strong> on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose <strong>OK</strong>.</p>
@@ -1538,9 +1548,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy3" class="paragraph">
-<div class="title">The modern team site that was just created</div>
-<p><span class="image"><img src="images/image19.png" alt="PostDeploy3" width="648" height="455"></span></p>
+<div id="PostDeploy3" class="imageblock">
+<div class="content">
+<a class="image" href="images/image19.png"><img src="images/image19.png" alt="PostDeploy3" width="648" height="455"></a>
+</div>
+<div class="title">Figure 8. The modern team site that was just created</div>
 </div>
 </div>
 <div class="sect2">
@@ -1558,9 +1570,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy4" class="paragraph">
-<div class="title">Connecting to WSFCNODE1</div>
-<p><span class="image"><img src="images/image7.png" alt="PostDeploy4" width="477" height="315"></span></p>
+<div id="PostDeploy4" class="imageblock">
+<div class="content">
+<a class="image" href="images/image7.png"><img src="images/image7.png" alt="PostDeploy4" width="477" height="315"></a>
+</div>
+<div class="title">Figure 9. Connecting to WSFCNODE1</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="2">
@@ -1572,9 +1586,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy5" class="paragraph">
-<div class="title">Setting databases to full recovery mode</div>
-<p><span class="image"><img src="images/image20.png" alt="PostDeploy5" width="648" height="586"></span></p>
+<div id="PostDeploy5" class="imageblock">
+<div class="content">
+<a class="image" href="images/image20.png"><img src="images/image20.png" alt="PostDeploy5" width="648" height="586"></a>
+</div>
+<div class="title">Figure 10. Setting databases to full recovery mode</div>
 </div>
 </div>
 <div class="sect2">
@@ -1589,9 +1605,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy6" class="paragraph">
-<div class="title">Backing up a database</div>
-<p><span class="image"><img src="images/image21.png" alt="PostDeploy6" width="648" height="358"></span></p>
+<div id="PostDeploy6" class="imageblock">
+<div class="content">
+<a class="image" href="images/image21.png"><img src="images/image21.png" alt="PostDeploy6" width="648" height="358"></a>
+</div>
+<div class="title">Figure 11. Backing up a database</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1613,16 +1631,20 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 <li>
 <p>Choose the context (right click) menu for the availability group, and choose <strong>Add Database</strong>.</p>
-<div id="PostDeploy7" class="paragraph">
-<div class="title">Select Add Database for the availability group</div>
-<p><span class="image"><img src="images/image22.png" alt="PostDeploy7" width="352" height="389"></span></p>
+<div id="PostDeploy7" class="imageblock">
+<div class="content">
+<a class="image" href="images/image22.png"><img src="images/image22.png" alt="PostDeploy7" width="352" height="389"></a>
+</div>
+<div class="title">Figure 12. Select Add Database for the availability group</div>
 </div>
 </li>
 <li>
 <p>Select all the SharePoint databases to add to the group, and choose <strong>Next</strong>.</p>
-<div id="PostDeploy8" class="paragraph">
-<div class="title">Selecting databases to include in the availability group</div>
-<p><span class="image"><img src="images/image23.png" alt="PostDeploy8" width="648" height="589"></span></p>
+<div id="PostDeploy8" class="imageblock">
+<div class="content">
+<a class="image" href="images/image23.png"><img src="images/image23.png" alt="PostDeploy8" width="648" height="589"></a>
+</div>
+<div class="title">Figure 13. Selecting databases to include in the availability group</div>
 </div>
 </li>
 <li>
@@ -1633,9 +1655,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy9" class="paragraph">
-<div class="title">Selecting automatic seeding to populate the secondary replicas</div>
-<p><span class="image"><img src="images/image24.png" alt="PostDeploy9" width="648" height="352"></span></p>
+<div id="PostDeploy9" class="imageblock">
+<div class="content">
+<a class="image" href="images/image24.png"><img src="images/image24.png" alt="PostDeploy9" width="648" height="352"></a>
+</div>
+<div class="title">Figure 14. Selecting automatic seeding to populate the secondary replicas</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -1644,9 +1668,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </li>
 </ol>
 </div>
-<div id="PostDeploy10" class="paragraph">
-<div class="title">Validation checks before adding the databases to the availability group</div>
-<p><span class="image"><img src="images/image25.png" alt="PostDeploy10" width="648" height="260"></span></p>
+<div id="PostDeploy10" class="imageblock">
+<div class="content">
+<a class="image" href="images/image25.png"><img src="images/image25.png" alt="PostDeploy10" width="648" height="260"></a>
+</div>
+<div class="title">Figure 15. Validation checks before adding the databases to the availability group</div>
 </div>
 <div class="paragraph">
 <p>The databases are now part of the availability group.</p>
@@ -1690,9 +1716,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>After your externally facing SharePoint site is available, you can test automatic failover. The primary database server should be the first WSFC node, the Network Load Balancer for the back end (central admin site) distributes HTTP requests across SPServer1 and SPServer2, and the Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4. To verify that automatic failover is functional, on the Amazon EC2 console, forcibly stop the first WSFC node, SPServer1, and SPServer3. You can stop the instances simultaneously to perform this test, as shown in Figure 26.</p>
 </div>
-<div id="PostDeploy11" class="paragraph">
-<div class="title">Stopping the instances in Availability Zone 1</div>
-<p><span class="image"><img src="images/image26.png" alt="PostDeploy11" width="625" height="369"></span></p>
+<div id="PostDeploy11" class="imageblock">
+<div class="content">
+<a class="image" href="images/image26.png"><img src="images/image26.png" alt="PostDeploy11" width="625" height="369"></a>
+</div>
+<div class="title">Figure 16. Stopping the instances in Availability Zone 1</div>
 </div>
 <div class="paragraph">
 <p>After you simulate a failure by stopping the instances, the SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have both gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central admin site in your web browser to confirm that everything is still working.</p>
@@ -1710,9 +1738,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>A single-server deployment of SharePoint 2019 is ideal for development environments and for small-scale testing of SharePoint where multiple servers might be excessive.</p>
 </div>
-<div id="PostDeploy12" class="paragraph">
-<div class="title">A single-server SharePoint topology</div>
-<p><span class="image"><img src="images/image32.png" alt="PostDeploy12" width="417" height="164"></span></p>
+<div id="PostDeploy12" class="imageblock">
+<div class="content">
+<a class="image" href="images/image32.png"><img src="images/image32.png" alt="PostDeploy12" width="417" height="164"></a>
+</div>
+<div class="title">Figure 17. A single-server SharePoint topology</div>
 </div>
 <div class="paragraph">
 <p>In this topology, all SharePoint Service Apps and Instances will execute on the one server though, with no load balancing being required. The database server, however, runs on a different server than SharePoint. This is the simplest way to set up an environment for experimenting with SharePoint.</p>
@@ -1723,9 +1753,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>When you deploy SharePoint to support a production workload that will have many users across the organization, a single-server deployment is not robust enough to account for the load or to maintain availability in the event of an incident. The multiple-server template uses four SharePoint servers in to different roles to distribute the load.</p>
 </div>
-<div id="PostDeploy13" class="paragraph">
-<div class="title">An example of how multiple-server topologies in SharePoint can work</div>
-<p><span class="image"><img src="images/image33.png" alt="PostDeploy13" width="417" height="248"></span></p>
+<div id="PostDeploy13" class="imageblock">
+<div class="content">
+<a class="image" href="images/image33.png"><img src="images/image33.png" alt="PostDeploy13" width="417" height="248"></a>
+</div>
+<div class="title">Figure 18. An example of how multiple-server topologies in SharePoint can work</div>
 </div>
 <div class="paragraph">
 <p>In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers) so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.</p>
@@ -1752,9 +1784,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>With two servers in both roles (to support high availability), the resulting architecture is shown in the following diagram.</p>
 </div>
-<div id="PostDeploy14" class="paragraph">
-<div class="title">The multiple-server topology</div>
-<p><span class="image"><img src="images/image34.png" alt="PostDeploy14" width="738" height="434"></span></p>
+<div id="PostDeploy14" class="imageblock">
+<div class="content">
+<a class="image" href="images/image34.png"><img src="images/image34.png" alt="PostDeploy14" width="738" height="434"></a>
+</div>
+<div class="title">Figure 19. The multiple-server topology</div>
 </div>
 <div class="paragraph">
 <p>To ensure the highest levels of availability, the servers are put in to different Availability Zones. This helps ensure that in an event where an entire Availability Zone becomes impaired, the servers in the second Availability Zone will still be running.</p>
@@ -1786,9 +1820,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>All the architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to include private connectivity from the on-premises environment. Figure 36 shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.</p>
 </div>
-<div id="PostDeploy15" class="paragraph">
-<div class="title">The multiple-server topology</div>
-<p><span class="image"><img src="images/image35.png" alt="PostDeploy15" width="743" height="434"></span></p>
+<div id="PostDeploy15" class="imageblock">
+<div class="content">
+<a class="image" href="images/image35.png"><img src="images/image35.png" alt="PostDeploy15" width="743" height="434"></a>
+</div>
+<div class="title">Figure 20. The multiple-server topology</div>
 </div>
 <div class="paragraph">
 <p>As shown in Figure 35, we’ve added a VPN gateway to the VPC. To enable internal network connectivity to the VPC, we’ve created a VPN tunnel from the customer gateway (an IPsec-capable device) to the VPN gateway running in the VPC.</p>
@@ -1816,9 +1852,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic, and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based upon IP protocol, service port, or source or destination IP address. Figure 36 shows the default ACL configuration for a VPC subnet.</p>
 </div>
-<div id="PostDeploy16" class="paragraph">
-<div class="title">Default network ACL configuration for a VPC subnet</div>
-<p><span class="image"><img src="images/image36.png" alt="PostDeploy16" width="597" height="281"></span></p>
+<div id="PostDeploy16" class="imageblock">
+<div class="content">
+<a class="image" href="images/image36.png"><img src="images/image36.png" alt="PostDeploy16" width="597" height="281"></a>
+</div>
+<div class="title">Figure 21. Default network ACL configuration for a VPC subnet</div>
 </div>
 <div class="paragraph">
 <p>You may choose to keep the default network ACL configuration or lock it down with more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.</p>
@@ -1832,9 +1870,11 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 <div class="paragraph">
 <p>Figure 37 shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.</p>
 </div>
-<div id="PostDeploy17" class="paragraph">
-<div class="title">Web application publishing with a reverse proxy server</div>
-<p><span class="image"><img src="images/image37.png" alt="PostDeploy17" width="648" height="389"></span></p>
+<div id="PostDeploy17" class="imageblock">
+<div class="content">
+<a class="image" href="images/image37.png"><img src="images/image37.png" alt="PostDeploy17" width="648" height="389"></a>
+</div>
+<div class="title">Figure 22. Web application publishing with a reverse proxy server</div>
 </div>
 <div class="paragraph">
 <p>A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the public internet. Several third-party appliances and applications can be used for this task. Microsoft’s Web Application Proxy role in Windows Server 2019 also provides support for publishing your SharePoint resources to the internet.</p>
@@ -2123,9 +2163,11 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
-<div id="Troubleshooting1" class="paragraph">
-<div class="title">Compliance view in Systems Manager</div>
-<p><span class="image"><img src="images/image27.png" alt="Troubleshooting1" width="648" height="285"></span></p>
+<div id="Troubleshooting1" class="imageblock">
+<div class="content">
+<a class="image" href="images/image27.png"><img src="images/image27.png" alt="Troubleshooting1" width="648" height="285"></a>
+</div>
+<div class="title">Figure 23. Compliance view in Systems Manager</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2153,9 +2195,11 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
-<div id="Troubleshooting2" class="paragraph">
-<div class="title">Filtering to show non-compliant resources</div>
-<p><span class="image"><img src="images/image28.png" alt="Troubleshooting2" width="648" height="261"></span></p>
+<div id="Troubleshooting2" class="imageblock">
+<div class="content">
+<a class="image" href="images/image28.png"><img src="images/image28.png" alt="Troubleshooting2" width="648" height="261"></a>
+</div>
+<div class="title">Figure 24. Filtering to show non-compliant resources</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2164,9 +2208,11 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
-<div id="Troubleshooting3" class="paragraph">
-<div class="title">Finding the association ID</div>
-<p><span class="image"><img src="images/image29.png" alt="Troubleshooting3" width="648" height="160"></span></p>
+<div id="Troubleshooting3" class="imageblock">
+<div class="content">
+<a class="image" href="images/image29.png"><img src="images/image29.png" alt="Troubleshooting3" width="648" height="160"></a>
+</div>
+<div class="title">Figure 25. Finding the association ID</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2175,9 +2221,11 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
-<div id="Troubleshooting4" class="paragraph">
-<div class="title">Filtering to show non-compliant resources</div>
-<p><span class="image"><img src="images/image30.png" alt="Troubleshooting4" width="648" height="473"></span></p>
+<div id="Troubleshooting4" class="imageblock">
+<div class="content">
+<a class="image" href="images/image30.png"><img src="images/image30.png" alt="Troubleshooting4" width="648" height="473"></a>
+</div>
+<div class="title">Figure 26. Filtering to show non-compliant resources</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
@@ -2192,9 +2240,11 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </li>
 </ol>
 </div>
-<div id="Troubleshooting5" class="paragraph">
-<div class="title">The output link for a specific execution job</div>
-<p><span class="image"><img src="images/image31.png" alt="Troubleshooting5" width="648" height="143"></span></p>
+<div id="Troubleshooting5" class="imageblock">
+<div class="content">
+<a class="image" href="images/image31.png"><img src="images/image31.png" alt="Troubleshooting5" width="648" height="143"></a>
+</div>
+<div class="title">Figure 27. The output link for a specific execution job</div>
 </div>
 <div class="paragraph">
 <p>A new browser tab will open.</p>

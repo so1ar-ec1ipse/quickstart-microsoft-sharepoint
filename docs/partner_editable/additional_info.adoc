@@ -17,7 +17,7 @@ After you have successfully launched the stack, create an RDP connection into th
 [#PostDeploy1]
 .Creating site collections
 [link=images/image17.png]
-image:../images/image17.png[PostDeploy1,image,width=283,height=151]
+image::../images/image17.png[PostDeploy1,image,width=283,height=151]
 
 [start=3]
 3.  Provide a *Title* for your site, and then choose the *Collaboration* tab and select the *team site* template.
@@ -25,7 +25,7 @@ image:../images/image17.png[PostDeploy1,image,width=283,height=151]
 [#PostDeploy2]
 .Creating a team site
 [link=images/image18.png]
-image:../images/image18.png[PostDeploy2,image,width=648,height=562]
+image::../images/image18.png[PostDeploy2,image,width=648,height=562]
 
 You will also need to define a *Primary Site Collection Administrator* on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose *OK*.
 
@@ -35,7 +35,7 @@ You will also need to define a *Primary Site Collection Administrator* on this p
 [#PostDeploy3]
 .The modern team site that was just created
 [link=images/image19.png]
-image:../images/image19.png[PostDeploy3,image,width=648,height=455]
+image::../images/image19.png[PostDeploy3,image,width=648,height=455]
 
 === Make the SharePoint databases highly available
 
@@ -49,7 +49,7 @@ image:../images/image19.png[PostDeploy3,image,width=648,height=455]
 [#PostDeploy4]
 .Connecting to WSFCNODE1
 [link=images/image7.png]
-image:../images/image7.png[PostDeploy4,image,width=477,height=315]
+image::../images/image7.png[PostDeploy4,image,width=477,height=315]
 
 [start=2]
 2.  For the four Search databases, and the Usage database, you will need to enable Full Recovery mode before you can add them to the availability group. In *Object Explorer*, expand the *Databases* node.
@@ -58,56 +58,58 @@ image:../images/image7.png[PostDeploy4,image,width=477,height=315]
 [#PostDeploy5]
 .Setting databases to full recovery mode
 [link=images/image20.png]
-image:../images/image20.png[PostDeploy5,image,width=648,height=586]
+image::../images/image20.png[PostDeploy5,image,width=648,height=586]
 
 [[back-up-the-databases]]
 === Back Up the Databases
 
 Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your CloudFormation stack.
 
-4.  To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back Up*.
+1.  To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back Up*.
 
 [#PostDeploy6]
 .Backing up a database
 [link=images/image21.png]
-image:../images/image21.png[PostDeploy6,image,width=648,height=358]
+image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 
-5.  Keep the default settings, and then choose *OK* to perform the backup.
+[start=2]
+2.  Keep the default settings, and then choose *OK* to perform the backup.
 
 [[add-the-databases-to-the-availability-group]]
 === Add the Databases to the Availability Group
 
 Now add these databases to the availability group that you prepared in link:#step-4.-prepare-the-sql-server-cluster-for-always-on-availability-groups[step 4].
 
-6.  In *Object Explorer*, expand *Always On High Availability*, *Availability Groups*.
-7.  Choose the context (right click) menu for the availability group, and choose *Add Database*.
+1.  In *Object Explorer*, expand *Always On High Availability*, *Availability Groups*.
+2.  Choose the context (right click) menu for the availability group, and choose *Add Database*.
 +
 [#PostDeploy7]
 .Select Add Database for the availability group
 [link=images/image22.png]
-image:../images/image22.png[PostDeploy7,image,width=352,height=389]
+image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 
-8.  Select all the SharePoint databases to add to the group, and choose *Next*.
+3.  Select all the SharePoint databases to add to the group, and choose *Next*.
 +
 [#PostDeploy8]
 .Selecting databases to include in the availability group
 [link=images/image23.png]
-image:../images/image23.png[PostDeploy8,image,width=648,height=589]
+image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 
-9.  Connect to WSFCNODE2 to allow the databases to be added to the group there, and then choose the *Connect* button, and choose *Next*.
-10.  Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
+4.  Connect to WSFCNODE2 to allow the databases to be added to the group there, and then choose the *Connect* button, and choose *Next*.
+5.  Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
 
 [#PostDeploy9]
 .Selecting automatic seeding to populate the secondary replicas
 [link=images/image24.png]
-image:../images/image24.png[PostDeploy9,image,width=648,height=352]
+image::../images/image24.png[PostDeploy9,image,width=648,height=352]
 
-11.  Ensure that the validation checks pass, and then choose *Next*, *Finish*.
+[start=6]
+6.  Ensure that the validation checks pass, and then choose *Next*, *Finish*.
 
 [#PostDeploy10]
 .Validation checks before adding the databases to the availability group
 [link=images/image25.png]
-image:../images/image25.png[PostDeploy10,image,width=648,height=260]
+image::../images/image25.png[PostDeploy10,image,width=648,height=260]
 
 The databases are now part of the availability group.
 
@@ -141,7 +143,7 @@ After your externally facing SharePoint site is available, you can test automati
 [#PostDeploy11]
 .Stopping the instances in Availability Zone 1
 [link=images/image26.png]
-image:../images/image26.png[PostDeploy11,image,width=625,height=369]
+image::../images/image26.png[PostDeploy11,image,width=625,height=369]
 
 After you simulate a failure by stopping the instances, the SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have both gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central admin site in your web browser to confirm that everything is still working.
 
@@ -158,7 +160,7 @@ A single-server deployment of SharePoint 2019 is ideal for development environme
 [#PostDeploy12]
 .A single-server SharePoint topology
 [link=images/image32.png]
-image:../images/image32.png[PostDeploy12,image,width=417,height=164]
+image::../images/image32.png[PostDeploy12,image,width=417,height=164]
 
 In this topology, all SharePoint Service Apps and Instances will execute on the one server though, with no load balancing being required. The database server, however, runs on a different server than SharePoint. This is the simplest way to set up an environment for experimenting with SharePoint.
 
@@ -170,7 +172,7 @@ When you deploy SharePoint to support a production workload that will have many 
 [#PostDeploy13]
 .An example of how multiple-server topologies in SharePoint can work
 [link=images/image33.png]
-image:../images/image33.png[PostDeploy13,image,width=417,height=248]
+image::../images/image33.png[PostDeploy13,image,width=417,height=248]
 
 In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers) so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.
 
@@ -188,7 +190,7 @@ With two servers in both roles (to support high availability), the resulting arc
 [#PostDeploy14]
 .The multiple-server topology
 [link=images/image34.png]
-image:../images/image34.png[PostDeploy14,image,width=738,height=434]
+image::../images/image34.png[PostDeploy14,image,width=738,height=434]
 
 To ensure the highest levels of availability, the servers are put in to different Availability Zones. This helps ensure that in an event where an entire Availability Zone becomes impaired, the servers in the second Availability Zone will still be running.
 
@@ -216,7 +218,7 @@ All the architecture diagrams shown up to this point represent an isolated Micro
 [#PostDeploy15]
 .The multiple-server topology
 [link=images/image35.png]
-image:../images/image35.png[PostDeploy15,image,width=743,height=434]
+image::../images/image35.png[PostDeploy15,image,width=743,height=434]
 
 As shown in Figure 35, we’ve added a VPN gateway to the VPC. To enable internal network connectivity to the VPC, we’ve created a VPN tunnel from the customer gateway (an IPsec-capable device) to the VPN gateway running in the VPC.
 
@@ -242,7 +244,7 @@ A network access control list (ACL) is a set of permissions that can be attached
 [#PostDeploy16]
 .Default network ACL configuration for a VPC subnet
 [link=images/image36.png]
-image:../images/image36.png[PostDeploy16,image,width=597,height=281]
+image::../images/image36.png[PostDeploy16,image,width=597,height=281]
 
 You may choose to keep the default network ACL configuration or lock it down with more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.
 
@@ -256,7 +258,7 @@ Figure 37 shows an example of publishing SharePoint web front-end servers, locat
 [#PostDeploy17]
 .Web application publishing with a reverse proxy server
 [link=images/image37.png]
-image:../images/image37.png[PostDeploy17,image,width=648,height=389]
+image::../images/image37.png[PostDeploy17,image,width=648,height=389]
 
 A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the public internet. Several third-party appliances and applications can be used for this task. Microsoft’s Web Application Proxy role in Windows Server 2019 also provides support for publishing your SharePoint resources to the internet.
 

@@ -46,7 +46,7 @@ You will see a list of all State Manager compliance resources.
 [#Troubleshooting1]
 .Compliance view in Systems Manager
 [link=images/image27.png]
-image:../images/image27.png[Troubleshooting1,image,width=648,height=285]
+image::../images/image27.png[Troubleshooting1,image,width=648,height=285]
 
 2.  Look for one of the following compliance types and identify whether there are non-compliant resources for it:
 
@@ -61,21 +61,21 @@ b.  Multiple-server deployments will see *Custom:QSSPFarmFarm*, *Custom:QSSPFarm
 [#Troubleshooting2]
 .Filtering to show non-compliant resources
 [link=images/image28.png]
-image:../images/image28.png[Troubleshooting2,image,width=648,height=261]
+image::../images/image28.png[Troubleshooting2,image,width=648,height=261]
 
 6.  To find detailed logs, on the *Associations* tab, choose the entry with the *AWS-ApplyDSCMofs* document name, and then choose *View Output*. Take note of the association ID here, which is needed in the next step.
 
 [#Troubleshooting3]
 .Finding the association ID
 [link=images/image29.png]
-image:../images/image29.png[Troubleshooting3,image,width=648,height=160]
+image::../images/image29.png[Troubleshooting3,image,width=648,height=160]
 
 7.  On the Systems Manager console, choose *State Manager*.
 
 [#Troubleshooting4]
 .Filtering to show non-compliant resources
 [link=images/image30.png]
-image:../images/image30.png[Troubleshooting4,image,width=648,height=473]
+image::../images/image30.png[Troubleshooting4,image,width=648,height=473]
 
 8.  In the list that is displayed, choose the association ID from step 6 to view its execution history.
 9.  On the *Execution History* tab, you can see every configuration run that has been attempted by this Automation document (State Manager configurations run every 30 minutes). Select the first item in the list, and then find the instance ID that was failing configuration.
@@ -84,7 +84,7 @@ image:../images/image30.png[Troubleshooting4,image,width=648,height=473]
 [#Troubleshooting5]
 .The output link for a specific execution job
 [link=images/image31.png]
-image:../images/image31.png[Troubleshooting5,image,width=648,height=143]
+image::../images/image31.png[Troubleshooting5,image,width=648,height=143]
 
 A new browser tab will open.
 

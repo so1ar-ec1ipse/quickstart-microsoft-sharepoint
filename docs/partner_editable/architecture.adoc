@@ -5,6 +5,7 @@ default parameters builds the following _{partner-product-short-name}_ environme
 AWS Cloud.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
+:xrefstyle: short
 [#architecture1]
 .Quick Start architecture for _{partner-product-short-name}_ on AWS
 [link=images/image2.png]
@@ -53,10 +54,11 @@ For details on the VPC design used in this reference, see the https://fwd.aws/N6
 
 Based on these best practices, the VPC Quick Start deploys the following base-level VPC framework to support the SharePoint Server 2019 infrastructure:
 
+:xrefstyle: short
 [#architecture2]
 .VPC architecture on the AWS cloud
 [link=images/image3.png]
-image:../images/image3.png[Architecture2,image,width=648,height=427]
+image::../images/image3.png[Architecture2,image,width=648,height=427]
 
 As shown in Figure 2, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
 
@@ -70,7 +72,7 @@ To provide user authentication and authorization, the Microsoft SharePoint serve
 [#architecture3]
 .Domain controllers in each Availability Zone
 [link=images/image4.png]
-image:../images/image4.png[Architecture3,image,width=648,height=373]
+image::../images/image4.png[Architecture3,image,width=648,height=373]
 
 Notice that in Figure 3, we’ve now included a domain controller in the Active Directory tier in each Availability Zone.
 
@@ -91,7 +93,7 @@ The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to establish a 
 [#architecture4]
 .NAT gateways and Remote Desktop Gateways in public subnets
 [link=images/image5.png]
-image:../images/image5.png[Architecture4,image,width=648,height=378]
+image::../images/image5.png[Architecture4,image,width=648,height=378]
 
 The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in the https://fwd.aws/5VrKP[Quick Start for Remote Desktop Gateway on AWS]. After you have launched your SharePoint infrastructure using a deployment option in this guide, you will initially connect to your instances using a standard RDP TCP port 3389 connection. You can then follow the steps in the https://fwd.aws/5VrKP[Quick Start for Remote Desktop Gateway] to secure future connections via HTTPS.
 
