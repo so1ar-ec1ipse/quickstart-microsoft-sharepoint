@@ -26,8 +26,6 @@ Metadata:
           - SPBinaryBucketRegion
           - SPBinaryKey
           - SPProductKey
-          - SQLAdminUserName
-          - SQLAdminPassword
           - Farm
           - SPServerNetBIOSName
           - DNSPrefixCentralAdmin
@@ -150,10 +148,6 @@ Metadata:
         default: Service account password
       SQLLicenseProvided:
         default: Amazon-provided SQL Server license
-      SQLAdminUserName:
-        default: User name of SQL administrator
-      SQLAdminPassword:
-        default: Password of the SQL administrator
       AvailabiltyGroupName:
         default: Availability group name
       Volume1Iops:
