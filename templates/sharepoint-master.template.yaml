@@ -47,8 +47,6 @@ Metadata:
       - Label:
           default: Microsoft SQL Server configuration
         Parameters:
-          - HostType
-          - DedicatedHostAMI
           - SQLServerVersion
           - SQLServiceAccount
           - SQLServiceAccountPassword
@@ -67,20 +65,17 @@ Metadata:
           default: WSFC configuration
         Parameters:
           - WSFCFileServerInstanceType
-          - WSFCFileServerNetBIOSName
           - WSFCFileServerPrivateIP
           - WSFCNode1InstanceType
           - WSFCNode1NetBIOSName
           - WSFCNode1PrivateIP1
           - WSFCNode1PrivateIP2
           - WSFCNode1PrivateIP3
-          - DedicatedHostIDNode1
           - WSFCNode2InstanceType
           - WSFCNode2NetBIOSName
           - WSFCNode2PrivateIP1
           - WSFCNode2PrivateIP2
           - WSFCNode2PrivateIP3
-          - DedicatedHostIDNode2
       - Label:
           default: Microsoft Remote Desktop Gateway configuration
         Parameters:
@@ -172,8 +167,6 @@ Metadata:
         default: VPC CIDR
       WSFCFileServerInstanceType:
         default: File server instance type
-      WSFCFileServerNetBIOSName:
-        default: File server NetBIOS name
       WSFCFileServerPrivateIP:
         default: File server private IP address
       WSFCNode1InstanceType:
