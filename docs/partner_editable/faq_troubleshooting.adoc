@@ -32,15 +32,15 @@ For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/la
 
 *Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
 
-*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information about AWS CloudFormation quotas, see the http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS documentation^].
+*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
 
 == Troubleshooting
 
 If failure is signaled or a wait condition or resource signal times out, review the configuration attempts in AWS Systems Manager State Manager.
 
-1.  On the Systems Manager console, choose *Compliance*.
-+
+. On the Systems Manager console, choose *Compliance*.
+
 You will see a list of all State Manager compliance resources.
 
 [#Troubleshooting1]
@@ -48,38 +48,43 @@ You will see a list of all State Manager compliance resources.
 [link=images/image27.png]
 image::../images/image27.png[Troubleshooting1,image,width=648,height=285]
 
-2.  Look for one of the following compliance types and identify whether there are non-compliant resources for it:
+[start=2]
+. Look for one of the following compliance types and identify whether there are non-compliant resources for it:
 
 a.  Single-server deployments will see *Custom:QSSPSingle*.
 
 b.  Multiple-server deployments will see *Custom:QSSPFarmFarm*, *Custom:QSSPFarmApp*, and *Custom:QSSPFarmWFE*.
 
-3.  If there are non-compliant resources, choose the number with the red X next to it, and scroll down the page to see a list of instances that do not meet the compliance requirement. (This occurs when the server could not be configured correctly.)
-4.  Select the instance you want to investigate. A new browser tab will open.
-5.  To see which resources on the server were not configured, on the instance detail page, on the *Configuration compliance* tab, choose *Configuration status* in the filter box, and then choose *NonCompliant*.
+[start=3]
+. If there are non-compliant resources, choose the number with the red X next to it, and scroll down the page to see a list of instances that do not meet the compliance requirement. (This occurs when the server could not be configured correctly.)
+. Select the instance you want to investigate. A new browser tab will open.
+. To see which resources on the server were not configured, on the instance detail page, on the *Configuration compliance* tab, choose *Configuration status* in the filter box, and then choose *NonCompliant*.
 
 [#Troubleshooting2]
 .Filtering to show non-compliant resources
 [link=images/image28.png]
 image::../images/image28.png[Troubleshooting2,image,width=648,height=261]
 
-6.  To find detailed logs, on the *Associations* tab, choose the entry with the *AWS-ApplyDSCMofs* document name, and then choose *View Output*. Take note of the association ID here, which is needed in the next step.
+[start=6]
+. To find detailed logs, on the *Associations* tab, choose the entry with the *AWS-ApplyDSCMofs* document name, and then choose *View Output*. Take note of the association ID here, which is needed in the next step.
 
 [#Troubleshooting3]
 .Finding the association ID
 [link=images/image29.png]
 image::../images/image29.png[Troubleshooting3,image,width=648,height=160]
 
-7.  On the Systems Manager console, choose *State Manager*.
+[start=7]
+. On the Systems Manager console, choose *State Manager*.
 
 [#Troubleshooting4]
 .Filtering to show non-compliant resources
 [link=images/image30.png]
 image::../images/image30.png[Troubleshooting4,image,width=648,height=473]
 
-8.  In the list that is displayed, choose the association ID from step 6 to view its execution history.
-9.  On the *Execution History* tab, you can see every configuration run that has been attempted by this Automation document (State Manager configurations run every 30 minutes). Select the first item in the list, and then find the instance ID that was failing configuration.
-10.  Choose *Output*.
+[start=8]
+. In the list that is displayed, choose the association ID from step 6 to view its execution history.
+. On the *Execution History* tab, you can see every configuration run that has been attempted by this Automation document (State Manager configurations run every 30 minutes). Select the first item in the list, and then find the instance ID that was failing configuration.
+. Choose *Output*.
 
 [#Troubleshooting5]
 .The output link for a specific execution job
@@ -88,6 +93,7 @@ image::../images/image31.png[Troubleshooting5,image,width=648,height=143]
 
 A new browser tab will open.
 
-11.  The console will show only the first 2,500 characters from the log, which is not likely to be useful. To view the logs, choose *Amazon S3*, select the RunPowerShell folder, and open the file stdout. The file will show you the full output of the configuration script, including any errors, which will help you troubleshoot.
+[start=11]
+. The console will show only the first 2,500 characters from the log, which is not likely to be useful. To view the logs, choose *Amazon S3*, select the RunPowerShell folder, and open the file stdout. The file will show you the full output of the configuration script, including any errors, which will help you troubleshoot.
 
 For additional information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/troubleshooting.html[Troubleshooting AWS CloudFormation] on the AWS website.
