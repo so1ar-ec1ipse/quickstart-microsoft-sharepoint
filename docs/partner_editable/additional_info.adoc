@@ -10,7 +10,7 @@ This step assumes that you deployed a SharePoint farm rather than a single serve
 
 After you have successfully launched the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.
 
-1.  Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to *http://spadmin.example.com*. When prompted for credentials, use the domain admin user name and password.
+1.  Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain admin user name and password.
 
 2.  On the central administration home page, choose *Create site collections*.
 
@@ -30,7 +30,7 @@ image::../images/image18.png[PostDeploy2,image,width=648,height=562]
 You will also need to define a *Primary Site Collection Administrator* on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose *OK*.
 
 [start=4]
-4.  Now that you have created a team site, navigate to *http://sharepoint.example.com*. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
+4.  Now that you have created a team site, navigate to http://sharepoint.example.com. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
 
 [#PostDeploy3]
 .The modern team site that was just created

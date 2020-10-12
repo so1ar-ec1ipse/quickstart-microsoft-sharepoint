@@ -100,7 +100,7 @@ Parameters:
   WS2019FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
-    Description: Windows Server 2019 full base AMI
+    Description: Windows Server 2019 full base AMI.
   SPServerInstanceType:
     AllowedValues:
       - t2.xlarge
@@ -249,7 +249,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region
+        AssertDescription: M4 instances are not available in the Paris region.
 
 Conditions:
   GovCloudCondition: !Equals
