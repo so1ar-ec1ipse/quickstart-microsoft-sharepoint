@@ -213,7 +213,7 @@ Metadata:
         default: DNS server IP address
 Parameters:
   AvailabilityZones:
-    Description: 'List of Availability Zones to use for the subnets in the VPC. Only two Availability Zones are used for this deployment, and the logical order is preserved.'
+    Description: List of Availability Zones to use for the subnets in the VPC. Only two Availability Zones are used for this deployment, and the logical order is preserved.
     Type: List<AWS::EC2::AvailabilityZone::Name>
   ADServer1InstanceType:
     AllowedValues:
@@ -343,7 +343,7 @@ Parameters:
     Type: String
   QSS3BucketRegion:
     Default: 'us-east-1'
-    Description: 'The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.'
+    Description: The AWS Region where the Quick Start S3 bucket (QSS3BucketName) is hosted. When using your own bucket, you must specify this value.
     Type: String
   QSS3KeyPrefix:
     AllowedPattern: ^[0-9a-zA-Z-/]*$
@@ -411,7 +411,7 @@ Parameters:
   AvailabiltyGroupName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: "SQLAG1"
-    Description: "NetBIOS name of the SQL database or availability group (up to 15 characters)."
+    Description: NetBIOS name of the SQL database or availability group (up to 15 characters).
     MaxLength: '15'
     MinLength: '1'
     Type: "String"
@@ -568,7 +568,7 @@ Parameters:
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary S3 bucket is hosted
+    Description: The region in which the SharePoint binary S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
@@ -586,7 +586,7 @@ Parameters:
     AllowedValues:
     - "Deploy a SharePoint farm"
     - "Deploy a single SharePoint server"
-    ConstraintDescription: If no is selected, other DNS Prefix values will be ignored
+    ConstraintDescription: If no is selected, other DNS Prefix values will be ignored.
     Default: "Deploy a SharePoint farm"
     Description: Choose whether you want to deploy a SharePoint farm or a single SharePoint server.
     Type: String

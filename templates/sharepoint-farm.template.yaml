@@ -105,7 +105,7 @@ Parameters:
   WS2019FULLBASE:
     Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
     Default: '/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base'
-    Description: Windows Server 2019 full base AMI
+    Description: Windows Server 2019 full base AMI.
   SPServerInstanceType:
     AllowedValues:
       - t2.xlarge
@@ -137,7 +137,7 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   VPCCIDR:
     AllowedPattern: ^(([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])\.){3}([0-9]|[1-9][0-9]|1[0-9]{2}|2[0-4][0-9]|25[0-5])(\/(1[6-9]|2[0-8]))$
-    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28
+    ConstraintDescription: CIDR block parameter must be in the form x.x.x.x/16-28.
     Default: 10.0.0.0/16
     Description: CIDR block for the VPC.
     Type: String
@@ -197,7 +197,7 @@ Parameters:
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary S3 bucket is hosted
+    Description: The region in which the SharePoint binary S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
@@ -244,7 +244,7 @@ Rules:
             - AWS::EC2::Subnet::Id
             - VpcId
           - !RefAll 'AWS::EC2::VPC::Id'
-        AssertDescription: All subnets must in the VPC
+        AssertDescription: All subnets must in the VPC.
   CheckSupportedInstances:
     RuleCondition: !Or
       - !Contains
@@ -260,7 +260,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region
+        AssertDescription: M4 instances are not available in the Paris region.
 
 Conditions:
   GovCloudCondition: !Equals
