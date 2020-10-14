@@ -20,7 +20,7 @@ In the public subnets:
 
 * Managed network address translation (NAT) gateways to allow outbound
 internet access for resources in the private subnets.*
-* A Remote Desktop Gateway in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elasic Compute Cloud (Amazon EC2) instances in public and private subnets.*
+* A Remote Desktop Gateway in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*
 
 In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
