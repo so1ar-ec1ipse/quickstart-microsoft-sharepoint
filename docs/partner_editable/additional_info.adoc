@@ -80,8 +80,8 @@ image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 
 Now add these databases to the availability group that you prepared in link:#step-4.-prepare-the-sql-server-cluster-for-always-on-availability-groups[step 4].
 
-1.  In *Object Explorer*, expand *Always On High Availability*, *Availability Groups*.
-2.  Choose the context (right click) menu for the availability group, and choose *Add Database*.
+1.  In *Object Explorer*, open the *Always On High Availability* folder. Then open the *Availability Groups* folder.
+2.  Select *Add Database* from the availability group's context menu.
 +
 [#PostDeploy7]
 .Select Add Database for the availability group
