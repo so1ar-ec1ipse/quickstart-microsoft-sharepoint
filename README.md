@@ -1,6 +1,6 @@
 ## Microsoft SharePoint Server on the AWS Cloud - Quick Start
 
-For architectural details, step-by-step instructions, and customization options, see the [deployment guide](https://fwd.aws/D67Nx).
+For architectural details, step-by-step instructions, and customization options, see the [deployment guide^](https://fwd.aws/D67Nx).
 
 To post feedback, submit feature ideas, or report bugs, use the **Issues** section of this GitHub repo. 
 
