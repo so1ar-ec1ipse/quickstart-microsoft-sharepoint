@@ -8,7 +8,7 @@ Description: >
 
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Deploy a single SharePoint server into an existing VPC"
+    EntrypointName: "Parameters for launching a single SharePoint server into an existing VPC"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -128,7 +128,7 @@ Parameters:
     Description: CIDR block for the VPC.
     Type: String
   VPCID:
-    Description: ID of the VPC (e.g., vpc-0343606e)
+    Description: ID of the VPC (e.g., vpc-0343606e).
     Type: AWS::EC2::VPC::Id
   DomainDNSName:
     AllowedPattern: '[a-zA-Z0-9\-]+\..+'
