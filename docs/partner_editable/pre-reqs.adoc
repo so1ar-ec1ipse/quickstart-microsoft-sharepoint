@@ -4,19 +4,20 @@
 
 To access the SharePoint Server 2019 installation media, you need to place the contents of the SharePoint installation ISO file in a .zip file. When creating this .zip file, you have the option of “slip streaming” additional cumulative updates into the file, which means that these updates will be automatically installed when SharePoint is installed. This can help you deploy SharePoint to a specific update level when it is first installed. The following steps show you how to create the .zip file and upload it to Amazon S3.
 
-1.  Download the evaluation edition from https://www.microsoft.com/en-us/download/details.aspx?id=57462[Microsoft Download Center].
+[start=1]
+. Download the evaluation edition from https://www.microsoft.com/en-us/download/details.aspx?id=57462[Microsoft Download Center].
 +
 —or—
 +
 Obtain the ISO file from MSDN, if you have an MSDN account with licenses for server software.
 
-2.  Open the ISO file (in Windows, double-click the file to mount the ISO and open it), and copy the contents to a temporary location on your system.
-3.  (Optional) To include any additional updates, use the slip-streaming option:
+. Open the ISO file (in Windows, double-click the file to mount the ISO and open it), and copy the contents to a temporary location on your system.
+. (Optional) To include any additional updates, use the slip-streaming option:
 
 a.  https://docs.microsoft.com/en-us/officeupdates/sharepoint-updates[Download the updates] that you want to include.
 b.  Open a command prompt, and change the current path to the folder where you downloaded the updates.
 c.  To extract the updates to the updates folder in your installation media temporary folder, run the following command:
-
+//TODO make this code?
 *UpdateFileName*.exe /extract:*PathToUpdatesFolder*
 
 where:
@@ -25,11 +26,11 @@ _UpdateFileName_ is the name of the file you downloaded for the update (for exam
 
 _PathToUpdatesFolder_ is the path to the folder called Updates that exists in the installation media that you extracted in Step 2. For example, if you extracted the media to C:\SPInstall, the path is C:\SPInstall\Updates.
 
-4.  Select all of the files and folders in the directory on your system to which you extracted the installation media, open the context (right-click) menu, and choose *Send To*, *Compressed (zipped) folder*. This creates a .zip file of your installation media that can be used for the installation.
-5.  Sign in to your AWS account and open the https://console.aws.amazon.com/s3[Amazon S3 console].
-
-6.  Choose *Create Bucket*.
-7.  Complete the *Create a Bucket* dialog box:
+[start=4]
+. Select all of the files and folders in the directory on your system to which you extracted the installation media, open the context (right-click) menu, and choose *Send To*, *Compressed (zipped) folder*. This creates a .zip file of your installation media that can be used for the installation.
+. Sign in to your AWS account and open the https://console.aws.amazon.com/s3[Amazon S3 console].
+. Choose *Create Bucket*.
+. Complete the *Create a Bucket* dialog box:
 
 a.  In the *Bucket Name* box, enter a globally unique name for the bucket (for example, your account name).
 
@@ -38,16 +39,16 @@ c.  Choose *Create*.
 +
 The console displays your new bucket in the *Buckets* pane.
 
-8.  Choose the new bucket to navigate to it.
-9.  Choose *Upload*.
-10.  In the *Upload – Select Files and Folders* dialog box, choose *Add Files*.
-11.  In the file selection dialog box, browse to the .zip file that you created earlier, and choose *Open*, *Start Upload*.
+. Choose the new bucket to navigate to it.
+. Choose *Upload*.
+. In the *Upload – Select Files and Folders* dialog box, choose *Add Files*.
+. In the file selection dialog box, browse to the .zip file that you created earlier, and choose *Open*, *Start Upload*.
 
 Make a note of the bucket name and the file name that you used for your zip file. You will use these later when you launch the SharePoint stack.
 
 ==== Configure AWS prerequisites
 
-*Note* This step is not required if you are deploying the master stack into a new VPC.
+NOTE: This step is not required if you are deploying the master stack into a new VPC.
 
 Before you launch the SharePoint stack, you need to configure several prerequisites. If you have deployed the Active Directory Domain Services and SQL Server Quick Starts, they will have provisioned the following components:
 

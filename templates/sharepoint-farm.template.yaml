@@ -11,7 +11,7 @@ Description: >
 
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Parameters for launching a SharePoint farm into an existing VPC"
+    EntrypointName: "Parameters for deploying a SharePoint farm into an existing VPC"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -70,6 +70,8 @@ Metadata:
         default: SharePoint server NetBIOS Name
       KeyPairName:
         default: Key pair name
+      VPCID:
+        default: VPC ID
       VPCCIDR:
         default: VPC CIDR
       DomainDNSName:
@@ -98,6 +100,10 @@ Metadata:
         default: Database server name
       SPProductKey:
         default: SharePoint product key
+      DNSPrefixCentralAdmin:
+        default: Administrator account domain
+      DNSPrefixMainSite:
+        default: SharePoint domain
       DNSServerIP:
         default: DNS server IP address
 
@@ -182,7 +188,7 @@ Parameters:
     Type: String
   SQLAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: The password of the SQL Server admin account.
+    Description: The password of the SQL Server administrator account.
     MaxLength: '32'
     MinLength: '8'
     Type: String
@@ -192,18 +198,18 @@ Parameters:
     Description: The ID of the security group that will allow communication with the server or servers running SQL Server.
   SPBinaryBucket:
     Type: String
-    Description: The name of the bucket that contains your SharePoint binaries.
+    Description: The name of the Amazon S3 bucket that contains your SharePoint binaries.
     MinLength: 2
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary S3 bucket is hosted.
+    Description: The region in which the SharePoint binary Amazon S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
   SPBinaryKey:
     Type: String
-    Description: The path (key) to the installer .zip file in the S3 bucket.
+    Description: The path (key) to the installer .zip file in the Amazon S3 bucket.
     MinLength: 2
     MaxLength: 255
   SPDatabaseName:
@@ -219,19 +225,19 @@ Parameters:
     Default: M692G-8N2JP-GG8B2-2W2P7-YY7J6 # Default SharePoint 2019 Enterprise Trial Key
   DNSPrefixCentralAdmin:
     Type: String
-    Description: The domain name to use for the central admin account (without the domain suffix; use 'admin' not 'admin.domain.com').
+    Description: The domain name for the central administrator account (without the domain suffix; use 'admin' not 'admin.domain.com').
     MinLength: 1
     MaxLength: 20
     Default: spadmin
   DNSPrefixMainSite:
     Type: String
-    Description: The domain name to use for the main SharePoint site (without the domain suffix; use 'site' not 'site.domain.com').
+    Description: The domain name for the main SharePoint site (without the domain suffix; use 'site' not 'site.domain.com').
     MinLength: 1
     MaxLength: 20
     Default: sharepoint
   DNSServerIP:
     Type: String
-    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account.
+    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the administrator account.
     MinLength: 8
     MaxLength: 16
     Default: 10.0.0.10

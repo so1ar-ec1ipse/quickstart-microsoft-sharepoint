@@ -10,9 +10,9 @@ This step assumes that you deployed a SharePoint farm rather than a single serve
 
 After you have successfully launched the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.
 
-1.  Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain admin user name and password.
-
-2.  On the central administration home page, choose *Create site collections*.
+[start=1]
+. Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain admin user name and password.
+. On the central administration home page, choose *Create site collections*.
 
 [#PostDeploy1]
 .Creating site collections
@@ -20,7 +20,7 @@ After you have successfully launched the stack, create an RDP connection into th
 image::../images/image17.png[PostDeploy1,image,width=283,height=151]
 
 [start=3]
-3.  Provide a *Title* for your site, and then choose the *Collaboration* tab and select the *team site* template.
+. Provide a *Title* for your site, and then choose the *Collaboration* tab and select the *team site* template.
 
 [#PostDeploy2]
 .Creating a team site
@@ -30,7 +30,7 @@ image::../images/image18.png[PostDeploy2,image,width=648,height=562]
 You will also need to define a *Primary Site Collection Administrator* on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose *OK*.
 
 [start=4]
-4.  Now that you have created a team site, navigate to http://sharepoint.example.com. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
+. Now that you have created a team site, navigate to http://sharepoint.example.com. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
 
 [#PostDeploy3]
 .The modern team site that was just created
@@ -39,12 +39,13 @@ image::../images/image19.png[PostDeploy3,image,width=648,height=455]
 
 === Make the SharePoint databases highly available
 
-*Note* This step is not required if deploying the master stack into a new VPC.
+NOTE: This step is not required if deploying the master stack into a new VPC.
 
 [[enable-full-recovery-mode]]
-=== Enable Full Recovery Mode
+==== Enable Full Recovery Mode
 
-1.  Establish an RDP session to the WSFCNODE1 instance. Start SQL Server Management Studio, and then choose *Connect* to connect to the local server.
+[start=1]
+. Establish an RDP session to the WSFCNODE1 instance. Start SQL Server Management Studio, and then choose *Connect* to connect to the local server.
 
 [#PostDeploy4]
 .Connecting to WSFCNODE1
@@ -52,8 +53,8 @@ image::../images/image19.png[PostDeploy3,image,width=648,height=455]
 image::../images/image7.png[PostDeploy4,image,width=477,height=315]
 
 [start=2]
-2.  For the four Search databases, and the Usage database, you will need to enable Full Recovery mode before you can add them to the availability group. In *Object Explorer*, expand the *Databases* node.
-3.  For each database, choose the context (right-click) menu, and then choose *Properties*. In the *Database Properties* dialog box, choose the *Options* page, and then change *Recovery Model* to *Full*.
+. For the four Search databases, and the Usage database, you will need to enable Full Recovery mode before you can add them to the availability group. In *Object Explorer*, expand the *Databases* node.
+. For each database, choose the context (right-click) menu, and then choose *Properties*. In the *Database Properties* dialog box, choose the *Options* page, and then change *Recovery Model* to *Full*.
 
 [#PostDeploy5]
 .Setting databases to full recovery mode
@@ -61,11 +62,12 @@ image::../images/image7.png[PostDeploy4,image,width=477,height=315]
 image::../images/image20.png[PostDeploy5,image,width=648,height=586]
 
 [[back-up-the-databases]]
-=== Back Up the Databases
+==== Back Up the Databases
 
-Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your CloudFormation stack.
+Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your AWS CloudFormation stack.
 
-1.  To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back Up*.
+[start=1]
+. To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back Up*.
 
 [#PostDeploy6]
 .Backing up a database
@@ -73,30 +75,32 @@ Next, make a backup of each SharePoint database. They will all share a common pr
 image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 
 [start=2]
-2.  Keep the default settings, and then choose *OK* to perform the backup.
+. Keep the default settings, and then choose *OK* to perform the backup.
 
 [[add-the-databases-to-the-availability-group]]
-=== Add the Databases to the Availability Group
+==== Add the databases to the availability group
 
-Now add these databases to the availability group that you prepared in link:#step-4.-prepare-the-sql-server-cluster-for-always-on-availability-groups[step 4].
 
-1.  In *Object Explorer*, open the *Always On High Availability* folder. Then open the *Availability Groups* folder.
-2.  Select *Add Database* from the availability group's context menu.
+[start=1]
+. In *Object Explorer*, open the *Always On High Availability* folder. Then open the *Availability Groups* folder.
+. Select *Add Database* from the availability group's context menu.
 +
 [#PostDeploy7]
 .Select Add Database for the availability group
 [link=images/image22.png]
 image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 
-3.  Select all the SharePoint databases to add to the group, and choose *Next*.
+[start=3]
+. Select all the SharePoint databases to add to the group, and choose *Next*.
 +
 [#PostDeploy8]
 .Selecting databases to include in the availability group
 [link=images/image23.png]
 image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 
-4.  Connect to WSFCNODE2 to allow the databases to be added to the group there, and then choose the *Connect* button, and choose *Next*.
-5.  Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
+[start=4]
+. Connect to WSFCNODE2 to allow the databases to be added to the group there, and then choose the *Connect* button, and choose *Next*.
+. Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
 
 [#PostDeploy9]
 .Selecting automatic seeding to populate the secondary replicas
@@ -104,17 +108,15 @@ image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 image::../images/image24.png[PostDeploy9,image,width=648,height=352]
 
 [start=6]
-6.  Ensure that the validation checks pass, and then choose *Next*, *Finish*.
+. Ensure that the validation checks pass, and then choose *Next*, *Finish*. The databases are now part of the availability group.
 
 [#PostDeploy10]
 .Validation checks before adding the databases to the availability group
 [link=images/image25.png]
 image::../images/image25.png[PostDeploy10,image,width=648,height=260]
 
-The databases are now part of the availability group.
-
 [[provide-log-access-to-the-secondary-database-server]]
-=== Provide Log Access to the Secondary Database Server
+=== Provide log access to the secondary database server
 
 Now we need to ensure that the SharePoint service accounts have access to log in to the secondary database server if there is a failover event.
 
@@ -180,43 +182,43 @@ To simplify the configuration of multiple-server farms, SharePoint includes the 
 
 The multiple-server topology in this Quick Start leverages the following roles in MinRole:
 
-* Front end: Front-End with Distributed Cache
-* Application servers: Application with Search
+* Front end: Front end with distributed cache
+* Application servers: Application with search
 
 This allows an even distribution of services while adhering to the Microsoft best practices for farm topology. for more information on what MinRole is and how it works in detail, including documentation on what services run on each of these roles, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
 
 With two servers in both roles (to support high availability), the resulting architecture is shown in the following diagram.
 
 [#PostDeploy14]
-.The multiple-server topology
-[link=images/image34.png]
-image::../images/image34.png[PostDeploy14,image,width=738,height=434]
+.Multiple-server topology
+[link=images/architecture_diagram.png]
+image::../images/architecture_diagram.png[PostDeploy14,image,width=738,height=434]
 
 To ensure the highest levels of availability, the servers are put in to different Availability Zones. This helps ensure that in an event where an entire Availability Zone becomes impaired, the servers in the second Availability Zone will still be running.
 
 [[load-balancing]]
-===== Load Balancing
+===== Load balancing
 
 The multiple-server version of the Quick Start deploys two load balancers. The first is an Application Load Balancer and is for the front-end servers, which run the main SharePoint web applications. The second is a Network Load Balancer and is for the application servers, where the central administration website runs.
 
 The load balancers directs traffic to a healthy node in the target group. The load balancers poll for the availability of a connection on port 80 every 30 seconds. If a node fails three consecutive checks, the load balancer will not direct any requests to it until it is again registered as healthy.
 
 [[database-tier]]
-===== Database Tier
+===== Database tier
 
 The database server role stores content and service data so that your SharePoint farm can utilize SQL Server in a number of ways. For small or medium-sized environments, you may be able to place all your databases on a single server. For larger-sized farms, you can spread your databases across multiple SQL Server instances or clusters of SQL Server instances. We recommend using SQL Server Enterprise in your SharePoint deployment, as it meets the performance, high availability, and reliability requirements for an enterprise application.
 
 Amazon Machine Images (AMIs) for SQL Server Express, SQL Server Web Edition, and SQL Server Standard are available for launch on AWS. To install SQL Server 2016 or 2017 Enterprise Edition on AWS, you can use http://aws.amazon.com/windows/mslicensemobility/[Microsoft License Mobility through Software Assurance] to bring your own license into the cloud.
 
-In the https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 vCPUs, 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performant and durable storage in the form of Elastic Block Store (Amazon EBS) volumes.
+In the https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 vCPUs, 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performing and durable storage in the form of Amazon Elastic Block Store (Amazon EBS) volumes.
 
 [[intranet-sharepoint-server-farm-on-aws]]
-==== Intranet SharePoint Server Farm on AWS
+==== Intranet SharePoint server farm on AWS
 
 All the architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to include private connectivity from the on-premises environment. Figure 20 shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
 
 [#PostDeploy15]
-.The multiple-server topology
+.Intranet SharePoint server farm topology
 [link=images/image35.png]
 image::../images/image35.png[PostDeploy15,image,width=743,height=434]
 
@@ -230,7 +232,7 @@ In addition, AWS offers the AWS Direct Connect service, which allows you to crea
 As with any enterprise application deployment, a Microsoft SharePoint Server farm on AWS should implement strict security controls. AWS provides a comprehensive set of security features that allow you to control the flow of traffic through your VPC, associated subnets, and ultimately to each Amazon EC2 instance. These features allow you to reduce the attack surface of your environment while providing both end-user access to SharePoint content and applications, and administrator access for securely managing the Windows Server infrastructure. These security features and approaches are covered in this section.
 
 [[security-groups]]
-===== Security Groups
+===== Security groups
 
 When launched, Amazon EC2 instances must be associated with at least one security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving your security groups, and you can build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.
 
@@ -249,7 +251,7 @@ image::../images/image36.png[PostDeploy16,image,width=597,height=281]
 You may choose to keep the default network ACL configuration or lock it down with more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.
 
 [[secure-extranet-publishing]]
-===== Secure Extranet Publishing
+===== Secure extranet publishing
 
 Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add another layer of security by placing reverse proxy servers into your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Web page requests from internet-based users would be sent to these reverse proxy servers, which would then establish a connection to your web front-end servers that are running in a private subnet.
 
@@ -265,7 +267,7 @@ A benefit of this architecture is that it provides the ability to pre-authentica
 The AWS CloudFormation template provided by this Quick Start does not set up an environment for extranet publishing, but after the deployment, you may choose to add reverse proxy servers and configure the environment that’s illustrated in Figure 22.
 
 [[ec2-instance-types]]
-==== EC2 Instance Types
+==== EC2 instance types
 
 Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your Microsoft SharePoint deployment. Since each deployment is different, you will need to follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.
 
