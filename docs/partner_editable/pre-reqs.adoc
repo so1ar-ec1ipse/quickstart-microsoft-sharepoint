@@ -17,27 +17,27 @@ Obtain the ISO file from MSDN, if you have an MSDN account with licenses for ser
 a.  https://docs.microsoft.com/en-us/officeupdates/sharepoint-updates[Download the updates] that you want to include.
 b.  Open a command prompt, and change the current path to the folder where you downloaded the updates.
 c.  To extract the updates to the updates folder in your installation media temporary folder, run the following command:
-//TODO make this code?
-*UpdateFileName*.exe /extract:*PathToUpdatesFolder*
 
-where:
+```
+UpdateFileName.exe /extract:PathToUpdatesFolder
+```
+[NOTE]
+====
+In the command,
 
-_UpdateFileName_ is the name of the file you downloaded for the update (for example, sts2019-kb4464556-fullfile-x64-glb.exe).
+* _UpdateFileName_ is the name of the file you downloaded for the update (for example, sts2019-kb4464556-fullfile-x64-glb.exe).
 
-_PathToUpdatesFolder_ is the path to the folder called Updates that exists in the installation media that you extracted in Step 2. For example, if you extracted the media to C:\SPInstall, the path is C:\SPInstall\Updates.
-
+* _PathToUpdatesFolder_ is the path to the folder called Updates that exists in the installation media that you extracted in Step 2. For example, if you extracted the media to C:\SPInstall, the path is C:\SPInstall\Updates.
+====
 [start=4]
 . Select all of the files and folders in the directory on your system to which you extracted the installation media, open the context (right-click) menu, and choose *Send To*, *Compressed (zipped) folder*. This creates a .zip file of your installation media that can be used for the installation.
 . Sign in to your AWS account and open the https://console.aws.amazon.com/s3[Amazon S3 console].
 . Choose *Create Bucket*.
 . Complete the *Create a Bucket* dialog box:
 
-a.  In the *Bucket Name* box, enter a globally unique name for the bucket (for example, your account name).
-
-b.  In the *Region* list, select the AWS Region where you plan to launch the Quick Start.
-c.  Choose *Create*.
-+
-The console displays your new bucket in the *Buckets* pane.
+.. In the *Bucket Name* box, enter a globally unique name for the bucket (for example, your account name).
+.. In the *Region* list, select the AWS Region where you plan to launch the Quick Start.
+.. Choose *Create*. The console displays your new bucket in the *Buckets* pane.
 
 . Choose the new bucket to navigate to it.
 . Choose *Upload*.
