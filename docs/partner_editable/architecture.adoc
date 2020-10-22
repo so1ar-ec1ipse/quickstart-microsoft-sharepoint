@@ -31,7 +31,7 @@ In the private subnets:
 * Two Amazon EC2 instances serving as Microsoft SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint front-end servers.
 * A network load balancer for the SharePoint application servers.
-* An application load balancer for the SharePoint front-end servers.
+* An Application Load Balancer for the SharePoint front-end servers.
 
 *The template that deploys the Quick Start into an existing VPC skips
 the components marked by asterisks and prompts you for your existing VPC
