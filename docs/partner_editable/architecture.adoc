@@ -3,7 +3,7 @@ There are a number of ways to design the topology of your SharePoint farm depend
 Deploying this Quick Start for a new virtual private cloud (VPC) with
 default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
 
-// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors giude)
+// Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors guide)
 :xrefstyle: short
 [#architecture1]
 .Quick Start architecture for {partner-product-short-name} on AWS
@@ -37,7 +37,7 @@ In the private subnets:
 the components marked by asterisks and prompts you for your existing VPC
 configuration.
 
-The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers in this diagram. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the link:#deployment-steps[Deployment Steps] section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.
+The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers shown in <<architecture1>>. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the link:#deployment-steps[Deployment Steps] section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.
 
 The following sections describe these components of the architecture in more detail. For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see link:#appendix-a-server-role-architecture[Appendix A].
 
