@@ -198,18 +198,18 @@ Parameters:
     Description: The ID of the security group that will allow communication with the server or servers running SQL Server.
   SPBinaryBucket:
     Type: String
-    Description: The name of the Amazon S3 bucket that contains your SharePoint binaries.
+    Description: The name of the S3 bucket that contains your SharePoint binaries.
     MinLength: 2
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary Amazon S3 bucket is hosted.
+    Description: The region in which the SharePoint binary S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
   SPBinaryKey:
     Type: String
-    Description: The path (key) to the installer .zip file in the Amazon S3 bucket.
+    Description: The path (key) to the installer .zip file in the S3 bucket.
     MinLength: 2
     MaxLength: 255
   SPDatabaseName:

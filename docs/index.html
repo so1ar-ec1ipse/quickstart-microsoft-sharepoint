@@ -1017,7 +1017,7 @@ the components marked by asterisks and prompts you for your existing VPC
 configuration.</p>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers in this diagram. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the <a href="#deployment-steps">Deployment Steps</a> section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.</p>
+<p>The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers shown in <a href="#architecture1">Figure 1</a>. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the <a href="#deployment-steps">Deployment Steps</a> section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.</p>
 </div>
 <div class="paragraph">
 <p>The following sections describe these components of the architecture in more detail. For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see <a href="#appendix-a-server-role-architecture">Appendix A</a>.</p>
@@ -2674,7 +2674,7 @@ This step is not required if deploying the master stack into a new VPC.
 <div class="sect2">
 <h3 id="_test_automatic_failover">Test automatic failover</h3>
 <div class="paragraph">
-<p>After your externally facing SharePoint site is available, you can test automatic failover. The primary database server should be the first WSFC node, the Network Load Balancer for the back end (central admin site) distributes HTTP requests across SPServer1 and SPServer2, and the Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4. To verify that automatic failover is functional, on the Amazon EC2 console, forcibly stop the first WSFC node, SPServer1, and SPServer3. You can stop the instances simultaneously to perform this test, as shown in figure 16.</p>
+<p>After your externally facing SharePoint site is available, you can test automatic failover. The primary database server should be the first WSFC node, the Network Load Balancer for the back end (central admin site) distributes HTTP requests across SPServer1 and SPServer2, and the Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4. To verify that automatic failover is functional, on the Amazon EC2 console, forcibly stop the first WSFC node, SPServer1, and SPServer3. You can stop the instances simultaneously to perform this test, as shown in <a href="#PostDeploy11">Figure 16</a>.</p>
 </div>
 <div id="PostDeploy11" class="imageblock">
 <div class="content">
@@ -2787,7 +2787,7 @@ This step is not required if deploying the master stack into a new VPC.
 <div class="title">Figure 20. Intranet SharePoint server farm topology</div>
 </div>
 <div class="paragraph">
-<p>As shown in figure 20, we’ve added a VPN gateway to the VPC. To enable internal network connectivity to the VPC, we’ve created a VPN tunnel from the customer gateway (an IPsec-capable device) to the VPN gateway running in the VPC.</p>
+<p>As shown in <a href="#PostDeploy15">Figure 20</a>, we’ve added a VPN gateway to the VPC. To enable internal network connectivity to the VPC, we’ve created a VPN tunnel from the customer gateway (an IPsec-capable device) to the VPN gateway running in the VPC.</p>
 </div>
 <div class="paragraph">
 <p>In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, once you have internal network connectivity into the VPC from your on-premises environment, you can simply provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing will also provide high availability in the event of a server failure. If a web front-end server is unavailable, requests will be sent to one that is online.</p>
@@ -2828,7 +2828,7 @@ This step is not required if deploying the master stack into a new VPC.
 <p>Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add another layer of security by placing reverse proxy servers into your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Web page requests from internet-based users would be sent to these reverse proxy servers, which would then establish a connection to your web front-end servers that are running in a private subnet.</p>
 </div>
 <div class="paragraph">
-<p>Figure 22 shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.</p>
+<p><a href="#PostDeploy17">Figure 22</a> shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.</p>
 </div>
 <div id="PostDeploy17" class="imageblock">
 <div class="content">
@@ -2840,7 +2840,7 @@ This step is not required if deploying the master stack into a new VPC.
 <p>A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the public internet. Several third-party appliances and applications can be used for this task. Microsoft’s Web Application Proxy role in Windows Server 2019 also provides support for publishing your SharePoint resources to the internet.</p>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation template provided by this Quick Start does not set up an environment for extranet publishing, but after the deployment, you may choose to add reverse proxy servers and configure the environment that’s illustrated in Figure 22.</p>
+<p>The AWS CloudFormation template provided by this Quick Start does not set up an environment for extranet publishing, but after the deployment, you may choose to add reverse proxy servers and configure the environment that’s illustrated in <a href="#PostDeploy17">Figure 22</a>.</p>
 </div>
 </div>
 </div>
