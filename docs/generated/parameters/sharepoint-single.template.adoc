@@ -39,8 +39,8 @@
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
 |Parameter label (name) |Default value|Description|SharePoint binary bucket
-(`SPBinaryBucket`)|`**__Requires input__**`|The name of the Amazon S3 bucket that contains your SharePoint binaries.|SharePoint binary bucket region
-(`SPBinaryBucketRegion`)|`us-east-1`|The region in which the SharePoint binary Amazon S3 bucket is hosted.|SharePoint binary key
-(`SPBinaryKey`)|`**__Requires input__**`|The path (key) to the installer .zip file in the Amazon S3 bucket.|SharePoint product key
+(`SPBinaryBucket`)|`**__Requires input__**`|The name of the S3 bucket that contains your SharePoint binaries.|SharePoint binary bucket region
+(`SPBinaryBucketRegion`)|`us-east-1`|The region in which the SharePoint binary S3 bucket is hosted.|SharePoint binary key
+(`SPBinaryKey`)|`**__Requires input__**`|The path (key) to the installer .zip file in the S3 bucket.|SharePoint product key
 (`SPProductKey`)|`M692G-8N2JP-GG8B2-2W2P7-YY7J6`|The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise trial.
 |===
