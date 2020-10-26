@@ -8,7 +8,7 @@ Description: >
 
 Metadata:
   QuickStartDocumentation:
-    EntrypointName: "Parameters for launching a single SharePoint server into an existing VPC"
+    EntrypointName: "Parameters for deploying a single SharePoint server into an existing VPC"
   AWS::CloudFormation::Interface:
     ParameterGroups:
       - Label:
@@ -60,7 +60,9 @@ Metadata:
       SPServerNetBIOSName:
         default: SharePoint server NetBIOS name
       KeyPairName:
-        default: Key pair name
+        default: Key-pair name
+      VPCID:
+        default: VPC ID
       VPCCIDR:
         default: VPC CIDR
       DomainDNSName:
@@ -106,7 +108,7 @@ Parameters:
       - m5.xlarge
       - m5.2xlarge
     Default: m5.xlarge
-    Description: EC2 instance type for the SharePoint server.
+    Description: Amazon EC2 instance type for the SharePoint server.
     Type: String
   SubnetID:
     Description: ID of the private subnet into which SharePoint will be deployed (e.g., subnet-a0246dcd).
@@ -168,7 +170,7 @@ Parameters:
     Type: String
   SQLAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: The password of the SQL Server admin account.
+    Description: The password of the SQL Server administrator account.
     MaxLength: '32'
     MinLength: '8'
     Type: String
@@ -199,7 +201,7 @@ Parameters:
     MaxLength: 128
   SPProductKey:
     Type: String
-    Description: The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise Trial.
+    Description: The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise trial.
     MinLength: 29
     MaxLength: 29
     Default: M692G-8N2JP-GG8B2-2W2P7-YY7J6 # Default SharePoint 2019 Enterprise Trial Key
