@@ -32,16 +32,14 @@ For additional information, see https://docs.aws.amazon.com/AWSCloudFormation/la
 
 *Q.* I encountered a size limitation error when I deployed the AWS CloudFormation templates.
 
-*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
+*A.* We recommend that you launch the Quick Start templates from the links in this guide or from another Amazon S3 bucket. If you deploy the templates from a local copy on your computer or from a location other than an S3 bucket, you might encounter template size limitations. For more information, see http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/cloudformation-limits.html[AWS CloudFormation quotas^].
 
 
 == Troubleshooting
 
 If failure is signaled or a wait condition or resource signal times out, review the configuration attempts in AWS Systems Manager State Manager.
 
-. On the Systems Manager console, choose *Compliance*.
-
-You will see a list of all State Manager compliance resources.
+. On the Systems Manager console, choose *Compliance*. You will see a list of all State Manager compliance resources.
 
 [#Troubleshooting1]
 .Compliance view in Systems Manager
@@ -58,7 +56,10 @@ b.  Multiple-server deployments will see *Custom:QSSPFarmFarm*, *Custom:QSSPFarm
 [start=3]
 . If there are non-compliant resources, choose the number with the red X next to it, and scroll down the page to see a list of instances that do not meet the compliance requirement. (This occurs when the server could not be configured correctly.)
 . Select the instance you want to investigate. A new browser tab will open.
-. To see which resources on the server were not configured, on the instance detail page, on the *Configuration compliance* tab, choose *Configuration status* in the filter box, and then choose *NonCompliant*.
+. To see which resources on the server were not configured, do the following:
+a.  Select the *Configuration compliance* tab on the instance detail page. 
+b.  Choose *Configuration status* in the filter box.
+c.  Choose *NonCompliant*.
 
 [#Troubleshooting2]
 .Filtering to show non-compliant resources
