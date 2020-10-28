@@ -2,8 +2,7 @@
 
 This Quick Start provides three deployment options:
 
-* *Deploy {partner-product-short-name} into a new VPC (end-to-end deployment)*. This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, remote desktop gateway, 
-Active Directory, Microsoft SQL, and other infrastructure components. It then deploys {partner-product-short-name} into this new VPC.
+* *Deploy {partner-product-short-name} into a new VPC (end-to-end deployment)*. This option builds a new AWS environment consisting of the VPC, subnets, NAT gateways, security groups, RD Gateway, Active Directory, Microsoft SQL, and other infrastructure components. It then deploys {partner-product-short-name} into this new VPC.
 * *Deploy a SharePoint farm into an existing VPC*. This option provisions a highly-available SharePoint farm in your existing AWS infrastructure.
 * *Deploy a single SharePoint server into an existing VPC*. This option provisions a single SharePoint server in your existing AWS infrastructure.
 

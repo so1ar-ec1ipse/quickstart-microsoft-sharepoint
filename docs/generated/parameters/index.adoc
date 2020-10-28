@@ -1,9 +1,9 @@
 
-=== Deploy SharePoint into a new VPC
+=== Parameters for deploying a SharePoint farm into a new VPC
 include::sharepoint-master.template.adoc[]
 
-=== Deploy a single SharePoint server into an existing VPC
+=== Parameters for deploying a single SharePoint server into an existing VPC
 include::sharepoint-single.template.adoc[]
 
-=== Deploy a SharePoint farm into an existing VPC
+=== Parameters for deploying a SharePoint farm into an existing VPC
 include::sharepoint-farm.template.adoc[]
