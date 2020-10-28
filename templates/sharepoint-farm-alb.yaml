@@ -249,7 +249,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region.
+        AssertDescription: M4 instances are not available in the Paris Region.
 
 Conditions:
   GovCloudCondition: !Equals

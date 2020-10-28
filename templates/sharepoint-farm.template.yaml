@@ -93,7 +93,7 @@ Metadata:
       SPBinaryBucket:
         default: SharePoint binary bucket
       SPBinaryBucketRegion:
-        default: SharePoint binary bucket region
+        default: SharePoint binary bucket Region
       SPBinaryKey:
         default: SharePoint binary key
       SPDatabaseName:
@@ -203,7 +203,7 @@ Parameters:
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary S3 bucket is hosted.
+    Description: The Region in which the SharePoint binary S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
@@ -266,7 +266,7 @@ Rules:
           - !Contains
             - - eu-west-3
             - !Ref 'AWS::Region'
-        AssertDescription: M4 instances are not available in the Paris region.
+        AssertDescription: M4 instances are not available in the Paris Region.
 
 Conditions:
   GovCloudCondition: !Equals
