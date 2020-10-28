@@ -11,7 +11,7 @@ This step assumes that you deployed a SharePoint farm rather than a single serve
 After you have successfully launched the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.
 
 [start=1]
-. Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain admin user name and password.
+. Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain administrator user name and password.
 . On the central administration home page, choose *Create site collections*.
 
 [#PostDeploy1]
@@ -33,16 +33,16 @@ You will also need to define a *Primary Site Collection Administrator* on this p
 . Now that you have created a team site, navigate to http://sharepoint.example.com. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
 
 [#PostDeploy3]
-.The modern team site that was just created
+.Team site
 [link=images/image19.png]
 image::../images/image19.png[PostDeploy3,image,width=648,height=455]
 
 === Make the SharePoint databases highly available
 
-NOTE: This step is not required if deploying the master stack into a new VPC.
+NOTE: This step is not required if deploying a SharePoint farm into a new VPC.
 
 [[enable-full-recovery-mode]]
-==== Enable Full Recovery Mode
+==== Enable full recovery mode
 
 [start=1]
 . Establish an RDP session to the WSFCNODE1 instance. Start SQL Server Management Studio, and then choose *Connect* to connect to the local server.
@@ -62,7 +62,7 @@ image::../images/image7.png[PostDeploy4,image,width=477,height=315]
 image::../images/image20.png[PostDeploy5,image,width=648,height=586]
 
 [[back-up-the-databases]]
-==== Back Up the Databases
+==== Back up the databases
 
 Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your AWS CloudFormation stack.
 
@@ -83,7 +83,7 @@ image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 
 [start=1]
 . In *Object Explorer*, open the *Always On High Availability* folder. Then open the *Availability Groups* folder.
-. Select *Add Database* from the availability group's context menu.
+. Choose *Add Database* from the availability group's context menu.
 +
 [#PostDeploy7]
 .Select Add Database for the availability group
@@ -91,7 +91,8 @@ image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 
 [start=3]
-. Select all the SharePoint databases to add to the group, and choose *Next*.
+. Choose all the SharePoint databases to add to the group. 
+. Choose *Next*.
 +
 [#PostDeploy8]
 .Selecting databases to include in the availability group
@@ -99,7 +100,9 @@ image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 
 [start=4]
-. Connect to WSFCNODE2 to allow the databases to be added to the group there, and then choose the *Connect* button, and choose *Next*.
+. Connect to WSFCNODE2 to allow the databases to be added to the availability group there. 
+. Choose the *Connect* button. 
+. Choose *Next*.
 . Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
 
 [#PostDeploy9]
@@ -108,7 +111,9 @@ image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 image::../images/image24.png[PostDeploy9,image,width=648,height=352]
 
 [start=6]
-. Ensure that the validation checks pass, and then choose *Next*, *Finish*. The databases are now part of the availability group.
+. Ensure that the validation checks pass. 
+. Choose *Next*.
+. Choose *Finish*. The databases are now part of the availability group.
 
 [#PostDeploy10]
 .Validation checks before adding the databases to the availability group
@@ -118,14 +123,15 @@ image::../images/image25.png[PostDeploy10,image,width=648,height=260]
 [[provide-log-access-to-the-secondary-database-server]]
 === Provide log access to the secondary database server
 
-Now we need to ensure that the SharePoint service accounts have access to log in to the secondary database server if there is a failover event.
+Now we need to ensure that if there is a failover event, the SharePoint service accounts have access to log in to the secondary database server.
 
-To do this, follow the instructions on the Microsoft https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server[How to transfer logins and passwords between instances of SQL Server] support page. When you run the generated script against the secondary server, you might see some errors for accounts that already exist. This is normal. The script will, however, add the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, be sure to run this script again to add them to the secondary server.
+To do this, follow the instructions on the Microsoft https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server[How to transfer logins and passwords between instances of SQL Server] support page. When you run the generated script against the secondary server, you might see errors for accounts that already exist. This is normal. The script will, however, add the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, be sure to run this script again to add them to the secondary server.
 
 === Enable multiple-subnet failover
 
 Since the SharePoint databases are replicated across subnets, the last step is to tell SharePoint that multiple-subnet failover is required. To enable multiple-subnet failover for the SharePoint databases, on the *SPServer1* server, run Windows PowerShell with administrative permissions and execute the following PowerShell code.
 
+----
 Add-PSSnapin Microsoft.SharePoint.PowerShell
 
 $dbs = Get-SPDatabase | ?\{$_.MultiSubnetFailover -ne $true}
@@ -137,25 +143,28 @@ $db.MultiSubnetFailover = $true
 $db.Update()
 
 }
+----
 
 === Test automatic failover
 :xrefstyle: short
-After your externally facing SharePoint site is available, you can test automatic failover. The primary database server should be the first WSFC node, the Network Load Balancer for the back end (central admin site) distributes HTTP requests across SPServer1 and SPServer2, and the Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4. To verify that automatic failover is functional, on the Amazon EC2 console, forcibly stop the first WSFC node, SPServer1, and SPServer3. You can stop the instances simultaneously to perform this test, as shown in <<PostDeploy11>>.
+After your externally facing SharePoint site is available, you can test automatic failover.  On the Amazon EC2 console, stop the first WSFC node, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <<PostDeploy11>>.)
 
 [#PostDeploy11]
 .Stopping the instances in Availability Zone 1
 [link=images/image26.png]
 image::../images/image26.png[PostDeploy11,image,width=625,height=369]
 
-After you simulate a failure by stopping the instances, the SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have both gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central admin site in your web browser to confirm that everything is still working.
+The SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central administrator site in your web browser to confirm that everything is still working.
+
+The primary database server should be the first WSFC node. The network load balancer for the back end (central administrator site) distributes HTTP requests across SPServer1 and SPServer2. The Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4.
 
 == Additional resources
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
-=== Appendix A: Server Role Architecture
+=== Appendix A: Server role architecture
 
 [[single-server-topology]]
-==== Single-Server Topology
+==== Single-server topology
 
 A single-server deployment of SharePoint 2019 is ideal for development environments and for small-scale testing of SharePoint where multiple servers might be excessive.
 
@@ -167,7 +176,7 @@ image::../images/image32.png[PostDeploy12,image,width=417,height=164]
 In this topology, all SharePoint Service Apps and Instances will execute on the one server though, with no load balancing being required. The database server, however, runs on a different server than SharePoint. This is the simplest way to set up an environment for experimenting with SharePoint.
 
 [[multiple-server-topology]]
-==== Multiple-Server Topology
+==== Multiple-server topology
 
 When you deploy SharePoint to support a production workload that will have many users across the organization, a single-server deployment is not robust enough to account for the load or to maintain availability in the event of an incident. The multiple-server template uses four SharePoint servers in to different roles to distribute the load.
 
@@ -176,18 +185,19 @@ When you deploy SharePoint to support a production workload that will have many 
 [link=images/image33.png]
 image::../images/image33.png[PostDeploy13,image,width=417,height=248]
 
-In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers) so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.
+In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers), so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.
 
-To simplify the configuration of multiple-server farms, SharePoint includes the MinRole feature. MinRole provides pre-defined roles, each of which runs a group of services, which ensures that the SharePoint farm runs more smoothly and is easier to maintain.
+To simplify the configuration of multiple-server farms, SharePoint includes the MinRole feature. MinRole provides pre-defined roles, each of which runs a group of services. This ensures that the SharePoint farm runs more smoothly and is easier to maintain.
 
 The multiple-server topology in this Quick Start leverages the following roles in MinRole:
 
 * Front end: Front end with distributed cache
 * Application servers: Application with search
 
-This allows an even distribution of services while adhering to the Microsoft best practices for farm topology. for more information on what MinRole is and how it works in detail, including documentation on what services run on each of these roles, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
+This allows an even distribution of services while adhering to the Microsoft best practices for farm topology. For more information on what MinRole is and how it works in detail, including documentation on what services run on each of these roles, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
 
-With two servers in both roles (to support high availability), the resulting architecture is shown in the following diagram.
+:xrefstyle: short
+With two servers in both roles (to support high availability), the resulting architecture is shown in <<PostDeploy14>>>>.
 
 [#PostDeploy14]
 .Multiple-server topology
@@ -199,9 +209,9 @@ To ensure the highest levels of availability, the servers are put in to differen
 [[load-balancing]]
 ===== Load balancing
 
-The multiple-server version of the Quick Start deploys two load balancers. The first is an Application Load Balancer and is for the front-end servers, which run the main SharePoint web applications. The second is a Network Load Balancer and is for the application servers, where the central administration website runs.
+The multiple-server version of the Quick Start deploys two load balancers. The first is an Application Load Balancer and is for the front-end servers, which run the main SharePoint web applications. The second is a network load balancer and is for the application servers, where the central administration website runs.
 
-The load balancers directs traffic to a healthy node in the target group. The load balancers poll for the availability of a connection on port 80 every 30 seconds. If a node fails three consecutive checks, the load balancer will not direct any requests to it until it is again registered as healthy.
+The load balancers direct traffic to a healthy node in the target group. Every 30 seconds, they poll port 80 for an available connection. If a node fails three consecutive checks, the load balancer will not direct any requests to it until it is again registered as healthy.
 
 [[database-tier]]
 ===== Database tier
@@ -210,12 +220,12 @@ The database server role stores content and service data so that your SharePoint
 
 Amazon Machine Images (AMIs) for SQL Server Express, SQL Server Web Edition, and SQL Server Standard are available for launch on AWS. To install SQL Server 2016 or 2017 Enterprise Edition on AWS, you can use http://aws.amazon.com/windows/mslicensemobility/[Microsoft License Mobility through Software Assurance] to bring your own license into the cloud.
 
-In the https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 vCPUs, 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performing and durable storage in the form of Amazon Elastic Block Store (Amazon EBS) volumes.
+In the https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 virtual CPUs (vCPUs), 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performing and durable storage in the form of Amazon Elastic Block Store (Amazon EBS) volumes.
 
 [[intranet-sharepoint-server-farm-on-aws]]
 ==== Intranet SharePoint server farm on AWS
 
-All the architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to include private connectivity from the on-premises environment. Figure 20 shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
+The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to also include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
 
 :xrefstyle: short
 [#PostDeploy15]
@@ -223,7 +233,7 @@ All the architecture diagrams shown up to this point represent an isolated Micro
 [link=images/image35.png]
 image::../images/image35.png[PostDeploy15,image,width=743,height=434]
 
-As shown in <<PostDeploy15>>, we’ve added a VPN gateway to the VPC. To enable internal network connectivity to the VPC, we’ve created a VPN tunnel from the customer gateway (an IPsec-capable device) to the VPN gateway running in the VPC.
+In <<PostDeploy15>>, we’ve created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.
 
 In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, once you have internal network connectivity into the VPC from your on-premises environment, you can simply provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing will also provide high availability in the event of a server failure. If a web front-end server is unavailable, requests will be sent to one that is online.
 
@@ -249,7 +259,7 @@ A network access control list (ACL) is a set of permissions that can be attached
 [link=images/image36.png]
 image::../images/image36.png[PostDeploy16,image,width=597,height=281]
 
-You may choose to keep the default network ACL configuration or lock it down with more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.
+You can keep the default network ACL configuration or add more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.
 
 [[secure-extranet-publishing]]
 ===== Secure extranet publishing
@@ -271,7 +281,7 @@ The AWS CloudFormation template provided by this Quick Start does not set up an 
 [[ec2-instance-types]]
 ==== EC2 instance types
 
-Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your Microsoft SharePoint deployment. Since each deployment is different, you will need to follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.
+Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your SharePoint deployment. Since each deployment is different, you will need to follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.
 
 The following values are based on minimum requirements for all server roles operating in a three-tier farm.
 
@@ -294,7 +304,7 @@ The Quick Start uses the following instance types by default. These provide addi
 |Database server |r4.2xlarge (8 vCPU, 61 GiB memory) |100 GiB (EBS/GP2)
 |======================================================================================================
 
-Amazon Elastic Block Store (Amazon EBS) volumes are used as the boot volume for each instance. Notice that we use the EBS General Purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.
+Amazon EBS volumes are used as the boot volume for each instance. Notice that we use the EBS General Purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.
 
 When you launch the AWS CloudFormation template in this guide, you’ll be given the opportunity to adjust these instance types.[[_Customize_Your_Topology]]
 
