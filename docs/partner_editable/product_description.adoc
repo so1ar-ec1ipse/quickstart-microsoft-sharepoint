@@ -2,4 +2,4 @@
 // Briefly describe the software. Use consistent and clear branding. 
 // Include the benefits of using the software on AWS, and provide details on usage scenarios.
 
-The AWS Cloud provides a suite of infrastructure services that enable you to deploy SharePoint Server 2019 securely, affordably, and with high availability. Running SharePoint Server on the AWS Cloud gives you flexibility and agility, and you can fully customize and extend SharePoint for your business processes.
+The AWS Cloud provides a suite of infrastructure services that deploys SharePoint Server 2019 securely, affordably, and with high availability. Running SharePoint Server on the AWS Cloud gives you flexibility and agility, and you can fully customize and extend SharePoint for your business processes.

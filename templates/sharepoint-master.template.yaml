@@ -104,9 +104,9 @@ Metadata:
       ADServer2PrivateIP:
         default: Domain controller 2 private IP address
       DomainAdminPassword:
-        default: Domain admin password
+        default: Domain administrator password
       DomainAdminUser:
-        default: Domain admin user name
+        default: Domain administrator user name
       DomainDNSName:
         default: Domain DNS name
       DomainNetBIOSName:
@@ -126,7 +126,7 @@ Metadata:
       QSS3BucketName:
         default: Quick Start S3 bucket name
       QSS3BucketRegion:
-        default: Quick Start S3 bucket region
+        default: Quick Start S3 bucket Region
       QSS3KeyPrefix:
         default: Quick Start S3 key prefix
       RDGWCIDR:
@@ -192,7 +192,7 @@ Metadata:
       SPBinaryBucket:
         default: SharePoint binary bucket
       SPBinaryBucketRegion:
-        default: SharePoint binary bucket region
+        default: SharePoint binary bucket Region
       SPBinaryKey:
         default: SharePoint binary key
       SPProductKey:
@@ -269,7 +269,7 @@ Parameters:
     Type: String
   DomainAdminPassword:
     AllowedPattern: (?=^.{6,255}$)((?=.*\d)(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[^A-Za-z0-9])(?=.*[a-z])|(?=.*[^A-Za-z0-9])(?=.*[A-Z])(?=.*[a-z])|(?=.*\d)(?=.*[A-Z])(?=.*[^A-Za-z0-9]))^.*
-    Description: Password for the domain admin user. Must be at least 8 characters
+    Description: Password for the domain administrator user. Must be at least 8 characters
       and contain letters, numbers, and symbols.
     MaxLength: '32'
     MinLength: '8'
@@ -278,8 +278,7 @@ Parameters:
   DomainAdminUser:
     AllowedPattern: '[a-zA-Z0-9]*'
     Default: StackAdmin
-    Description: User name for the account that will be added as Domain Administrator.
-      This is separate from the default Administrator account.
+    Description: User name for the account that will be added as domain administrator. (This is separate from the default administrator account.)
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -388,8 +387,7 @@ Parameters:
   SQLServiceAccount:
     AllowedPattern: '[a-zA-Z0-9]*'
     Default: sqlsa
-    Description: User name for the SQL Server service account. This account is a Domain
-      User.
+    Description: User name for the SQL Server service account. This account is a domain user.
     MaxLength: '25'
     MinLength: '5'
     Type: String
@@ -411,13 +409,13 @@ Parameters:
   AvailabiltyGroupName:
     AllowedPattern: '[a-zA-Z0-9\-]+'
     Default: "SQLAG1"
-    Description: NetBIOS name of the SQL database or availability group (up to 15 characters).
+    Description: NetBIOS name of the SQL database or availability group. (Up to 15 characters.)
     MaxLength: '15'
     MinLength: '1'
     Type: "String"
   Volume1Iops:
     Default: '1000'
-    Description: IOPS for the SQL Data drive (use only when volume type is io1).
+    Description: IOPS for the SQL Data drive. (Use only when volume type is io1.)
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
@@ -436,7 +434,7 @@ Parameters:
     Type: String
   Volume2Iops:
     Default: '1000'
-    Description: IOPS for the SQL Logs drive (use only when volume type is io1).
+    Description: IOPS for the SQL Logs drive. (Use only when volume type is io1.)
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
@@ -455,7 +453,7 @@ Parameters:
     Type: String
   Volume3Iops:
     Default: '1000'
-    Description: IOPS for the SQL TempDB drive (only used when volume type is io1).
+    Description: IOPS for the SQL TempDB drive. (Only used when volume type is io1.)
     MaxValue: '20000'
     MinValue: '100'
     Type: Number
@@ -529,7 +527,7 @@ Parameters:
   WSFCNode2NetBIOSName:
     AllowedPattern: '[a-zA-Z0-9]+'
     Default: WSFCNode2
-    Description: NetBIOS name of the second WSFC node (up to 15 characters).
+    Description: NetBIOS name of the second WSFC node. (Up to 15 characters.)
     MaxLength: '15'
     MinLength: '1'
     Type: String
@@ -568,7 +566,7 @@ Parameters:
     MaxLength: 255
   SPBinaryBucketRegion:
     Type: String
-    Description: The region in which the SharePoint binary S3 bucket is hosted.
+    Description: The Region in which the SharePoint binary S3 bucket is hosted.
     MinLength: 2
     MaxLength: 16
     Default: us-east-1
@@ -592,19 +590,19 @@ Parameters:
     Type: String
   DNSPrefixCentralAdmin:
     Type: String
-    Description: The domain name to use for central admin (without the domain suffix; use 'admin' not 'admin.domain.com').
+    Description: The domain name to use for central administrator, without the domain suffix. (Use 'admin' not 'admin.domain.com'.)
     MinLength: 1
     MaxLength: 20
     Default: spadmin
   DNSPrefixMainSite:
     Type: String
-    Description: The domain name to use for the main SharePoint site (without the domain suffix; use 'site' not 'site.domain.com').
+    Description: The domain name to use for the main SharePoint site, without the domain suffix. (Use 'site' not 'site.domain.com'.)
     MinLength: 1
     MaxLength: 20
     Default: sharepoint
   DNSServerIP:
     Type: String
-    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the admin account.
+    Description: The IP address of a DNS server on the network that will allow DNS entries to be created as the administrator account.
     MinLength: 8
     MaxLength: 16
     Default: 10.0.0.10

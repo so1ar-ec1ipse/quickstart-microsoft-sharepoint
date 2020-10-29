@@ -27,7 +27,7 @@ In the private subnets:
 
 * An Application Load Balancer for the SharePoint front-end servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint front-end servers.
-* A network load balancer for the SharePoint application servers.
+* A Network Load Balancer for the SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SQL servers in a highly-available cluster.
 * An Amazon EC2 instance serving as a Windows failover clustering file share witness.
@@ -67,21 +67,21 @@ Instances that will be deployed in the private subnets have no direct route to t
 [[active-directory-domain-services]]
 === Active Directory Domain Services
 
-To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (Active Directory DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability.
+To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (AD DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability.
 
 [#architecture3]
 .Domain controllers in each Availability Zone
 [link=images/image4.png]
 image::../images/image4.png[Architecture3,image,width=648,height=373]
 
-Notice that in <<architecture3>>, we’ve now included a domain controller in the Active Directory tier in each Availability Zone.
+Notice that in <<architecture3>>, we’ve now included a domain controller in the AD tier in each Availability Zone.
 
-There are two ways to use Active Directory DS in the AWS Cloud:
+There are two ways to use AD DS in the AWS Cloud:
 
-* Cloud only – This is the architecture shown in <<architecture3>>. This type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. With a cloud-only Active Directory DS architecture, there are no on-premises domain controllers.
-* Hybrid – The hybrid architecture takes advantage of your existing Active Directory DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can utilize your existing Active Directory infrastructure. In a hybrid architecture, we recommend that you also deploy domain controllers for your existing Active Directory forest to the AWS Cloud. We recommend this configuration primarily to help ensure that the application servers deployed in AWS remain functional and available in the event of an on-premises outage.
+* Cloud only – This is the architecture shown in <<architecture3>>. This type of architecture means that your entire AD forest exists only within the AWS Cloud. With a cloud-only AD DS architecture, there are no on-premises domain controllers.
+* Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can utilize your existing AD infrastructure. In a hybrid architecture, we recommend that you also deploy domain controllers for your existing AD forest to the AWS Cloud. We recommend this configuration primarily to help ensure that the application servers deployed in AWS remain functional and available in the event of an on-premises outage.
 
-The https://fwd.aws/N6e7B[Quick Start for Active Directory Domain Services on the AWS Cloud] covers our best practices and recommendations for deploying Active Directory DS on AWS. The process outlined in this SharePoint Quick Start asks you to launches the Active Directory DS Quick Start, which deploys the Active Directory environment based on those best practices.
+The https://fwd.aws/N6e7B[Quick Start for Active Directory Domain Services on the AWS Cloud] covers our best practices and recommendations for deploying AD DS on AWS. The process outlined in this SharePoint Quick Start asks you to launches the AD DS Quick Start, which deploys the AD environment based on those best practices.
 
 [[remote-administration]]
 === Remote administration
