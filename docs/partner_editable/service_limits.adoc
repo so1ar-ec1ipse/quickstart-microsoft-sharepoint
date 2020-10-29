@@ -9,6 +9,6 @@
 |IAM roles |7
 |Auto Scaling groups |1
 |Application Load Balancers |1
-|Network load balancers |1
+|Network Load Balancers |1
 |EC2 instances |8
 |===

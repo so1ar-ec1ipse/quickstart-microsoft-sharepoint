@@ -27,7 +27,7 @@ In the private subnets:
 
 * An Application Load Balancer for the SharePoint front-end servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint front-end servers.
-* A network load balancer for the SharePoint application servers.
+* A Network Load Balancer for the SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SQL servers in a highly-available cluster.
 * An Amazon EC2 instance serving as a Windows failover clustering file share witness.

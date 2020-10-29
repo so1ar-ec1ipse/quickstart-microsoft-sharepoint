@@ -156,7 +156,7 @@ image::../images/image26.png[PostDeploy11,image,width=625,height=369]
 
 The SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central administrator site in your web browser to confirm that everything is still working.
 
-The primary database server should be the first WSFC node. The network load balancer for the back end (central administrator site) distributes HTTP requests across SPServer1 and SPServer2. The Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4.
+The primary database server should be the first WSFC node. The Network Load Balancer for the back end (central administrator site) distributes HTTP requests across SPServer1 and SPServer2. The Application Load Balancer for the front end distributes HTTP requests across SPServer3 and SPServer4.
 
 == Additional resources
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
@@ -209,7 +209,7 @@ To ensure the highest levels of availability, the servers are put in to differen
 [[load-balancing]]
 ===== Load balancing
 
-The multiple-server version of the Quick Start deploys two load balancers. The first is an Application Load Balancer and is for the front-end servers, which run the main SharePoint web applications. The second is a network load balancer and is for the application servers, where the central administration website runs.
+The multiple-server version of the Quick Start deploys two load balancers. The first is an Application Load Balancer and is for the front-end servers, which run the main SharePoint web applications. The second is a Network Load Balancer and is for the application servers, where the central administration website runs.
 
 The load balancers direct traffic to a healthy node in the target group. Every 30 seconds, they poll port 80 for an available connection. If a node fails three consecutive checks, the load balancer will not direct any requests to it until it is again registered as healthy.
 
