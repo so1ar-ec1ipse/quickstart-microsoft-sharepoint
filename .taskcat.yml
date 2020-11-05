@@ -23,6 +23,7 @@ tests:
       DomainAdminPassword: $[taskcat_genpass_16]
       Farm: Deploy a SharePoint farm
       KeyPairName: $[taskcat_getkeypair]
+      NumberOfRDGWHosts: '0'
       QSS3BucketName: $[taskcat_autobucket]
       QSS3BucketRegion: $[taskcat_current_region]
       RDGWCIDR: 10.0.0.0/16

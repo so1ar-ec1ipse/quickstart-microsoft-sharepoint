@@ -303,6 +303,7 @@ Parameters:
     Type: AWS::EC2::KeyPair::KeyName
   NumberOfRDGWHosts:
     AllowedValues:
+      - '0'
       - '1'
       - '2'
       - '3'
@@ -619,6 +620,10 @@ Conditions:
     - Ref: Farm
     - "Deploy a single SharePoint server"
   UsingDefaultBucket: !Equals [!Ref QSS3BucketName, 'aws-quickstart']
+  IncludeRDGW: !Not
+    - !Equals
+      - !Ref NumberOfRDGWHosts
+      - '0'
 Resources:
   VPCStack:
     Type: AWS::CloudFormation::Stack
@@ -670,6 +675,7 @@ Resources:
         VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
   RDGWStack:
     DependsOn: ADStack
+    Condition: IncludeRDGW
     Type: AWS::CloudFormation::Stack
     Properties:
       TemplateURL:
