@@ -21,8 +21,8 @@
 |===
 |Parameter label (name) |Default value|Description|Domain DNS name
 (`DomainDNSName`)|`example.com`|Fully qualified domain name (FQDN) of the domain to join.|Domain NetBIOS name
-(`DomainNetBIOSName`)|`example`|NetBIOS name of the domain to join (up to 15 characters) for users of earlier versions of Windows.|Admin user name
-(`ADAdminUserName`)|`**__Requires input__**`|The user name of an account with rights to the domain (without the domain name).|Admin password
+(`DomainNetBIOSName`)|`example`|NetBIOS name of the domain to join for users of earlier versions of Windows. (Up to 15 characters.)|Administrator user name
+(`ADAdminUserName`)|`**__Requires input__**`|The user name of an account with rights to the domain, without the domain name.|Administrator password
 (`ADAdminPassword`)|`**__Requires input__**`|The password of the Active Directory administrator account.|Security group ID
 (`ADMemberSecurityGroup`)|`**__Requires input__**`|The ID of the security group that will allow access to the domain controllers for domain join and other actions.
 |===
@@ -31,16 +31,16 @@
 |===
 |Parameter label (name) |Default value|Description|Security group ID
 (`SQLServerAccessSecurityGroup`)|`**__Requires input__**`|The ID of the security group that will allow communication with the server (or servers) running SQL Server.|Database server name
-(`SPDatabaseName`)|`**__Requires input__**`|The name of the server running SQL Server that will store the SharePoint databases.|SQL Server admin user name
-(`SQLAdminUserName`)|`**__Requires input__**`|The user name of an account with rights to the server running SQL Server (without the domain name).|SQL Server admin password
+(`SPDatabaseName`)|`**__Requires input__**`|The name of the server running SQL Server that will store the SharePoint databases.|SQL Server administrator user name
+(`SQLAdminUserName`)|`**__Requires input__**`|The user name of an account with rights to the server running SQL Server, without the domain name.|SQL Server administrator password
 (`SQLAdminPassword`)|`**__Requires input__**`|The password of the SQL Server administrator account.
 |===
 .Microsoft SharePoint configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
 |Parameter label (name) |Default value|Description|SharePoint binary bucket
-(`SPBinaryBucket`)|`**__Requires input__**`|The name of the S3 bucket that contains your SharePoint binaries.|SharePoint binary bucket region
-(`SPBinaryBucketRegion`)|`us-east-1`|The region in which the SharePoint binary S3 bucket is hosted.|SharePoint binary key
+(`SPBinaryBucket`)|`**__Requires input__**`|The name of the S3 bucket that contains your SharePoint binaries.|SharePoint binary bucket Region
+(`SPBinaryBucketRegion`)|`us-east-1`|The Region in which the SharePoint binary S3 bucket is hosted.|SharePoint binary key
 (`SPBinaryKey`)|`**__Requires input__**`|The path (key) to the installer .zip file in the S3 bucket.|SharePoint product key
 (`SPProductKey`)|`M692G-8N2JP-GG8B2-2W2P7-YY7J6`|The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise trial.
 |===
