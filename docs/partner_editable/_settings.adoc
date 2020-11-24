@@ -2,7 +2,7 @@
 :partner-product-name: Microsoft SharePoint
 :partner-product-short-name: SharePoint
 //:partner-company-name: Example Company Name, Ltd.
-:doc-month: October
+:doc-month: November
 :doc-year: 2020
 //:partner-contributors: John Doe and Jane Doe - {partner-company-name}
 :quickstart-contributors: AWS Quick Start team
