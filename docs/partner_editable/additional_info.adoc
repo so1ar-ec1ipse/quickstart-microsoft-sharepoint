@@ -1,6 +1,7 @@
 // Add steps as necessary for accessing the software, post-configuration, and testing. Don’t include full usage instructions for your software, but add links to your product documentation for that information.
 //Should any sections not be applicable, remove them
 
+[[post-deployment-steps]]
 == Post-deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
@@ -161,8 +162,8 @@ The primary database server should be the first WSFC node. The Network Load Bala
 == Additional resources
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
-[[appendix-a-server-role-architecture]]
-=== Appendix A: Server role architecture
+[[server-role-architecture]]
+=== Server role architecture
 
 [[single-server-topology]]
 ==== Single-server topology

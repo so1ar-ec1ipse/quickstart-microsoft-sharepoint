@@ -1,6 +1,6 @@
-There are a number of ways to design the topology of your SharePoint farm depending on your requirements. In SharePoint 2016, Microsoft added a feature called MinRole, which helped simplify deployment, performance, and reliability of SharePoint farms. This approach is used for the multiple-server AWS CloudFormation template provided by this Quick Start. (The single-server option is deployed as a custom role so that it can run more services on its own.) Both the multiple-server and single-server topologies are covered in detail later in this guide.
+There are three link:#deployment-options[deployment options] provided with this Quick Start.
 
-Deploying this Quick Start for a new virtual private cloud (VPC) with
+Deploying SharePoint into a new virtual private cloud (VPC) with
 default parameters builds the following {partner-product-short-name} environment in the AWS Cloud.
 
 // Replace this example diagram with your own. Send us your source PowerPoint file. Be sure to follow our guidelines here : http://(we should include these points on our contributors guide)
@@ -20,7 +20,7 @@ In the public subnets:
 
 * Managed network address translation (NAT) gateways to allow outbound
 internet access for resources in the private subnets.*
-* A Remote Desktop Gateway (RD Gateway) in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*
+* A Remote Desktop gateway (RD gateway) in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*
 
 In the private subnets:
 // Add bullet points for any additional components that are included in the deployment. Make sure that the additional components are also represented in the architecture diagram.
@@ -29,17 +29,21 @@ In the private subnets:
 * Two Amazon EC2 instances serving as Microsoft SharePoint front-end servers.
 * A Network Load Balancer for the SharePoint application servers.
 * Two Amazon EC2 instances serving as Microsoft SharePoint application servers.
-* Two Amazon EC2 instances serving as Microsoft SQL servers in a highly-available cluster.
+* Two Amazon EC2 instances serving as Microsoft SQL Servers in a highly-available cluster.
 * An Amazon EC2 instance serving as a Windows failover clustering file share witness.
-* Two Amazon EC2 instances serving as Microsoft Active Directory (AD) domain controllers.
+* Two Amazon EC2 instances serving as Microsoft Active Directory domain controllers.
 
 *The template that deploys the Quick Start into an existing VPC skips
-the components marked by asterisks and prompts you for your existing VPC
-configuration.
+the components marked by asterisks and prompts you for your existing VPC configuration.
 
-The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers shown in <<architecture1>>. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the link:#deployment-steps[Deployment Steps] section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.
+[NOTE]
+===============================
+In the deployment shown in <<architecture1>>, the AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers. Active Directory and SQL Server are deployed using https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts, respectively. 
 
-The following sections describe these components of the architecture in more detail. For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see link:#appendix-a-server-role-architecture[Appendix A].
+When deploying into a new VPC, you do not have to run the Active Directory and SQL Server Quick Starts separately. Before deploying SharePoint 2019 to an existing VPC, see link:#configure-aws-prerequisites[Configure AWS prerequisites]] later in this guide.
+===============================
+
+== VPC, Active Directory, and RD Gateway configuration
 
 [[vpc-configuration]]
 === VPC configuration
@@ -48,21 +52,21 @@ When deploying a Windows-based architecture on the AWS Cloud, we recommend a VPC
 
 * Critical workloads should be placed in a minimum of two Availability Zones to provide high availability.
 * Internal application servers and other non-internet facing servers should be placed in private subnets to prevent direct access to these instances from the internet.
-* RD Gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.
+* RD gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.
 
-For details on the VPC design used in this reference, see the https://fwd.aws/N6e7B[Active Directory Domain Services Quick Start deployment guide].
-
-Based on these best practices, the VPC Quick Start deploys the following base-level VPC framework to support the SharePoint Server 2019 infrastructure:
+For details on the VPC design used in this reference, see the https://fwd.aws/N6e7B[Active Directory Domain Services on the AWS Cloud].
 
 :xrefstyle: short
+Based on these best practices, this Quick Start deploys the base-level VPC framework shown in <<architecture2>>:
+
 [#architecture2]
 .VPC architecture on the AWS cloud
 [link=images/image3.png]
 image::../images/image3.png[Architecture2,image,width=648,height=427]
 
-As shown in <<architecture2>>, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
+NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
 
-Instances that will be deployed in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.
+Instances that deploy in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.
 
 [[active-directory-domain-services]]
 === Active Directory Domain Services
@@ -74,26 +78,29 @@ To provide user authentication and authorization, the Microsoft SharePoint serve
 [link=images/image4.png]
 image::../images/image4.png[Architecture3,image,width=648,height=373]
 
-Notice that in <<architecture3>>, we’ve now included a domain controller in the AD tier in each Availability Zone.
+In <<architecture3>>, we included a domain controller in the Active Directory tier in each Availability Zone.
 
 There are two ways to use AD DS in the AWS Cloud:
 
-* Cloud only – This is the architecture shown in <<architecture3>>. This type of architecture means that your entire AD forest exists only within the AWS Cloud. With a cloud-only AD DS architecture, there are no on-premises domain controllers.
-* Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can utilize your existing AD infrastructure. In a hybrid architecture, we recommend that you also deploy domain controllers for your existing AD forest to the AWS Cloud. We recommend this configuration primarily to help ensure that the application servers deployed in AWS remain functional and available in the event of an on-premises outage.
+* Cloud only – As shown in <<architecture3>>, this type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.
+* Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can use your existing Active Directory infrastructure. In a hybrid architecture, we recommend that you deploy domain controllers for your existing Active Directory forest to the AWS Cloud. We recommend this configuration primarily to ensure that the deployed application servers remain functional and available if there is an on-premises outage.
 
-The https://fwd.aws/N6e7B[Quick Start for Active Directory Domain Services on the AWS Cloud] covers our best practices and recommendations for deploying AD DS on AWS. The process outlined in this SharePoint Quick Start asks you to launches the AD DS Quick Start, which deploys the AD environment based on those best practices.
+The https://fwd.aws/N6e7B[Active Directory Domain Services on the AWS Cloud] Quick Start covers best practices and recommendations for deploying AD DS on AWS. This Quick Start has you launch the AD DS Quick Start, which uses our best practices to deploy the Active Directory environment.
 
 [[remote-administration]]
 === Remote administration
 
-As we design the architecture for a highly available SharePoint farm, we should also design for highly available and secure remote access. We can do this by deploying an RD Gateway in each Availability Zone. In the case of an Availability Zone outage, this architecture allows access to the resources that may have failed over to the other Availability Zone.
+As we design the architecture for a highly available SharePoint farm, we should also design for highly available and secure remote access. We can do this by deploying an RD Gateway in each Availability Zone. If an Availability Zone outage occurs, this architecture provides access to failed resources using another Availability Zone.
 
-The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This allows you to reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.
+The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to help establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances. This does not require you to configure a virtual private network (VPN) connection. This allows you to reduce vulnerabilities on your Windows-based instances during remote administration.
 
 [#architecture4]
 .NAT gateways and Remote Desktop Gateways in public subnets
 [link=images/image5.png]
 image::../images/image5.png[Architecture4,image,width=648,height=378]
 
-The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in https://fwd.aws/5VrKP[Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment]. After you have launched your SharePoint infrastructure using a deployment option in this guide, you will initially connect to your instances using a standard RDP TCP port 3389 connection. You can then follow the steps in the guide to secure future connections via HTTPS.
+The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in https://fwd.aws/5VrKP[Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment]. After you launch your SharePoint infrastructure using a deployment option in this guide, you initially connect to your instances using the standard RDP TCP port 3389. You can then follow the steps in this guide to secure future connections via HTTPS. (See link:#post-deployment-steps[Post-deployment steps].)
 
+//TODO: add link to "secure future connections via HTTPS"
+
+NOTE: For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see link:#server-role-architecture[Server role architecture].
