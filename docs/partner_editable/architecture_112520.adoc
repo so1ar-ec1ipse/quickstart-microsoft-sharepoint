@@ -36,9 +36,12 @@ In the private subnets:
 *The template that deploys the Quick Start into an existing VPC skips
 the components marked by asterisks and prompts you for your existing VPC configuration.
 
-NOTE: In the deployment shown in <<architecture1>>, the AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers. Active Directory and SQL Server are deployed using AWS CloudFormation templates provided by https://aws.amazon.com/quickstart/architecture/active-directory-ds/[Active Directory Domain Services on AWS] and https://aws.amazon.com/quickstart/architecture/sql/[SQL Server on AWS] Quick Starts, respectively. 
+[NOTE]
+===============================
+In the deployment shown in <<architecture1>>, the AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers. Active Directory and SQL Server are deployed using https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts, respectively. 
 
-When deploying into a new VPC, you do not have to run the Active Directory and SQL Server Quick Starts separately. Before deploying SharePoint 2019 to an existing VPC, see .. for the steps you should follow to ensure you're environment is ready.
+When deploying into a new VPC, you do not have to run the Active Directory and SQL Server Quick Starts separately. Before deploying SharePoint 2019 to an existing VPC, see link:#configure-aws-prerequisites[Configure AWS prerequisites]] later in this guide.
+===============================
 
 == VPC, Active Directory, and RD Gateway configuration
 
@@ -53,15 +56,15 @@ When deploying a Windows-based architecture on the AWS Cloud, we recommend a VPC
 
 For details on the VPC design used in this reference, see the https://fwd.aws/N6e7B[Active Directory Domain Services Quick Start deployment guide].
 
-Based on these best practices, this Quick Start deploys the following base-level VPC framework to support the SharePoint Server 2019 infrastructure:
-
 :xrefstyle: short
+Based on these best practices, this Quick Start deploys the base-level VPC framework shown in <<architecture2>>:
+
 [#architecture2]
 .VPC architecture on the AWS cloud
 [link=images/image3.png]
 image::../images/image3.png[Architecture2,image,width=648,height=427]
 
-As shown in <<architecture2>>, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
+NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
 
 Instances that will be deployed in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.
 

@@ -49,10 +49,10 @@ Make a note of the bucket name and the file name that you used for your .zip fil
 
 NOTE: This step is not required if you are deploying the SharePoint farm into a new VPC.
 
-Before launching the SharePoint stack, the following prerequisites should be configured:
+Before launching the SharePoint stack into an existing VPC, the following items must be configured:
 
 * A VPC with two private subnets where SharePoint will run.
 * A Windows Active Directory server that runs the Domain Name Server (DNS) service.
 * A SQL Server 2016 or 2017 instance (or a highly available instance that has an Always On availability group configured with a listener attached to it).
 
-If you have not already, deploying the https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts will provision these prerequisites. Refer to the Quick Start deployment guides for instructions. 
+You can configure these resources according to AWS best practices by deploying the https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts.
