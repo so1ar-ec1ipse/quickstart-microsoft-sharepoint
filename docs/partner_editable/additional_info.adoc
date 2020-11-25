@@ -7,12 +7,12 @@
 
 === Create initial content
 
-This step assumes that you deployed a SharePoint farm rather than a single server, and that the server name prefix value was SPServer. In this scenario, we’ll assume that the SharePoint farm is hosting an internal site, and we’ll set up a modern team site to validate our test.
+This step assumes that you deployed a SharePoint farm rather than a single server, and that the server name prefix value is SPServer. In this scenario, we assume that the SharePoint farm host an internal site, and then we set up a modern team site to validate our test.
 
-After you have successfully launched the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.
+After successfully launching the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.
 
 [start=1]
-. Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK* for this prompt. A web browser will open to http://spadmin.example.com. When prompted for credentials, use the domain administrator user name and password.
+. Establish an RDP session to the primary SharePoint server. It is SPServer1 if you deployed a SharePoint farm with the default parameters, and SP if you deployed a single SharePoint server with default parameters. From the *Start* menu, choose *SharePoint 2019 Central Administration*. When prompted to run this as an administrator, choose *OK*. A web browser opens to http://spadmin.example.com. When prompted for credentials, use the domain administrator name and password.
 . On the central administration home page, choose *Create site collections*.
 
 [#PostDeploy1]
@@ -21,17 +21,17 @@ After you have successfully launched the stack, create an RDP connection into th
 image::../images/image17.png[PostDeploy1,image,width=283,height=151]
 
 [start=3]
-. Provide a *Title* for your site, and then choose the *Collaboration* tab and select the *team site* template.
+. Provide a *Title* for your site, and then choose the *Collaboration* tab and choose the *team site* template.
 
 [#PostDeploy2]
 .Creating a team site
 [link=images/image18.png]
 image::../images/image18.png[PostDeploy2,image,width=648,height=562]
 
-You will also need to define a *Primary Site Collection Administrator* on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose *OK*.
+You must define a *Primary Site Collection Administrator* on this page. You can use either the domain administrator account for this value, or any other valid account within the domain. When you finish filling out the form, choose *OK*.
 
 [start=4]
-. Now that you have created a team site, navigate to http://sharepoint.example.com. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.
+. Now that you have a team site, navigate to http://sharepoint.example.com. When prompted, specify the administrator credentials that you set in the preceding step above. If the site loads, your SharePoint server is ready.
 
 [#PostDeploy3]
 .Team site
@@ -43,7 +43,7 @@ image::../images/image19.png[PostDeploy3,image,width=648,height=455]
 NOTE: This step is not required if deploying a SharePoint farm into a new VPC.
 
 [[enable-full-recovery-mode]]
-==== Enable full recovery mode
+==== Enable full recovery model
 
 [start=1]
 . Establish an RDP session to the WSFCNODE1 instance. Start SQL Server Management Studio, and then choose *Connect* to connect to the local server.
@@ -54,7 +54,7 @@ NOTE: This step is not required if deploying a SharePoint farm into a new VPC.
 image::../images/image7.png[PostDeploy4,image,width=477,height=315]
 
 [start=2]
-. For the four Search databases, and the Usage database, you will need to enable Full Recovery mode before you can add them to the availability group. In *Object Explorer*, expand the *Databases* node.
+. For the four search databases, and the usage database, you will need to enable the full recovery model before you can add them to the availability group. In *Object Explorer*, expand the *Databases* node.
 . For each database, choose the context (right-click) menu, and then choose *Properties*. In the *Database Properties* dialog box, choose the *Options* page, and then change *Recovery Model* to *Full*.
 
 [#PostDeploy5]
@@ -65,10 +65,10 @@ image::../images/image20.png[PostDeploy5,image,width=648,height=586]
 [[back-up-the-databases]]
 ==== Back up the databases
 
-Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your AWS CloudFormation stack.
+Next, make a backup of each SharePoint database. They all share a common prefix that begins with the name of your AWS CloudFormation stack.
 
 [start=1]
-. To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back Up*.
+. To make a backup, choose the context (right-click) menu for the database name, choose *Tasks*, and then choose *Back up*.
 
 [#PostDeploy6]
 .Backing up a database
@@ -76,7 +76,7 @@ Next, make a backup of each SharePoint database. They will all share a common pr
 image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 
 [start=2]
-. Keep the default settings, and then choose *OK* to perform the backup.
+. Keep the default settings, and then choose *OK* to create a backup.
 
 [[add-the-databases-to-the-availability-group]]
 ==== Add the databases to the availability group
@@ -87,7 +87,7 @@ image::../images/image21.png[PostDeploy6,image,width=648,height=358]
 . Choose *Add Database* from the availability group's context menu.
 +
 [#PostDeploy7]
-.Select Add Database for the availability group
+.Choosing Add Database for the availability group
 [link=images/image22.png]
 image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 
@@ -96,7 +96,7 @@ image::../images/image22.png[PostDeploy7,image,width=352,height=389]
 . Choose *Next*.
 +
 [#PostDeploy8]
-.Selecting databases to include in the availability group
+.Choosing databases to include in the availability group
 [link=images/image23.png]
 image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 
@@ -107,7 +107,7 @@ image::../images/image23.png[PostDeploy8,image,width=648,height=589]
 . Choose *Automatic seeding* to tell SQL Server to automatically copy the databases to the replica.
 
 [#PostDeploy9]
-.Selecting automatic seeding to populate the secondary replicas
+.Choosing automatic seeding to populate secondary replicas
 [link=images/image24.png]
 image::../images/image24.png[PostDeploy9,image,width=648,height=352]
 
@@ -124,9 +124,9 @@ image::../images/image25.png[PostDeploy10,image,width=648,height=260]
 [[provide-log-access-to-the-secondary-database-server]]
 === Provide log access to the secondary database server
 
-Now we need to ensure that if there is a failover event, the SharePoint service accounts have access to log in to the secondary database server.
+Ensure that if there is a failover event, the SharePoint service accounts have access to log in to the secondary database server.
 
-To do this, follow the instructions on the Microsoft https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server[How to transfer logins and passwords between instances of SQL Server] support page. When you run the generated script against the secondary server, you might see errors for accounts that already exist. This is normal. The script will, however, add the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, be sure to run this script again to add them to the secondary server.
+To do this, follow the instructions on the Microsoft https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server[How to transfer logins and passwords between instances of SQL Server] support page. When you run the generated script against the secondary server, you might see errors for accounts that already exists, which is normal. The script, however, adds the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, ensure that you run this script again to add them to the secondary server.
 
 === Enable multiple-subnet failover
 
@@ -148,7 +148,7 @@ $db.Update()
 
 === Test automatic failover
 :xrefstyle: short
-After your externally facing SharePoint site is available, you can test automatic failover.  On the Amazon EC2 console, stop the first WSFC node, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <<PostDeploy11>>.)
+After your external SharePoint site is available, you can test automatic failover. On the Amazon EC2 console, stop WSFCNode 1, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <<PostDeploy11>>.)
 
 [#PostDeploy11]
 .Stopping the instances in Availability Zone 1
