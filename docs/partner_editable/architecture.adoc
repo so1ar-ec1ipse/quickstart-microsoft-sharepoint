@@ -101,6 +101,4 @@ image::../images/image5.png[Architecture4,image,width=648,height=378]
 
 The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in https://fwd.aws/5VrKP[Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment]. After you launch your SharePoint infrastructure using a deployment option in this guide, you initially connect to your instances using the standard RDP TCP port 3389. You can then follow the steps in this guide to secure future connections via HTTPS. (See link:#post-deployment-steps[Post-deployment steps].)
 
-//TODO: add link to "secure future connections via HTTPS"
-
 NOTE: For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see link:#server-role-architecture[Server role architecture].
