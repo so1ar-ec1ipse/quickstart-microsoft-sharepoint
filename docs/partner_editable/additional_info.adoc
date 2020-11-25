@@ -161,6 +161,7 @@ The primary database server should be the first WSFC node. The Network Load Bala
 == Additional resources
 //Provide any other information of interest to users, especially focusing on areas where AWS or cloud usage differs from on-premises usage.
 
+[[appendix-a-server-role-architecture]]
 === Appendix A: Server role architecture
 
 [[single-server-topology]]

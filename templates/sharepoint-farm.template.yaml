@@ -1,12 +1,12 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: >
   This template deploys a SharePoint 2016 multiple-server topology
-  farm with two Front-End servers and two Application servers or a streamlined
-  topology farm with two Web Front End servers, two Application servers, two
-  Database servers, and two Active Directory servers. This template is intended to be
+  farm with two front-end servers and two application servers or a streamlined
+  topology farm with two web front-end servers, two application servers, two
+  database servers, and two Active Directory servers. This template is intended to be
   installed into an existing VPC that was built using the sample reference architecture
   titled "Implementing Active Directory Domain Services in the AWS Cloud" **WARNING**
-  This template creates Amazon EC2 Windows instance and related resources. You will be
+  This template creates an Amazon EC2 Windows instance and related resources. You will be
   billed for the AWS resources used if you create a stack from this template. (qs-1qtrn51tc)
 
 Metadata:
