@@ -4,7 +4,7 @@
 
 *Q.* I encountered a *CREATE_FAILED* error when I launched the Quick Start.
 
-*A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *Disabled*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
+*A.* If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with *Rollback on failure* set to *Disabled*. (This setting is under *Advanced* in the AWS CloudFormation console, *Options* page.) With this setting, the stack’s state is retained and the instance remains running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)
 // If you’re deploying on Linux instances, provide the location for log files on Linux, or omit this sentence.
 
 WARNING: When you set *Rollback on failure* to *Disabled*, you continue to incur AWS charges for this stack. Delete the stack when you finish troubleshooting.
@@ -15,16 +15,14 @@ The following table lists specific CREATE_FAILED error messages you might encoun
 |===========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
 |Error message |Possible cause |What to do
 |API: ec2: RunInstances Not authorized for images: [ami-<ID>] |The template is referencing an AMI that has expired. a|
-We refresh AMIs on a regular basis, but our schedule isn’t always synchronized with AWS AMI updates. If you get this error message, notify us, and we’ll update the template with the new AMI ID.
+We refresh AMIs on a regular basis, but our schedule isn’t always synchronized with AWS AMI updates. If you get this error message, notify us so we can update the template with a new AMI ID.
 
 If you’d like to fix the template yourself, you can https://fwd.aws/87Dgp[download it] and update the Mappings section with the latest AMI ID for your Region.
 
 |We currently do not have sufficient <instance type> capacity in the AZ you requested |One of the instance types is currently not available. |Switch to an instance type that supports higher capacity, or complete the *Request quota increase* form on the https://console.aws.amazon.com/servicequotas/home?region=us-east-1#!/[Service Quotas] console to increase the Amazon EC2 quota for the instance type or Region. Quota increases are tied to the Region they were requested for.
 |Instance <ID> did not stabilize |You have exceeded your IOPS for the Region. |https://aws.amazon.com/support/createCase?serviceLimitIncreaseType=ebs-volumes&type=service_limit_increase[Request a quota increase] by completing the *Request quota increase* form on https://console.aws.amazon.com/servicequotas/home?region=us-east-1#!/[Service Quotas] console.
-|System Administrator password must contain at least 8 characters |The master password contains $ or other special characters. a|
-Check the password parameters before you re-launch the Quick Start.
-
-The passwords must be at least 8 characters, consisting of uppercase and lowercase letters and numbers. Follow the https://technet.microsoft.com/en-us/library/hh994562.aspx[guidelines for complex passwords], and avoid using special characters such as @ or $.
+|System Administrator password must contain at least 8 characters |The master password does not conform to the allowed pattern of the password policy. a|
+Change the *Domain administrator password* parameter and relaunch the Quick Start.
 
 |===========================================================================================================================================================================================================================================================================================================================================================================================================================================================================================
 
@@ -93,7 +91,7 @@ image::../images/image30.png[Troubleshooting4,image,width=648,height=473]
 image::../images/image31.png[Troubleshooting5,image,width=648,height=143]
 
 [start=11]
-. A new browser tab will open. To view the logs, do the following:
+. A new browser tab opens. To view the logs, do the following:
 .. Choose *Amazon S3* 
 .. Choose the *RunPowerShell* folder 
 .. Open the file stdout. This file contains full output of the configuration script  including errors.
