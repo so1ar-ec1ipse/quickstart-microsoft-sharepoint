@@ -793,7 +793,8 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_microsoft_sharepoint_on_aws">Microsoft SharePoint on AWS</a></li>
 <li><a href="#_cost">Cost</a></li>
 <li><a href="#_software_licenses">Software licenses</a></li>
-<li><a href="#_architecture">Architecture</a>
+<li><a href="#_architecture">Architecture</a></li>
+<li><a href="#_vpc_active_directory_and_rd_gateway_configuration">VPC, Active Directory, and RD Gateway configuration</a>
 <ul class="sectlevel2">
 <li><a href="#vpc-configuration">VPC configuration</a></li>
 <li><a href="#active-directory-domain-services">Active Directory Domain Services</a></li>
@@ -813,7 +814,7 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_launch_the_quick_start">Launch the Quick Start</a></li>
 </ul>
 </li>
-<li><a href="#_post_deployment_steps">Post-deployment steps</a>
+<li><a href="#post-deployment-steps">Post-deployment steps</a>
 <ul class="sectlevel2">
 <li><a href="#_create_initial_content">Create initial content</a></li>
 <li><a href="#_make_the_sharepoint_databases_highly_available">Make the SharePoint databases highly available</a></li>
@@ -824,8 +825,15 @@ p.footer-text a{color:#d7d8d8}
 </li>
 <li><a href="#_additional_resources">Additional resources</a>
 <ul class="sectlevel2">
-<li><a href="#_appendix_a_server_role_architecture">Appendix A: Server role architecture</a></li>
+<li><a href="#server-role-architecture">Server role architecture</a></li>
+</ul>
+</li>
+<li><a href="#_references">References</a>
+<ul class="sectlevel2">
 <li><a href="#_aws_services">AWS services</a></li>
+<li><a href="#_microsoft_sharepoint_server">Microsoft SharePoint Server</a></li>
+<li><a href="#_deploying_microsoft_software_on_aws">Deploying Microsoft software on AWS</a></li>
+<li><a href="#_quick_start_reference_deployments">Quick Start reference deployments</a></li>
 </ul>
 </li>
 <li><a href="#_faq">FAQ</a></li>
@@ -838,7 +846,7 @@ p.footer-text a{color:#d7d8d8}
 </ul>
 </li>
 <li><a href="#_send_us_feedback">Send us feedback</a></li>
-<li><a href="#_quick_start_reference_deployments">Quick Start reference deployments</a></li>
+<li><a href="#_quick_start_reference_deployments_2">Quick Start reference deployments</a></li>
 <li><a href="#_github_repository">GitHub repository</a></li>
 <li><a href="#_notices">Notices</a></li>
 </ul>
@@ -855,7 +863,7 @@ p.footer-text a{color:#d7d8d8}
 </div>
 </div>
 <div class="paragraph text-center">
-<p><strong>October 2020</strong><br>
+<p><strong>November 2020</strong><br>
 <em>AWS Quick Start team</em></p>
 </div>
 <div class="admonitionblock tip text-left">
@@ -924,8 +932,7 @@ After you deploy the Quick Start, <a href="https://docs.aws.amazon.com/awsaccoun
 <h2 id="_software_licenses">Software licenses</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>This Quick Start requires a license for Microsoft SharePoint 2019. The product key defaults to a trial key, which will allow the environment to run for 180 days.
-The trial key can be replaced by a purchased key at launch time, or can be updated after the environment has been provisioned.</p>
+<p>This Quick Start requires a trial key or purchased license for Microsoft SharePoint 2019. You can evaluate SharePoint 2019 for 180 days with a trial key. The trial key can be converted to a licensed installation after you have deployed the Microsoft SharePoint Quick Start.</p>
 </div>
 </div>
 </div>
@@ -933,10 +940,10 @@ The trial key can be replaced by a purchased key at launch time, or can be updat
 <h2 id="_architecture">Architecture</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>There are a number of ways to design the topology of your SharePoint farm depending on your requirements. In SharePoint 2016, Microsoft added a feature called MinRole, which helped simplify deployment, performance, and reliability of SharePoint farms. This approach is used for the multiple-server AWS CloudFormation template provided by this Quick Start. (The single-server option is deployed as a custom role so that it can run more services on its own.) Both the multiple-server and single-server topologies are covered in detail later in this guide.</p>
+<p>There are three <a href="#deployment-options">deployment options</a> provided with this Quick Start.</p>
 </div>
 <div class="paragraph">
-<p>Deploying this Quick Start for a new virtual private cloud (VPC) with
+<p>Deploying SharePoint into a new virtual private cloud (VPC) with
 default parameters builds the following SharePoint environment in the AWS Cloud.</p>
 </div>
 <div id="architecture1" class="imageblock">
@@ -969,7 +976,7 @@ best practices, to provide you with your own virtual network on AWS.*</p>
 internet access for resources in the private subnets.*</p>
 </li>
 <li>
-<p>A Remote Desktop Gateway (RD Gateway) in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*</p>
+<p>A Remote Desktop gateway (RD gateway) in an Auto Scaling group to allow Remote Desktop Protocol (RDP) access to Amazon Elastic Compute Cloud (Amazon EC2) instances in public and private subnets.*</p>
 </li>
 </ul>
 </div>
@@ -991,27 +998,42 @@ internet access for resources in the private subnets.*</p>
 <p>Two Amazon EC2 instances serving as Microsoft SharePoint application servers.</p>
 </li>
 <li>
-<p>Two Amazon EC2 instances serving as Microsoft SQL servers in a highly-available cluster.</p>
+<p>Two Amazon EC2 instances serving as Microsoft SQL Servers in a highly-available cluster.</p>
 </li>
 <li>
 <p>An Amazon EC2 instance serving as a Windows failover clustering file share witness.</p>
 </li>
 <li>
-<p>Two Amazon EC2 instances serving as Microsoft Active Directory (AD) domain controllers.</p>
+<p>Two Amazon EC2 instances serving as Microsoft Active Directory domain controllers.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
 <p>*The template that deploys the Quick Start into an existing VPC skips
-the components marked by asterisks and prompts you for your existing VPC
-configuration.</p>
+the components marked by asterisks and prompts you for your existing VPC configuration.</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+<div class="paragraph">
+<p>In the deployment shown in <a href="#architecture1">Figure 1</a>, the AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers. Active Directory and SQL Server are deployed using <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on AWS</a> and <a href="https://fwd.aws/GRNKR">SQL Server on AWS</a> Quick Starts, respectively.</p>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation templates provided with this Quick Start deploy the SharePoint servers shown in <a href="#architecture1">Figure 1</a>. Active Directory and SQL Server are deployed via their corresponding Quick Starts. See the <a href="#deployment-steps">Deployment Steps</a> section for more details. The template deploys a highly available architecture that includes redundant servers for SharePoint Server 2019 in two Availability Zones.</p>
+<p>When deploying into a new VPC, you do not have to run the Active Directory and SQL Server Quick Starts separately. Before deploying SharePoint 2019 to an existing VPC, see <a href="#configure-aws-prerequisites">Configure AWS prerequisites</a>] later in this guide.</p>
 </div>
-<div class="paragraph">
-<p>The following sections describe these components of the architecture in more detail. For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see <a href="#appendix-a-server-role-architecture">Appendix A</a>.</p>
+</td>
+</tr>
+</table>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_vpc_active_directory_and_rd_gateway_configuration">VPC, Active Directory, and RD Gateway configuration</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="vpc-configuration">VPC configuration</h3>
 <div class="paragraph">
@@ -1026,15 +1048,15 @@ configuration.</p>
 <p>Internal application servers and other non-internet facing servers should be placed in private subnets to prevent direct access to these instances from the internet.</p>
 </li>
 <li>
-<p>RD Gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.</p>
+<p>RD gateways should be deployed into public subnets in each Availability Zone for remote administration. Other components, such as reverse proxy servers, can also be placed into these public subnets if needed.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>For details on the VPC design used in this reference, see the <a href="https://fwd.aws/N6e7B">Active Directory Domain Services Quick Start deployment guide</a>.</p>
+<p>For details on the VPC design used in this reference, see the <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on the AWS Cloud</a>.</p>
 </div>
 <div class="paragraph">
-<p>Based on these best practices, the VPC Quick Start deploys the following base-level VPC framework to support the SharePoint Server 2019 infrastructure:</p>
+<p>Based on these best practices, this Quick Start deploys the base-level VPC framework shown in <a href="#architecture2">Figure 2</a>:</p>
 </div>
 <div id="architecture2" class="imageblock">
 <div class="content">
@@ -1043,10 +1065,10 @@ configuration.</p>
 <div class="title">Figure 2. VPC architecture on the AWS cloud</div>
 </div>
 <div class="paragraph">
-<p>As shown in <a href="#architecture2">Figure 2</a>, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.</p>
+<p>NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.</p>
 </div>
 <div class="paragraph">
-<p>Instances that will be deployed in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.</p>
+<p>Instances that deploy in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1061,7 +1083,7 @@ configuration.</p>
 <div class="title">Figure 3. Domain controllers in each Availability Zone</div>
 </div>
 <div class="paragraph">
-<p>Notice that in <a href="#architecture3">Figure 3</a>, we’ve now included a domain controller in the AD tier in each Availability Zone.</p>
+<p>In <a href="#architecture3">Figure 3</a>, we included a domain controller in the Active Directory tier in each Availability Zone.</p>
 </div>
 <div class="paragraph">
 <p>There are two ways to use AD DS in the AWS Cloud:</p>
@@ -1069,24 +1091,24 @@ configuration.</p>
 <div class="ulist">
 <ul>
 <li>
-<p>Cloud only – This is the architecture shown in <a href="#architecture3">Figure 3</a>. This type of architecture means that your entire AD forest exists only within the AWS Cloud. With a cloud-only AD DS architecture, there are no on-premises domain controllers.</p>
+<p>Cloud only – As shown in <a href="#architecture3">Figure 3</a>, this type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.</p>
 </li>
 <li>
-<p>Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can utilize your existing AD infrastructure. In a hybrid architecture, we recommend that you also deploy domain controllers for your existing AD forest to the AWS Cloud. We recommend this configuration primarily to help ensure that the application servers deployed in AWS remain functional and available in the event of an on-premises outage.</p>
+<p>Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can use your existing Active Directory infrastructure. In a hybrid architecture, we recommend that you deploy domain controllers for your existing Active Directory forest to the AWS Cloud. We recommend this configuration primarily to ensure that the deployed application servers remain functional and available if there is an on-premises outage.</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>The <a href="https://fwd.aws/N6e7B">Quick Start for Active Directory Domain Services on the AWS Cloud</a> covers our best practices and recommendations for deploying AD DS on AWS. The process outlined in this SharePoint Quick Start asks you to launches the AD DS Quick Start, which deploys the AD environment based on those best practices.</p>
+<p>The <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on the AWS Cloud</a> Quick Start covers best practices and recommendations for deploying AD DS on AWS. This Quick Start has you launch the AD DS Quick Start, which uses our best practices to deploy the Active Directory environment.</p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="remote-administration">Remote administration</h3>
 <div class="paragraph">
-<p>As we design the architecture for a highly available SharePoint farm, we should also design for highly available and secure remote access. We can do this by deploying an RD Gateway in each Availability Zone. In the case of an Availability Zone outage, this architecture allows access to the resources that may have failed over to the other Availability Zone.</p>
+<p>As we design the architecture for a highly available SharePoint farm, we should also design for highly available and secure remote access. We can do this by deploying an RD Gateway in each Availability Zone. If an Availability Zone outage occurs, this architecture provides access to failed resources using another Availability Zone.</p>
 </div>
 <div class="paragraph">
-<p>The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances, without needing to configure a virtual private network (VPN) connection. This allows you to reduce the attack surface on your Windows-based instances while providing a remote administration solution for administrators.</p>
+<p>The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to help establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances. This does not require you to configure a virtual private network (VPN) connection. This allows you to reduce vulnerabilities on your Windows-based instances during remote administration.</p>
 </div>
 <div id="architecture4" class="imageblock">
 <div class="content">
@@ -1095,7 +1117,19 @@ configuration.</p>
 <div class="title">Figure 4. NAT gateways and Remote Desktop Gateways in public subnets</div>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in <a href="https://fwd.aws/5VrKP">Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment</a>. After you have launched your SharePoint infrastructure using a deployment option in this guide, you will initially connect to your instances using a standard RDP TCP port 3389 connection. You can then follow the steps in the guide to secure future connections via HTTPS.</p>
+<p>The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in <a href="https://fwd.aws/5VrKP">Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment</a>. After you launch your SharePoint infrastructure using a deployment option in this guide, you initially connect to your instances using the standard RDP TCP port 3389. You can then follow the steps in this guide to secure future connections via HTTPS. (See <a href="#post-deployment-steps">Post-deployment steps</a>.)</p>
+</div>
+<div class="admonitionblock note">
+<table>
+<tr>
+<td class="icon">
+<i class="fa icon-note" title="Note"></i>
+</td>
+<td class="content">
+For more information about the server role architecture, including a detailed discussion of multiple-server and single-server topologies, see <a href="#server-role-architecture">Server role architecture</a>.
+</td>
+</tr>
+</table>
 </div>
 </div>
 </div>
@@ -1220,7 +1254,7 @@ Certain Regions are available on an opt-in basis. See <a href="https://docs.aws.
 <div class="sect3">
 <h4 id="_download_the_sharepoint_software">Download the SharePoint software</h4>
 <div class="paragraph">
-<p>To access the SharePoint Server 2019 installation media, you need to place the contents of the SharePoint installation ISO file in a .zip file. When creating this .zip file, you have the option of “slip streaming” additional cumulative updates into the file, which means that these updates will be automatically installed when SharePoint is installed. This can help you deploy SharePoint to a specific update level when it is first installed. The following steps show you how to create the .zip file and upload it to Amazon S3.</p>
+<p>To access the SharePoint Server 2019 installation, you must transfer the contents of the SharePoint installation ISO file to a .zip file. When creating the .zip file, choose the “slip streaming” option to add cumulative updates to the file, which means that updates automatically install when SharePoint installs. This can help you deploy SharePoint with a specific update upon initial installation. The following steps show you how to create the .zip file and upload it to Amazon S3.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="1">
@@ -1234,7 +1268,7 @@ Certain Regions are available on an opt-in basis. See <a href="https://docs.aws.
 </div>
 </li>
 <li>
-<p>Open the ISO file (in Windows, double-click the file to mount the ISO and open it), and copy the contents to a temporary location on your system.</p>
+<p>Open the ISO file (in Windows, choose the file to mount the ISO and open it), and copy the contents to a temporary location.</p>
 </li>
 <li>
 <p>(Optional) To include any additional updates, use the slip-streaming option:</p>
@@ -1247,7 +1281,7 @@ Certain Regions are available on an opt-in basis. See <a href="https://docs.aws.
 <p>Open a command prompt, and change the current path to the folder where you downloaded the updates.</p>
 </li>
 <li>
-<p>To extract the updates to the updates folder in your installation media temporary folder, run the following command:</p>
+<p>To extract the updates, run the following command:</p>
 </li>
 </ol>
 </div>
@@ -1286,20 +1320,20 @@ Certain Regions are available on an opt-in basis. See <a href="https://docs.aws.
 <div class="olist arabic">
 <ol class="arabic" start="4">
 <li>
-<p>Choose all of the files and folders in the directory on your system to which you extracted the installation media, open the context (right-click) menu, and choose <strong>Send To</strong>, <strong>Compressed (zipped) folder</strong>. This creates a .zip file of your installation media that can be used for the installation.</p>
+<p>Choose all of the files and folders in the directory to which you extracted the installation media. Open the context (right-click) menu, and choose <strong>Send to</strong>, and then choose <strong>Compressed (zipped) folder</strong>. This creates a .zip file of your media that can be used for installation.</p>
 </li>
 <li>
 <p>Sign in to your AWS account and open the <a href="https://console.aws.amazon.com/s3">Amazon S3 console</a>.</p>
 </li>
 <li>
-<p>Choose <strong>Create Bucket</strong>.</p>
+<p>Choose <strong>Create bucket</strong>.</p>
 </li>
 <li>
-<p>Complete the <strong>Create a Bucket</strong> dialog box:</p>
+<p>Complete the <strong>Create a bucket</strong> dialog box:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
-<p>In the <strong>Bucket Name</strong> box, enter a globally unique name for the bucket (for example, your account name).</p>
+<p>In the <strong>Bucket name</strong> box, enter a globally unique name for the bucket (for example, your account name).</p>
 </li>
 <li>
 <p>In the <strong>Region</strong> list, select the AWS Region where you plan to launch the Quick Start.</p>
@@ -1317,10 +1351,10 @@ Certain Regions are available on an opt-in basis. See <a href="https://docs.aws.
 <p>Choose <strong>Upload</strong>.</p>
 </li>
 <li>
-<p>In the <strong>Upload – Select Files and Folders</strong> dialog box, choose <strong>Add Files</strong>.</p>
+<p>In the <strong>Upload – select files and folders</strong> dialog box, choose <strong>Add files</strong>.</p>
 </li>
 <li>
-<p>In the file selection dialog box, browse to the .zip file that you created earlier, and choose <strong>Open</strong>, <strong>Start Upload</strong>.</p>
+<p>In the dialog box, browse to the .zip file that you created earlier, and choose <strong>Open</strong>, and then choose <strong>Start upload</strong>.</p>
 </li>
 </ol>
 </div>
@@ -1343,23 +1377,23 @@ This step is not required if you are deploying the SharePoint farm into a new VP
 </table>
 </div>
 <div class="paragraph">
-<p>Before launching the SharePoint stack, the following prerequisites should be configured:</p>
+<p>Before launching the SharePoint stack into an existing VPC, the following items must be deployed:</p>
 </div>
 <div class="ulist">
 <ul>
 <li>
-<p>A VPC with two private subnets where SharePoint will run.</p>
+<p>A VPC with two private subnets where SharePoint runs.</p>
 </li>
 <li>
-<p>A Windows Active Directory server that runs the Domain Name Server (DNS) service.</p>
+<p>A Windows Active Directory server that runs the Domain Name System (DNS) service.</p>
 </li>
 <li>
-<p>A SQL Server 2016 or 2017 instance (or a highly available instance that has an Always On availability group configured with a listener attached to it).</p>
+<p>An SQL Server 2016 or 2017 instance (or a highly available instance that has an Always On availability group configured with a listener attached to it).</p>
 </li>
 </ul>
 </div>
 <div class="paragraph">
-<p>If you have not already, deploying the <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on AWS</a> and <a href="https://fwd.aws/GRNKR">SQL Server on AWS</a> Quick Starts will provision these prerequisites. Refer to the Quick Start deployment guides for instructions.</p>
+<p>You can deploy these resources with the <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on AWS</a> and <a href="https://fwd.aws/GRNKR">SQL Server on AWS</a> Quick Starts. Refer to their respective deployment guides for instructions.</p>
 </div>
 </div>
 <div class="sect3">
@@ -1398,7 +1432,7 @@ This step is not required if you are deploying the SharePoint farm into a new VP
 <p>Sign in to your AWS account at <a href="https://aws.amazon.com" class="bare">https://aws.amazon.com</a> with an IAM user role that has the necessary permissions. For details, see <a href="#_planning_the_deployment">Planning the deployment</a> earlier in this guide.</p>
 </li>
 <li>
-<p>Make sure that your AWS account is configured correctly, as discussed in the <a href="#_technical_requirements">Technical requirements</a> section.</p>
+<p>Ensure that your AWS account is configured correctly, as discussed in the <a href="#_technical_requirements">Technical requirements</a> section.</p>
 </li>
 </ol>
 </div>
@@ -1451,13 +1485,13 @@ You are responsible for the cost of the AWS services used while running this Qui
 <i class="fa icon-warning" title="Warning"></i>
 </td>
 <td class="content">
-If you’re deploying SharePoint into an existing VPC, ensure that your VPC has two private subnets in different Availability Zones for the workload instances, and that the subnets aren’t shared. This Quick Start doesn’t support <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html" target="_blank" rel="noopener">shared subnets</a>. These subnets require <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html" target="_blank" rel="noopener">NAT gateways</a> in their route tables, to allow the instances to download packages and software without exposing them to the internet.
+If you deploy SharePoint into an existing VPC, ensure that your VPC has two private subnets in different Availability Zones for the workload instances, and that the subnets aren’t shared. This Quick Start doesn’t support <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-sharing.html" target="_blank" rel="noopener">shared subnets</a>. These subnets require <a href="https://docs.aws.amazon.com/vpc/latest/userguide/vpc-nat-gateway.html" target="_blank" rel="noopener">NAT gateways</a> in their route tables, to allow the instances to download packages and software without exposing them to the internet.
 </td>
 </tr>
 </table>
 </div>
 <div class="paragraph">
-<p>Also, ensure that the domain name option in the DHCP options is configured as explained in the <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_DHCP_Options.html" target="_blank" rel="noopener">Amazon VPC documentation</a>. You provide your VPC settings when you launch the Quick Start.</p>
+<p>Also, ensure that the domain name option in the DHCP options is configured as explained in <a href="http://docs.aws.amazon.com/AmazonVPC/latest/UserGuide/VPC_DHCP_Options.html" target="_blank" rel="noopener">DHCP options sets</a>. You provide your VPC settings when you launch the Quick Start.</p>
 </div>
 <div class="paragraph">
 <p>Each deployment takes about 4 hours to complete.</p>
@@ -1508,20 +1542,20 @@ If you’re deploying SharePoint into an existing VPC, ensure that your VPC has 
 </div>
 </div>
 <div class="sect1">
-<h2 id="_post_deployment_steps">Post-deployment steps</h2>
+<h2 id="post-deployment-steps">Post-deployment steps</h2>
 <div class="sectionbody">
 <div class="sect2">
 <h3 id="_create_initial_content">Create initial content</h3>
 <div class="paragraph">
-<p>This step assumes that you deployed a SharePoint farm rather than a single server, and that the server name prefix value was SPServer. In this scenario, we’ll assume that the SharePoint farm is hosting an internal site, and we’ll set up a modern team site to validate our test.</p>
+<p>This step assumes that you deployed a SharePoint farm rather than a single server, and that the server name prefix value is SPServer. In this scenario, we assume that the SharePoint farm host an internal site, and then we set up a modern team site to validate our test.</p>
 </div>
 <div class="paragraph">
-<p>After you have successfully launched the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.</p>
+<p>After successfully launching the stack, create an RDP connection into the environment through one of the RD Gateway instances. You can retrieve the Elastic IP address for each RD Gateway instance from the Amazon EC2 console.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="1">
 <li>
-<p>Establish an RDP session to the primary SharePoint server (SPServer1 if you deployed a SharePoint farm with the default parameters, or SP if you deployed a single SharePoint server with the default parameters). From the start menu, select <strong>SharePoint 2019 Central Administration</strong>. When prompted to run this as an administrator, choose <strong>OK</strong> for this prompt. A web browser will open to <a href="http://spadmin.example.com" class="bare">http://spadmin.example.com</a>. When prompted for credentials, use the domain administrator user name and password.</p>
+<p>Establish an RDP session to the primary SharePoint server. It is SPServer1 if you deployed a SharePoint farm with the default parameters, and SP if you deployed a single SharePoint server with default parameters. From the <strong>Start</strong> menu, choose <strong>SharePoint 2019 Central Administration</strong>. When prompted to run this as an administrator, choose <strong>OK</strong>. A web browser opens to <a href="http://spadmin.example.com" class="bare">http://spadmin.example.com</a>. When prompted for credentials, use the domain administrator name and password.</p>
 </li>
 <li>
 <p>On the central administration home page, choose <strong>Create site collections</strong>.</p>
@@ -1537,7 +1571,7 @@ If you’re deploying SharePoint into an existing VPC, ensure that your VPC has 
 <div class="olist arabic">
 <ol class="arabic" start="3">
 <li>
-<p>Provide a <strong>Title</strong> for your site, and then choose the <strong>Collaboration</strong> tab and select the <strong>team site</strong> template.</p>
+<p>Provide a <strong>Title</strong> for your site, and then choose the <strong>Collaboration</strong> tab and choose the <strong>team site</strong> template.</p>
 </li>
 </ol>
 </div>
@@ -1548,12 +1582,12 @@ If you’re deploying SharePoint into an existing VPC, ensure that your VPC has 
 <div class="title">Figure 7. Creating a team site</div>
 </div>
 <div class="paragraph">
-<p>You will also need to define a <strong>Primary Site Collection Administrator</strong> on this page. You can use the domain administrator account for this value, or any other valid user in the domain. When you finish filling out the form, choose <strong>OK</strong>.</p>
+<p>You must define a <strong>Primary Site Collection Administrator</strong> on this page. You can use either the domain administrator account for this value, or any other valid account within the domain. When you finish filling out the form, choose <strong>OK</strong>.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="4">
 <li>
-<p>Now that you have created a team site, navigate to <a href="http://sharepoint.example.com" class="bare">http://sharepoint.example.com</a>. When prompted for credentials, enter those of the user you selected as the site collection administrator in the step above. If the site loads, your SharePoint server is now ready for use.</p>
+<p>Now that you have a team site, navigate to <a href="http://sharepoint.example.com" class="bare">http://sharepoint.example.com</a>. When prompted, specify the administrator credentials that you set in the preceding step above. If the site loads, your SharePoint server is ready.</p>
 </li>
 </ol>
 </div>
@@ -1579,7 +1613,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 </table>
 </div>
 <div class="sect3">
-<h4 id="enable-full-recovery-mode">Enable full recovery mode</h4>
+<h4 id="enable-full-recovery-mode">Enable full recovery model</h4>
 <div class="olist arabic">
 <ol class="arabic" start="1">
 <li>
@@ -1596,7 +1630,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="olist arabic">
 <ol class="arabic" start="2">
 <li>
-<p>For the four Search databases, and the Usage database, you will need to enable Full Recovery mode before you can add them to the availability group. In <strong>Object Explorer</strong>, expand the <strong>Databases</strong> node.</p>
+<p>For the four search databases, and the usage database, you will need to enable the full recovery model before you can add them to the availability group. In <strong>Object Explorer</strong>, expand the <strong>Databases</strong> node.</p>
 </li>
 <li>
 <p>For each database, choose the context (right-click) menu, and then choose <strong>Properties</strong>. In the <strong>Database Properties</strong> dialog box, choose the <strong>Options</strong> page, and then change <strong>Recovery Model</strong> to <strong>Full</strong>.</p>
@@ -1613,12 +1647,12 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="sect3">
 <h4 id="back-up-the-databases">Back up the databases</h4>
 <div class="paragraph">
-<p>Next, make a backup of each SharePoint database. They will all share a common prefix that begins with the name of your AWS CloudFormation stack.</p>
+<p>Next, make a backup of each SharePoint database. They all share a common prefix that begins with the name of your AWS CloudFormation stack.</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="1">
 <li>
-<p>To make a backup, choose the context (right-click) menu for the database name, choose <strong>Tasks</strong>, and then choose <strong>Back Up</strong>.</p>
+<p>To make a backup, choose the context (right-click) menu for the database name, choose <strong>Tasks</strong>, and then choose <strong>Back up</strong>.</p>
 </li>
 </ol>
 </div>
@@ -1631,7 +1665,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="olist arabic">
 <ol class="arabic" start="2">
 <li>
-<p>Keep the default settings, and then choose <strong>OK</strong> to perform the backup.</p>
+<p>Keep the default settings, and then choose <strong>OK</strong> to create a backup.</p>
 </li>
 </ol>
 </div>
@@ -1649,7 +1683,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image22.png"><img src="images/image22.png" alt="PostDeploy7" width="352" height="389"></a>
 </div>
-<div class="title">Figure 12. Select Add Database for the availability group</div>
+<div class="title">Figure 12. Choosing Add Database for the availability group</div>
 </div>
 </li>
 </ol>
@@ -1665,7 +1699,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image23.png"><img src="images/image23.png" alt="PostDeploy8" width="648" height="589"></a>
 </div>
-<div class="title">Figure 13. Selecting databases to include in the availability group</div>
+<div class="title">Figure 13. Choosing databases to include in the availability group</div>
 </div>
 </li>
 </ol>
@@ -1690,7 +1724,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image24.png"><img src="images/image24.png" alt="PostDeploy9" width="648" height="352"></a>
 </div>
-<div class="title">Figure 14. Selecting automatic seeding to populate the secondary replicas</div>
+<div class="title">Figure 14. Choosing automatic seeding to populate secondary replicas</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="6">
@@ -1716,10 +1750,10 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="sect2">
 <h3 id="provide-log-access-to-the-secondary-database-server">Provide log access to the secondary database server</h3>
 <div class="paragraph">
-<p>Now we need to ensure that if there is a failover event, the SharePoint service accounts have access to log in to the secondary database server.</p>
+<p>Ensure that if there is a failover event, the SharePoint service accounts have access to log in to the secondary database server.</p>
 </div>
 <div class="paragraph">
-<p>To do this, follow the instructions on the Microsoft <a href="https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server">How to transfer logins and passwords between instances of SQL Server</a> support page. When you run the generated script against the secondary server, you might see errors for accounts that already exist. This is normal. The script will, however, add the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, be sure to run this script again to add them to the secondary server.</p>
+<p>To do this, follow the instructions on the Microsoft <a href="https://support.microsoft.com/en-us/help/918992/how-to-transfer-logins-and-passwords-between-instances-of-sql-server">How to transfer logins and passwords between instances of SQL Server</a> support page. When you run the generated script against the secondary server, you might see errors for accounts that already exists, which is normal. The script, however, adds the user logins that do not already exist on the secondary server. If you add additional server accounts or users at a later stage, ensure that you run this script again to add them to the secondary server.</p>
 </div>
 </div>
 <div class="sect2">
@@ -1746,7 +1780,7 @@ $db.Update()
 <div class="sect2">
 <h3 id="_test_automatic_failover">Test automatic failover</h3>
 <div class="paragraph">
-<p>After your externally facing SharePoint site is available, you can test automatic failover.  On the Amazon EC2 console, stop the first WSFC node, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <a href="#PostDeploy11">Figure 16</a>.)</p>
+<p>After your external SharePoint site is available, you can test automatic failover. On the Amazon EC2 console, stop WSFCNode 1, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <a href="#PostDeploy11">Figure 16</a>.)</p>
 </div>
 <div id="PostDeploy11" class="imageblock">
 <div class="content">
@@ -1767,7 +1801,7 @@ $db.Update()
 <h2 id="_additional_resources">Additional resources</h2>
 <div class="sectionbody">
 <div class="sect2">
-<h3 id="_appendix_a_server_role_architecture">Appendix A: Server role architecture</h3>
+<h3 id="server-role-architecture">Server role architecture</h3>
 <div class="sect3">
 <h4 id="single-server-topology">Single-server topology</h4>
 <div class="paragraph">
@@ -1780,13 +1814,13 @@ $db.Update()
 <div class="title">Figure 17. A single-server SharePoint topology</div>
 </div>
 <div class="paragraph">
-<p>In this topology, all SharePoint Service Apps and Instances will execute on the one server though, with no load balancing being required. The database server, however, runs on a different server than SharePoint. This is the simplest way to set up an environment for experimenting with SharePoint.</p>
+<p>In this topology, all SharePoint service applications and instances will run on one server with no load balancing being required. The database server, however, runs on a different server than SharePoint.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="multiple-server-topology">Multiple-server topology</h4>
 <div class="paragraph">
-<p>When you deploy SharePoint to support a production workload that will have many users across the organization, a single-server deployment is not robust enough to account for the load or to maintain availability in the event of an incident. The multiple-server template uses four SharePoint servers in to different roles to distribute the load.</p>
+<p>The multiple-server template uses four SharePoint servers in two different roles to distribute the load.</p>
 </div>
 <div id="PostDeploy13" class="imageblock">
 <div class="content">
@@ -1795,13 +1829,7 @@ $db.Update()
 <div class="title">Figure 18. An example of how multiple-server topologies in SharePoint can work</div>
 </div>
 <div class="paragraph">
-<p>In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers), so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.</p>
-</div>
-<div class="paragraph">
-<p>To simplify the configuration of multiple-server farms, SharePoint includes the MinRole feature. MinRole provides pre-defined roles, each of which runs a group of services. This ensures that the SharePoint farm runs more smoothly and is easier to maintain.</p>
-</div>
-<div class="paragraph">
-<p>The multiple-server topology in this Quick Start leverages the following roles in MinRole:</p>
+<p>This Quick Start uses the SharePoint MinRole feature to evenly distribute services among servers in a SharePoint farm deployment. This Quick Start uses the following MinRole roles:</p>
 </div>
 <div class="ulist">
 <ul>
@@ -1814,7 +1842,7 @@ $db.Update()
 </ul>
 </div>
 <div class="paragraph">
-<p>This allows an even distribution of services while adhering to the Microsoft best practices for farm topology. For more information on what MinRole is and how it works in detail, including documentation on what services run on each of these roles, see <a href="https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server">Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019</a>.</p>
+<p>For more information about MinRole, see <a href="https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server">Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019</a>.</p>
 </div>
 <div class="paragraph">
 <p>With two servers in both roles (to support high availability), the resulting architecture is shown in <a href="#PostDeploy14">Figure 19</a>&gt;&gt;.</p>
@@ -1826,7 +1854,7 @@ $db.Update()
 <div class="title">Figure 19. Multiple-server topology</div>
 </div>
 <div class="paragraph">
-<p>To ensure the highest levels of availability, the servers are put in to different Availability Zones. This helps ensure that in an event where an entire Availability Zone becomes impaired, the servers in the second Availability Zone will still be running.</p>
+<p>To help ensure the highest availability, the servers are set up in different Availability Zones. This helps to ensure that if an entire Availability Zone is impaired, the servers in the second Availability Zone are still running.</p>
 </div>
 <div class="sect4">
 <h5 id="load-balancing">Load balancing</h5>
@@ -1846,14 +1874,14 @@ $db.Update()
 <p>Amazon Machine Images (AMIs) for SQL Server Express, SQL Server Web Edition, and SQL Server Standard are available for launch on AWS. To install SQL Server 2016 or 2017 Enterprise Edition on AWS, you can use <a href="http://aws.amazon.com/windows/mslicensemobility/">Microsoft License Mobility through Software Assurance</a> to bring your own license into the cloud.</p>
 </div>
 <div class="paragraph">
-<p>In the <a href="https://fwd.aws/GRNKR">Quick Start for Microsoft WSFC and SQL Server Always On on AWS</a>, we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 virtual CPUs (vCPUs), 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performing and durable storage in the form of Amazon Elastic Block Store (Amazon EBS) volumes.</p>
+<p>As explained in <a href="https://fwd.aws/GRNKR">Quick Start for Microsoft WSFC and SQL Server Always On on AWS</a>, we provide a way to deploy an <strong>Always On</strong> availability group to provide high availability for databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 virtual CPUs (vCPUs), 61 GiB of memory, and 100 GiB of SSD instance storage. Additionally, we provide high-performance, durable storage through Amazon Elastic Block Store (Amazon EBS) volumes.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="intranet-sharepoint-server-farm-on-aws">Intranet SharePoint server farm on AWS</h4>
 <div class="paragraph">
-<p>The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to also include private connectivity from the on-premises environment. <a href="#PostDeploy15">Figure 20</a> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.</p>
+<p>The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, domain users on the SharePoint network can access the content, but it&#8217;s closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <a href="#PostDeploy15">Figure 20</a> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.</p>
 </div>
 <div id="PostDeploy15" class="imageblock">
 <div class="content">
@@ -1862,30 +1890,30 @@ $db.Update()
 <div class="title">Figure 20. Intranet SharePoint server farm topology</div>
 </div>
 <div class="paragraph">
-<p>In <a href="#PostDeploy15">Figure 20</a>, we’ve created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.</p>
+<p>In <a href="#PostDeploy15">Figure 20</a>, we created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.</p>
 </div>
 <div class="paragraph">
-<p>In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, once you have internal network connectivity into the VPC from your on-premises environment, you can simply provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing will also provide high availability in the event of a server failure. If a web front-end server is unavailable, requests will be sent to one that is online.</p>
+<p>In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, when you connect to the VPC from your on-premises environment, you can provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing provides high availability if a server fails. If a web front-end server is unavailable, requests are sent to one that is online.</p>
 </div>
 </div>
 <div class="sect3">
 <h4 id="security">Security</h4>
 <div class="paragraph">
-<p>As with any enterprise application deployment, a Microsoft SharePoint Server farm on AWS should implement strict security controls. AWS provides a comprehensive set of security features that allow you to control the flow of traffic through your VPC, associated subnets, and ultimately to each Amazon EC2 instance. These features allow you to reduce the attack surface of your environment while providing both end-user access to SharePoint content and applications, and administrator access for securely managing the Windows Server infrastructure. These security features and approaches are covered in this section.</p>
+<p>As with any enterprise application deployment, a Microsoft SharePoint Server farm on AWS should implement strict security controls. AWS provides a comprehensive set of security features that allow you to control the flow of traffic through your VPC, associated subnets, and ultimately to each Amazon EC2 instance. These features can reduce your environment&#8217;s attack surface while providing end-user access to SharePoint content and applications, in addition to administrator access for managing Windows Server infrastructure.</p>
 </div>
 <div class="sect4">
 <h5 id="security-groups">Security groups</h5>
 <div class="paragraph">
-<p>When launched, Amazon EC2 instances must be associated with at least one security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving your security groups, and you can build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.</p>
+<p>When launched, Amazon EC2 instances must be associated with at least one security group which acts as a stateful firewall. You control the network traffic of your security group and build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all outbound traffic is permitted by the security group. Inbound traffic, however, must be configured to allow appropriate traffic to reach your instances.</p>
 </div>
 <div class="paragraph">
-<p>The <a href="https://d0.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf">Securing the Microsoft Platform on Amazon Web Services</a> whitepaper discusses the different methods for securing your AWS infrastructure in detail. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic in order to reduce the attack surface of your Amazon EC2 instances.</p>
+<p>The <a href="https://https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf">Securing the Microsoft Platform on Amazon Web Services</a> whitepaper details different methods for securing your AWS infrastructure, such as using security groups to isolate application tiers. To reduce the attack surface of your Amazon EC2 instances, we recommend tightly controlling your inbound traffic..</p>
 </div>
 </div>
 <div class="sect4">
 <h5 id="network-acls">Network ACLs</h5>
 <div class="paragraph">
-<p>A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic, and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based upon IP protocol, service port, or source or destination IP address. Figure 21 shows the default ACL configuration for a VPC subnet.</p>
+<p>A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic, and provide an effective way to deny list a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based upon IP protocol, service port, or source or destination IP address. Figure 21 shows the default ACL configuration for a VPC subnet.</p>
 </div>
 <div id="PostDeploy16" class="imageblock">
 <div class="content">
@@ -1900,7 +1928,7 @@ $db.Update()
 <div class="sect4">
 <h5 id="secure-extranet-publishing">Secure extranet publishing</h5>
 <div class="paragraph">
-<p>Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add another layer of security by placing reverse proxy servers into your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Web page requests from internet-based users would be sent to these reverse proxy servers, which would then establish a connection to your web front-end servers that are running in a private subnet.</p>
+<p>Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.</p>
 </div>
 <div class="paragraph">
 <p><a href="#PostDeploy17">Figure 22</a> shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.</p>
@@ -1912,17 +1940,17 @@ $db.Update()
 <div class="title">Figure 22. Web application publishing with a reverse proxy server</div>
 </div>
 <div class="paragraph">
-<p>A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the public internet. Several third-party appliances and applications can be used for this task. Microsoft’s Web Application Proxy role in Windows Server 2019 also provides support for publishing your SharePoint resources to the internet.</p>
+<p>A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.</p>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation template provided by this Quick Start does not set up an environment for extranet publishing, but after the deployment, you may choose to add reverse proxy servers and configure the environment that’s illustrated in <a href="#PostDeploy17">Figure 22</a>.</p>
+<p>The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <a href="#PostDeploy17">Figure 22</a>.</p>
 </div>
 </div>
 </div>
 <div class="sect3">
 <h4 id="ec2-instance-types">EC2 instance types</h4>
 <div class="paragraph">
-<p>Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your SharePoint deployment. Since each deployment is different, you will need to follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.</p>
+<p>Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your SharePoint deployment. Because each deployment is different, you must follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.</p>
 </div>
 <div class="paragraph">
 <p>The following values are based on minimum requirements for all server roles operating in a three-tier farm.</p>
@@ -2004,97 +2032,87 @@ $db.Update()
 </tbody>
 </table>
 <div class="paragraph">
-<p>Amazon EBS volumes are used as the boot volume for each instance. Notice that we use the EBS General Purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.</p>
+<p>Amazon EBS volumes are used as the boot volume for each instance. Note that we use the EBS general purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.</p>
 </div>
 <div class="paragraph">
-<p>When you launch the AWS CloudFormation template in this guide, you’ll be given the opportunity to adjust these instance types.<a id="_Customize_Your_Topology"></a></p>
+<p>You can adjust these instance types when you launch the AWS CloudFormation template in this guide.</p>
 </div>
 </div>
 </div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_references">References</h2>
+<div class="sectionbody">
 <div class="sect2">
 <h3 id="_aws_services">AWS services</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>AWS CloudFormation<br>
-<a href="https://aws.amazon.com/documentation/cloudformation/" class="bare">https://aws.amazon.com/documentation/cloudformation/</a></p>
+<p><a href="https://aws.amazon.com/documentation/cloudformation/">AWS CloudFormation Documentation</a></p>
 </li>
 <li>
-<p>Amazon EC2<br>
-<a href="https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/" class="bare">https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/</a></p>
+<p><a href="https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/">What is Amazon EC2?</a></p>
 </li>
 <li>
-<p>Amazon VPC<br>
-<a href="https://aws.amazon.com/documentation/vpc/" class="bare">https://aws.amazon.com/documentation/vpc/</a></p>
+<p><a href="https://aws.amazon.com/documentation/vpc/">Amazon Virtual Private Cloud Documentation</a></p>
 </li>
 <li>
-<p>AWS Systems Manager<br>
-<a href="https://aws.amazon.com/systems-manager/" class="bare">https://aws.amazon.com/systems-manager/</a></p>
+<p><a href="https://aws.amazon.com/systems-manager/">AWS Systems Manager</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Microsoft SharePoint Server</strong></p>
 </div>
+<div class="sect2">
+<h3 id="_microsoft_sharepoint_server">Microsoft SharePoint Server</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Configure SQL Server AlwaysOn Availability Groups for SharePoint Server<br>
-<a href="https://docs.microsoft.com/en-us/sharepoint/administration/configure-an-alwayson-availability-group" class="bare">https://docs.microsoft.com/en-us/sharepoint/administration/configure-an-alwayson-availability-group</a></p>
+<p><a href="https://docs.microsoft.com/en-us/sharepoint/administration/configure-an-alwayson-availability-group">Configure SQL Server AlwaysOn Availability Groups for SharePoint Server</a></p>
 </li>
 <li>
-<p>Failover Clustering and Always On Availability Groups (SQL Server)<br>
-<a href="https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/failover-clustering-and-always-on-availability-groups-sql-server?view=sql-server-2017" class="bare">https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/failover-clustering-and-always-on-availability-groups-sql-server?view=sql-server-2017</a></p>
+<p><a href="https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/failover-clustering-and-always-on-availability-groups-sql-server?view=sql-server-2017">Failover Clustering and Always On Availability Groups (SQL Server)</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Deploying Microsoft software on AWS</strong></p>
 </div>
+<div class="sect2">
+<h3 id="_deploying_microsoft_software_on_aws">Deploying Microsoft software on AWS</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>Microsoft on AWS<br>
-<a href="https://aws.amazon.com/microsoft/" class="bare">https://aws.amazon.com/microsoft/</a></p>
+<p><a href="https://aws.amazon.com/microsoft/">Windows on AWS</a></p>
 </li>
 <li>
-<p>Securing the Microsoft Platform on Amazon Web Services<br>
-<a href="https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf" class="bare">https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf</a></p>
+<p><a href="https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf">Securing the Microsoft Platform on Amazon Web Services</a></p>
 </li>
 <li>
-<p>Microsoft Licensing Mobility<br>
-<a href="https://aws.amazon.com/windows/mslicensemobility/" class="bare">https://aws.amazon.com/windows/mslicensemobility/</a></p>
+<p><a href="https://aws.amazon.com/windows/mslicensemobility/">License Mobility</a></p>
 </li>
 <li>
-<p>MSDN on AWS<br>
-<a href="https://aws.amazon.com/windows/msdn/" class="bare">https://aws.amazon.com/windows/msdn/</a></p>
+<p><a href="https://aws.amazon.com/windows/msdn/">Licensing - MSDN</a></p>
 </li>
 <li>
-<p>Windows and .NET Developer Center on AWS<br>
-<a href="https://aws.amazon.com/net/" class="bare">https://aws.amazon.com/net/</a></p>
+<p><a href="https://aws.amazon.com/net/">Build .NET applications on AWS</a></p>
 </li>
 </ul>
 </div>
-<div class="paragraph">
-<p><strong>Quick Start reference deployments</strong></p>
 </div>
+<div class="sect2">
+<h3 id="_quick_start_reference_deployments">Quick Start reference deployments</h3>
 <div class="ulist">
 <ul>
 <li>
-<p>AWS Quick Start home page<br>
-<a href="https://aws.amazon.com/quickstart/" class="bare">https://aws.amazon.com/quickstart/</a></p>
+<p><a href="https://aws.amazon.com/quickstart/">AWS Quick Starts</a></p>
 </li>
 <li>
-<p>Microsoft Active Directory on AWS<br>
-<a href="https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/" class="bare">https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/</a></p>
+<p><a href="https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/">Active Directory Domain Services on the AWS Cloud: Quick Start Reference Deployment</a></p>
 </li>
 <li>
-<p>Microsoft Remote Desktop Gateway on AWS<br>
-<a href="https://docs.aws.amazon.com/quickstart/latest/rd-gateway/" class="bare">https://docs.aws.amazon.com/quickstart/latest/rd-gateway/</a></p>
+<p><a href="https://docs.aws.amazon.com/quickstart/latest/rd-gateway/">Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment</a></p>
 </li>
 <li>
-<p>Microsoft SQL Server with WSFC on AWS<br>
-<a href="https://docs.aws.amazon.com/quickstart/latest/sql/" class="bare">https://docs.aws.amazon.com/quickstart/latest/sql/</a></p>
+<p><a href="https://docs.aws.amazon.com/quickstart/latest/sql/">SQL Server on the AWS Cloud: Quick Start Reference Deployment</a></p>
 </li>
 </ul>
 </div>
@@ -2108,7 +2126,7 @@ $db.Update()
 <p><strong>Q.</strong> I encountered a <strong>CREATE_FAILED</strong> error when I launched the Quick Start.</p>
 </div>
 <div class="paragraph">
-<p><strong>A.</strong> If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with <strong>Rollback on failure</strong> set to <strong>Disabled</strong>. (This setting is under <strong>Advanced</strong> in the AWS CloudFormation console, <strong>Options</strong> page.) With this setting, the stack’s state is retained and the instance is left running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)</p>
+<p><strong>A.</strong> If AWS CloudFormation fails to create the stack, we recommend that you relaunch the template with <strong>Rollback on failure</strong> set to <strong>Disabled</strong>. (This setting is under <strong>Advanced</strong> in the AWS CloudFormation console, <strong>Options</strong> page.) With this setting, the stack’s state is retained and the instance remains running, so you can troubleshoot the issue. (For Windows, look at the log files in %ProgramFiles%\Amazon\EC2ConfigService and C:\cfn\log.)</p>
 </div>
 <div class="admonitionblock warning">
 <table>
@@ -2143,7 +2161,7 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 <td class="tableblock halign-left valign-top"><p class="tableblock">API: ec2: RunInstances Not authorized for images: [ami-&lt;ID&gt;]</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">The template is referencing an AMI that has expired.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>We refresh AMIs on a regular basis, but our schedule isn’t always synchronized with AWS AMI updates. If you get this error message, notify us, and we’ll update the template with the new AMI ID.</p>
+<p>We refresh AMIs on a regular basis, but our schedule isn’t always synchronized with AWS AMI updates. If you get this error message, notify us so we can update the template with a new AMI ID.</p>
 </div>
 <div class="paragraph">
 <p>If you’d like to fix the template yourself, you can <a href="https://fwd.aws/87Dgp">download it</a> and update the Mappings section with the latest AMI ID for your Region.</p>
@@ -2161,12 +2179,9 @@ When you set <strong>Rollback on failure</strong> to <strong>Disabled</strong>, 
 </tr>
 <tr>
 <td class="tableblock halign-left valign-top"><p class="tableblock">System Administrator password must contain at least 8 characters</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The master password contains $ or other special characters.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The master password does not conform to the allowed pattern of the password policy.</p></td>
 <td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
-<p>Check the password parameters before you re-launch the Quick Start.</p>
-</div>
-<div class="paragraph">
-<p>The passwords must be at least 8 characters, consisting of uppercase and lowercase letters and numbers. Follow the <a href="https://technet.microsoft.com/en-us/library/hh994562.aspx">guidelines for complex passwords</a>, and avoid using special characters such as @ or $.</p>
+<p>Change the <strong>Domain administrator password</strong> parameter and relaunch the Quick Start.</p>
 </div></div></td>
 </tr>
 </tbody>
@@ -2319,7 +2334,7 @@ Non-compliant resources occur when the server could not be configured correctly.
 <div class="olist arabic">
 <ol class="arabic" start="11">
 <li>
-<p>A new browser tab will open. To view the logs, do the following:</p>
+<p>A new browser tab opens. To view the logs, do the following:</p>
 <div class="olist loweralpha">
 <ol class="loweralpha" type="a">
 <li>
@@ -3287,7 +3302,7 @@ Region</code>, and <code>Quick Start S3 key prefix</code>. Changing these parame
 </div>
 </div>
 <div class="sect1">
-<h2 id="_quick_start_reference_deployments">Quick Start reference deployments</h2>
+<h2 id="_quick_start_reference_deployments_2">Quick Start reference deployments</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>See the <a href="https://aws.amazon.com/quickstart/">AWS Quick Start home page</a>.</p>
