@@ -245,12 +245,12 @@ As with any enterprise application deployment, a Microsoft SharePoint Server far
 
 When launched, Amazon EC2 instances must be associated with at least one security group which acts as a stateful firewall. You control the network traffic of your security group and build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all outbound traffic is permitted by the security group. Inbound traffic, however, must be configured to allow appropriate traffic to reach your instances.
 
-The https://https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services] whitepaper discusses the different methods for securing your AWS infrastructure in detail. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic in order to reduce the attack surface of your Amazon EC2 instances.
+The https://https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services] whitepaper details different methods for securing your AWS infrastructure, such as using security groups to isolate application tiers. To reduce the attack surface of your Amazon EC2 instances, we recommend tightly controlling your inbound traffic..
 
 [[network-acls]]
 ===== Network ACLs
 
-A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic, and provide an effective way to blacklist a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based upon IP protocol, service port, or source or destination IP address. Figure 21 shows the default ACL configuration for a VPC subnet.
+A network access control list (ACL) is a set of permissions that can be attached to any network subnet in a VPC to provide stateless filtering of traffic. Network ACLs can be used for inbound or outbound traffic, and provide an effective way to deny list a CIDR block or individual IP addresses. These ACLs can contain ordered rules to allow or deny traffic based upon IP protocol, service port, or source or destination IP address. Figure 21 shows the default ACL configuration for a VPC subnet.
 
 [#PostDeploy16]
 .Default network ACL configuration for a VPC subnet
@@ -262,7 +262,7 @@ You can keep the default network ACL configuration or add more specific rules to
 [[secure-extranet-publishing]]
 ===== Secure extranet publishing
 
-Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add another layer of security by placing reverse proxy servers into your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Web page requests from internet-based users would be sent to these reverse proxy servers, which would then establish a connection to your web front-end servers that are running in a private subnet.
+Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.
 
 <<PostDeploy17>> shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.
 
@@ -272,14 +272,14 @@ Some organizations may use SharePoint Server to host a publicly accessible extra
 [link=images/image37.png]
 image::../images/image37.png[PostDeploy17,image,width=648,height=389]
 
-A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the public internet. Several third-party appliances and applications can be used for this task. Microsoft’s Web Application Proxy role in Windows Server 2019 also provides support for publishing your SharePoint resources to the internet.
+A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.
 
-The AWS CloudFormation template provided by this Quick Start does not set up an environment for extranet publishing, but after the deployment, you may choose to add reverse proxy servers and configure the environment that’s illustrated in <<PostDeploy17>>.
+The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <<PostDeploy17>>.
 
 [[ec2-instance-types]]
 ==== EC2 instance types
 
-Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your SharePoint deployment. Since each deployment is different, you will need to follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.
+Properly planning for capacity and sizing servers is a key aspect of every enterprise application deployment. As such, it is important that you choose the appropriate Amazon EC2 instance type for each server role in your SharePoint deployment. Because each deployment is different, you must follow Microsoft’s detailed guidance on how to properly size your environment based on the number of users and workloads involved. As a starting point, consider the minimum requirements for each server role.
 
 The following values are based on minimum requirements for all server roles operating in a three-tier farm.
 
@@ -302,48 +302,38 @@ The Quick Start uses the following instance types by default. These provide addi
 |Database server |r4.2xlarge (8 vCPU, 61 GiB memory) |100 GiB (EBS/GP2)
 |======================================================================================================
 
-Amazon EBS volumes are used as the boot volume for each instance. Notice that we use the EBS General Purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.
+Amazon EBS volumes are used as the boot volume for each instance. Note that we use the EBS general purpose (gp2) volume type. This is an SSD-backed EBS volume that is used as the default boot volume type for all EC2 instances. These gp2 volumes provide a consistent baseline of 3 IOPS/GiB and are burstable up to 3,000 IOPS.
 
-When you launch the AWS CloudFormation template in this guide, you’ll be given the opportunity to adjust these instance types.[[_Customize_Your_Topology]]
+You can adjust these instance types when you launch the AWS CloudFormation template in this guide.
+
+== References
 
 === AWS services
 
-* AWS CloudFormation +
-https://aws.amazon.com/documentation/cloudformation/
-* Amazon EC2 +
-https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/
-* Amazon VPC +
-https://aws.amazon.com/documentation/vpc/
-* AWS Systems Manager +
-https://aws.amazon.com/systems-manager/
+* https://aws.amazon.com/documentation/cloudformation/[AWS CloudFormation Documentation]
+* https://docs.aws.amazon.com/AWSEC2/latest/WindowsGuide/[What is Amazon EC2?]
+* https://aws.amazon.com/documentation/vpc/[Amazon Virtual Private Cloud Documentation]
+* https://aws.amazon.com/systems-manager/[AWS Systems Manager]
 
-*Microsoft SharePoint Server*
 
-* Configure SQL Server AlwaysOn Availability Groups for SharePoint Server +
-https://docs.microsoft.com/en-us/sharepoint/administration/configure-an-alwayson-availability-group
-* Failover Clustering and Always On Availability Groups (SQL Server) +
-https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/failover-clustering-and-always-on-availability-groups-sql-server?view=sql-server-2017
+=== Microsoft SharePoint Server
 
-*Deploying Microsoft software on AWS*
+* https://docs.microsoft.com/en-us/sharepoint/administration/configure-an-alwayson-availability-group[Configure SQL Server AlwaysOn Availability Groups for SharePoint Server]
+* https://docs.microsoft.com/en-us/sql/database-engine/availability-groups/windows/failover-clustering-and-always-on-availability-groups-sql-server?view=sql-server-2017[Failover Clustering and Always On Availability Groups (SQL Server)]
 
-* Microsoft on AWS +
-https://aws.amazon.com/microsoft/
-* Securing the Microsoft Platform on Amazon Web Services +
-https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf
-* Microsoft Licensing Mobility +
-https://aws.amazon.com/windows/mslicensemobility/
-* MSDN on AWS +
-https://aws.amazon.com/windows/msdn/
-* Windows and .NET Developer Center on AWS +
-https://aws.amazon.com/net/
 
-*Quick Start reference deployments*
+=== Deploying Microsoft software on AWS
 
-* AWS Quick Start home page +
-https://aws.amazon.com/quickstart/
-* Microsoft Active Directory on AWS +
-https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/
-* Microsoft Remote Desktop Gateway on AWS +
-https://docs.aws.amazon.com/quickstart/latest/rd-gateway/
-* Microsoft SQL Server with WSFC on AWS +
-https://docs.aws.amazon.com/quickstart/latest/sql/
+* https://aws.amazon.com/microsoft/[Windows on AWS]
+* https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services]
+* https://aws.amazon.com/windows/mslicensemobility/[License Mobility]
+* https://aws.amazon.com/windows/msdn/[Licensing - MSDN]
+* https://aws.amazon.com/net/[Build .NET applications on AWS]
+
+
+=== Quick Start reference deployments
+
+* https://aws.amazon.com/quickstart/[AWS Quick Starts]
+* https://docs.aws.amazon.com/quickstart/latest/active-directory-ds/[Active Directory Domain Services on the AWS Cloud: Quick Start Reference Deployment]
+* https://docs.aws.amazon.com/quickstart/latest/rd-gateway/[Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment]
+* https://docs.aws.amazon.com/quickstart/latest/sql/[SQL Server on the AWS Cloud: Quick Start Reference Deployment]
