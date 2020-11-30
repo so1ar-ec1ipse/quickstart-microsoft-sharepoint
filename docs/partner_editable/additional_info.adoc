@@ -175,28 +175,24 @@ A single-server deployment of SharePoint 2019 is ideal for development environme
 [link=images/image32.png]
 image::../images/image32.png[PostDeploy12,image,width=417,height=164]
 
-In this topology, all SharePoint Service Apps and Instances will execute on the one server though, with no load balancing being required. The database server, however, runs on a different server than SharePoint. This is the simplest way to set up an environment for experimenting with SharePoint.
+In this topology, all SharePoint service applications and instances will run on one server with no load balancing being required. The database server, however, runs on a different server than SharePoint.
 
 [[multiple-server-topology]]
 ==== Multiple-server topology
 
-When you deploy SharePoint to support a production workload that will have many users across the organization, a single-server deployment is not robust enough to account for the load or to maintain availability in the event of an incident. The multiple-server template uses four SharePoint servers in to different roles to distribute the load.
+The multiple-server template uses four SharePoint servers in two different roles to distribute the load.
 
 [#PostDeploy13]
 .An example of how multiple-server topologies in SharePoint can work
 [link=images/image33.png]
 image::../images/image33.png[PostDeploy13,image,width=417,height=248]
 
-In this model, many of the back-end related activities of a SharePoint farm are handled by a second application server (or group of servers), so that the front-end servers can focus on serving end-user requests. Both sets of SharePoint servers directly communicate with the database server or Always On availability group.
-
-To simplify the configuration of multiple-server farms, SharePoint includes the MinRole feature. MinRole provides pre-defined roles, each of which runs a group of services. This ensures that the SharePoint farm runs more smoothly and is easier to maintain.
-
-The multiple-server topology in this Quick Start leverages the following roles in MinRole:
+This Quick Start uses the SharePoint MinRole feature to evenly distribute services among servers in a SharePoint farm deployment. This Quick Start uses the following MinRole roles:
 
 * Front end: Front end with distributed cache
 * Application servers: Application with search
 
-This allows an even distribution of services while adhering to the Microsoft best practices for farm topology. For more information on what MinRole is and how it works in detail, including documentation on what services run on each of these roles, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
+For more information about MinRole, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
 
 :xrefstyle: short
 With two servers in both roles (to support high availability), the resulting architecture is shown in <<PostDeploy14>>>>.
@@ -206,7 +202,7 @@ With two servers in both roles (to support high availability), the resulting arc
 [link=images/architecture_diagram.png]
 image::../images/architecture_diagram.png[PostDeploy14,image,width=738,height=434]
 
-To ensure the highest levels of availability, the servers are put in to different Availability Zones. This helps ensure that in an event where an entire Availability Zone becomes impaired, the servers in the second Availability Zone will still be running.
+To help ensure the highest availability, the servers are set up in different Availability Zones. This helps to ensure that if an entire Availability Zone is impaired, the servers in the second Availability Zone are still running.
 
 [[load-balancing]]
 ===== Load balancing
@@ -222,12 +218,12 @@ The database server role stores content and service data so that your SharePoint
 
 Amazon Machine Images (AMIs) for SQL Server Express, SQL Server Web Edition, and SQL Server Standard are available for launch on AWS. To install SQL Server 2016 or 2017 Enterprise Edition on AWS, you can use http://aws.amazon.com/windows/mslicensemobility/[Microsoft License Mobility through Software Assurance] to bring your own license into the cloud.
 
-In the https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide an example of how you can deploy an Always On availability group to provide high availability for your databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 virtual CPUs (vCPUs), 61 GiB of memory, and 1 x 100 GiB of SSD instance storage. Additionally, we provide highly performing and durable storage in the form of Amazon Elastic Block Store (Amazon EBS) volumes.
+As explained in https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Server Always On on AWS], we provide a way to deploy an *Always On* availability group to provide high availability for databases. Our default SQL Server configuration uses the r4.2xlarge instance type, which is a memory-optimized instance with 8 virtual CPUs (vCPUs), 61 GiB of memory, and 100 GiB of SSD instance storage. Additionally, we provide high-performance, durable storage through Amazon Elastic Block Store (Amazon EBS) volumes.
 
 [[intranet-sharepoint-server-farm-on-aws]]
 ==== Intranet SharePoint server farm on AWS
 
-The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, users who are in the domain and network where SharePoint is running can access the content, but it is closed off to anyone outside of that domain and network. To allow access for a corporate network, the architecture needs to also include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
+The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, domain users on the SharePoint network can access the content, but it's closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
 
 :xrefstyle: short
 [#PostDeploy15]
@@ -235,21 +231,21 @@ The architecture diagrams shown up to this point represent an isolated Microsoft
 [link=images/image35.png]
 image::../images/image35.png[PostDeploy15,image,width=743,height=434]
 
-In <<PostDeploy15>>, we’ve created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.
+In <<PostDeploy15>>, we created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.
 
-In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, once you have internal network connectivity into the VPC from your on-premises environment, you can simply provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing will also provide high availability in the event of a server failure. If a web front-end server is unavailable, requests will be sent to one that is online.
+In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, when you connect to the VPC from your on-premises environment, you can provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing provides high availability if a server fails. If a web front-end server is unavailable, requests are sent to one that is online.
 
 [[security]]
 ==== Security
 
-As with any enterprise application deployment, a Microsoft SharePoint Server farm on AWS should implement strict security controls. AWS provides a comprehensive set of security features that allow you to control the flow of traffic through your VPC, associated subnets, and ultimately to each Amazon EC2 instance. These features allow you to reduce the attack surface of your environment while providing both end-user access to SharePoint content and applications, and administrator access for securely managing the Windows Server infrastructure. These security features and approaches are covered in this section.
+As with any enterprise application deployment, a Microsoft SharePoint Server farm on AWS should implement strict security controls. AWS provides a comprehensive set of security features that allow you to control the flow of traffic through your VPC, associated subnets, and ultimately to each Amazon EC2 instance. These features can reduce your environment's attack surface while providing end-user access to SharePoint content and applications, in addition to administrator access for managing Windows Server infrastructure.
 
 [[security-groups]]
 ===== Security groups
 
-When launched, Amazon EC2 instances must be associated with at least one security group, which acts as a stateful firewall. You have complete control over the network traffic entering or leaving your security groups, and you can build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all traffic egressing a security group is permitted. Ingress traffic, on the other hand, must be configured to allow the appropriate traffic to reach your instances.
+When launched, Amazon EC2 instances must be associated with at least one security group which acts as a stateful firewall. You control the network traffic of your security group and build granular rules that are scoped by protocol, port number, and source/destination IP address or subnet. By default, all outbound traffic is permitted by the security group. Inbound traffic, however, must be configured to allow appropriate traffic to reach your instances.
 
-The https://d0.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services] whitepaper discusses the different methods for securing your AWS infrastructure in detail. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic in order to reduce the attack surface of your Amazon EC2 instances.
+The https://https://d1.awsstatic.com/whitepapers/aws-microsoft-platform-security.pdf[Securing the Microsoft Platform on Amazon Web Services] whitepaper discusses the different methods for securing your AWS infrastructure in detail. Recommendations include providing isolation between application tiers using security groups. We recommend that you tightly control ingress traffic in order to reduce the attack surface of your Amazon EC2 instances.
 
 [[network-acls]]
 ===== Network ACLs
