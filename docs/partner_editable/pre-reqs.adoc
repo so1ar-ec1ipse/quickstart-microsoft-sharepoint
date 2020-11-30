@@ -2,7 +2,7 @@
 
 ==== Download the SharePoint software
 
-To access the SharePoint Server 2019 installation media, you need to place the contents of the SharePoint installation ISO file in a .zip file. When creating this .zip file, you have the option of “slip streaming” additional cumulative updates into the file, which means that these updates will be automatically installed when SharePoint is installed. This can help you deploy SharePoint to a specific update level when it is first installed. The following steps show you how to create the .zip file and upload it to Amazon S3.
+To access the SharePoint Server 2019 installation, you must transfer the contents of the SharePoint installation ISO file to a .zip file. When creating the .zip file, choose the “slip streaming” option to add cumulative updates to the file, which means that updates automatically install when SharePoint installs. This can help you deploy SharePoint with a specific update upon initial installation. The following steps show you how to create the .zip file and upload it to Amazon S3.
 
 [start=1]
 . Download the evaluation edition of SharePoint 2019 from https://www.microsoft.com/en-us/download/details.aspx?id=57462[Microsoft Download Center].
@@ -11,11 +11,11 @@ To access the SharePoint Server 2019 installation media, you need to place the c
 +
 Obtain the ISO file from MSDN, if you have an MSDN account with licenses for server software.
 
-. Open the ISO file (in Windows, double-click the file to mount the ISO and open it), and copy the contents to a temporary location on your system.
+. Open the ISO file (in Windows, choose the file to mount the ISO and open it), and copy the contents to a temporary location.
 . (Optional) To include any additional updates, use the slip-streaming option:
 ..  https://docs.microsoft.com/en-us/officeupdates/sharepoint-updates[Download the updates] that you want to include.
 ..  Open a command prompt, and change the current path to the folder where you downloaded the updates.
-..  To extract the updates to the updates folder in your installation media temporary folder, run the following command:
+..  To extract the updates, run the following command:
 
 ```
 UpdateFileName.exe /extract:PathToUpdatesFolder
@@ -29,19 +29,19 @@ In the command,
 * _PathToUpdatesFolder_ is the path to the folder called Updates that exists in the installation media that you extracted in Step 2. For example, if you extracted the media to C:\SPInstall, the path is C:\SPInstall\Updates.
 ====
 [start=4]
-. Choose all of the files and folders in the directory on your system to which you extracted the installation media, open the context (right-click) menu, and choose *Send To*, *Compressed (zipped) folder*. This creates a .zip file of your installation media that can be used for the installation.
+. Choose all of the files and folders in the directory to which you extracted the installation media. Open the context (right-click) menu, and choose *Send to*, and then choose *Compressed (zipped) folder*. This creates a .zip file of your media that can be used for installation.
 . Sign in to your AWS account and open the https://console.aws.amazon.com/s3[Amazon S3 console].
-. Choose *Create Bucket*.
-. Complete the *Create a Bucket* dialog box:
+. Choose *Create bucket*.
+. Complete the *Create a bucket* dialog box:
 
-.. In the *Bucket Name* box, enter a globally unique name for the bucket (for example, your account name).
+.. In the *Bucket name* box, enter a globally unique name for the bucket (for example, your account name).
 .. In the *Region* list, select the AWS Region where you plan to launch the Quick Start.
 .. Choose *Create*. The console displays your new bucket in the *Buckets* pane.
 
 . Choose the new bucket to navigate to it.
 . Choose *Upload*.
-. In the *Upload – Select Files and Folders* dialog box, choose *Add Files*.
-. In the file selection dialog box, browse to the .zip file that you created earlier, and choose *Open*, *Start Upload*.
+. In the *Upload – select files and folders* dialog box, choose *Add files*.
+. In the dialog box, browse to the .zip file that you created earlier, and choose *Open*, and then choose *Start upload*.
 
 Make a note of the bucket name and the file name that you used for your .zip file. You will use these later when you launch the SharePoint stack.
 
@@ -49,10 +49,10 @@ Make a note of the bucket name and the file name that you used for your .zip fil
 
 NOTE: This step is not required if you are deploying the SharePoint farm into a new VPC.
 
-Before launching the SharePoint stack, the following prerequisites should be configured:
+Before launching the SharePoint stack into an existing VPC, the following items must be deployed:
 
-* A VPC with two private subnets where SharePoint will run.
-* A Windows Active Directory server that runs the Domain Name Server (DNS) service.
-* A SQL Server 2016 or 2017 instance (or a highly available instance that has an Always On availability group configured with a listener attached to it).
+* A VPC with two private subnets where SharePoint runs.
+* A Windows Active Directory server that runs the Domain Name System (DNS) service.
+* An SQL Server 2016 or 2017 instance (or a highly available instance that has an Always On availability group configured with a listener attached to it).
 
-If you have not already, deploying the https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts will provision these prerequisites. Refer to the Quick Start deployment guides for instructions. 
+You can deploy these resources with the https://fwd.aws/N6e7B[Active Directory Domain Services on AWS] and https://fwd.aws/GRNKR[SQL Server on AWS] Quick Starts. Refer to their respective deployment guides for instructions.
