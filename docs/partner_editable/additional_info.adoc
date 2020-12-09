@@ -258,13 +258,7 @@ Some organizations use SharePoint Server to host a publicly accessible extranet.
 
 A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.
 
-The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <<PostDeploy17>>.
-
-:xrefstyle: short
-[#PostDeploy17]
-.Web application publishing with a reverse proxy server
-[link=images/image37.png]
-image::../images/image37.png[PostDeploy17,image,width=648,height=389]
+The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers in the public subnets.
 
 [[ec2-instance-types]]
 ==== EC2 instance types
