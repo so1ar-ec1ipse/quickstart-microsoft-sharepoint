@@ -192,17 +192,9 @@ This Quick Start uses the SharePoint MinRole feature to evenly distribute servic
 * Front end: Front end with distributed cache
 * Application servers: Application with search
 
+Two servers, one in each MinRole role, are set up in different Availability Zones. This helps to ensure that if one Availability Zone is impaired, a server in each role is still running in the second Availability Zone.
+
 For more information about MinRole, see https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server[Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019].
-
-:xrefstyle: short
-With two servers in both roles (to support high availability), the resulting architecture is shown in <<PostDeploy14>>>>.
-
-[#PostDeploy14]
-.Multiple-server topology
-[link=images/architecture_diagram.png]
-image::../images/architecture_diagram.png[PostDeploy14,image,width=738,height=434]
-
-To help ensure the highest availability, the servers are set up in different Availability Zones. This helps to ensure that if an entire Availability Zone is impaired, the servers in the second Availability Zone are still running.
 
 [[load-balancing]]
 ===== Load balancing
@@ -223,7 +215,7 @@ As explained in https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Ser
 [[intranet-sharepoint-server-farm-on-aws]]
 ==== Intranet SharePoint server farm on AWS
 
-The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, domain users on the SharePoint network can access the content, but it's closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
+In an isolated Microsoft SharePoint farm scenario, domain users on the SharePoint network can access the content, but it's closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
 
 :xrefstyle: short
 [#PostDeploy15]
@@ -262,19 +254,17 @@ You can keep the default network ACL configuration or add more specific rules to
 [[secure-extranet-publishing]]
 ===== Secure extranet publishing
 
-Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.
+Some organizations use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.
 
-<<PostDeploy17>> shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.
+A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.
+
+The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <<PostDeploy17>>.
 
 :xrefstyle: short
 [#PostDeploy17]
 .Web application publishing with a reverse proxy server
 [link=images/image37.png]
 image::../images/image37.png[PostDeploy17,image,width=648,height=389]
-
-A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.
-
-The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <<PostDeploy17>>.
 
 [[ec2-instance-types]]
 ==== EC2 instance types
