@@ -215,7 +215,7 @@ As explained in https://fwd.aws/GRNKR[Quick Start for Microsoft WSFC and SQL Ser
 [[intranet-sharepoint-server-farm-on-aws]]
 ==== Intranet SharePoint server farm on AWS
 
-In an isolated Microsoft SharePoint farm scenario, domain users on the SharePoint network can access the content, but it's closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
+In an isolated Microsoft SharePoint farm scenario, domain users on the SharePoint network can access the content, but it's closed off to anyone outside the SharePoint domain and network. To allow corporate network access, the architecture must include private connectivity from the on-premises environment. <<PostDeploy15>> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.
 
 :xrefstyle: short
 [#PostDeploy15]
@@ -223,7 +223,7 @@ In an isolated Microsoft SharePoint farm scenario, domain users on the SharePoin
 [link=images/image35.png]
 image::../images/image35.png[PostDeploy15,image,width=743,height=434]
 
-In <<PostDeploy15>>, we created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.
+<<PostDeploy15>> depicts a VPN tunnel running from the customer gateway to the VPN gateway in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.
 
 In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, when you connect to the VPC from your on-premises environment, you can provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing provides high availability if a server fails. If a web front-end server is unavailable, requests are sent to one that is online.
 
