@@ -56,33 +56,18 @@ When deploying a Windows-based architecture on the AWS Cloud, we recommend a VPC
 
 For details on the VPC design used in this reference, see the https://fwd.aws/N6e7B[Active Directory Domain Services on the AWS Cloud].
 
-:xrefstyle: short
-Based on these best practices, this Quick Start deploys the base-level VPC framework shown in <<architecture2>>:
-
-[#architecture2]
-.VPC architecture on the AWS cloud
-[link=images/image3.png]
-image::../images/image3.png[Architecture2,image,width=648,height=427]
-
-NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
+Based on these best practices, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.
 
 Instances that deploy in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.
 
 [[active-directory-domain-services]]
 === Active Directory Domain Services
 
-To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (AD DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability.
-
-[#architecture3]
-.Domain controllers in each Availability Zone
-[link=images/image4.png]
-image::../images/image4.png[Architecture3,image,width=648,height=373]
-
-In <<architecture3>>, we included a domain controller in the Active Directory tier in each Availability Zone.
+To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (AD DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability. This Quick Start includes a domain controller in the Active Directory tier in each Availability Zone.
 
 There are two ways to use AD DS in the AWS Cloud:
 
-* Cloud only – As shown in <<architecture3>>, this type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.
+* Cloud only – This type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.
 * Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can use your existing Active Directory infrastructure. In a hybrid architecture, we recommend that you deploy domain controllers for your existing Active Directory forest to the AWS Cloud. We recommend this configuration primarily to ensure that the deployed application servers remain functional and available if there is an on-premises outage.
 
 The https://fwd.aws/N6e7B[Active Directory Domain Services on the AWS Cloud] Quick Start covers best practices and recommendations for deploying AD DS on AWS. This Quick Start has you launch the AD DS Quick Start, which uses our best practices to deploy the Active Directory environment.
@@ -93,11 +78,6 @@ The https://fwd.aws/N6e7B[Active Directory Domain Services on the AWS Cloud] Qui
 As we design the architecture for a highly available SharePoint farm, we should also design for highly available and secure remote access. We can do this by deploying an RD Gateway in each Availability Zone. If an Availability Zone outage occurs, this architecture provides access to failed resources using another Availability Zone.
 
 The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to help establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances. This does not require you to configure a virtual private network (VPN) connection. This allows you to reduce vulnerabilities on your Windows-based instances during remote administration.
-
-[#architecture4]
-.NAT gateways and Remote Desktop Gateways in public subnets
-[link=images/image5.png]
-image::../images/image5.png[Architecture4,image,width=648,height=378]
 
 The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in https://fwd.aws/5VrKP[Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment]. After you launch your SharePoint infrastructure using a deployment option in this guide, you initially connect to your instances using the standard RDP TCP port 3389. You can then follow the steps in this guide to secure future connections via HTTPS. (See link:#post-deployment-steps[Post-deployment steps].)
 

@@ -863,7 +863,7 @@ p.footer-text a{color:#d7d8d8}
 </div>
 </div>
 <div class="paragraph text-center">
-<p><strong>November 2020</strong><br>
+<p><strong>December 2020</strong><br>
 <em>AWS Quick Start team</em></p>
 </div>
 <div class="admonitionblock tip text-left">
@@ -1056,16 +1056,7 @@ the components marked by asterisks and prompts you for your existing VPC configu
 <p>For details on the VPC design used in this reference, see the <a href="https://fwd.aws/N6e7B">Active Directory Domain Services on the AWS Cloud</a>.</p>
 </div>
 <div class="paragraph">
-<p>Based on these best practices, this Quick Start deploys the base-level VPC framework shown in <a href="#architecture2">Figure 2</a>:</p>
-</div>
-<div id="architecture2" class="imageblock">
-<div class="content">
-<a class="image" href="images/image3.png"><img src="images/image3.png" alt="Architecture2" width="648" height="427"></a>
-</div>
-<div class="title">Figure 2. VPC architecture on the AWS cloud</div>
-</div>
-<div class="paragraph">
-<p>NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.</p>
+<p>Based on these best practices, NAT gateways are deployed into the public subnets. The public subnets have a route to the internet directly through the internet gateway attached to the VPC.</p>
 </div>
 <div class="paragraph">
 <p>Instances that deploy in the private subnets have no direct route to the internet. Instead, instances in private subnets use private routes to send internet traffic to the NAT gateways in the public subnets. This architecture isolates your critical workloads from direct internet access.</p>
@@ -1074,16 +1065,7 @@ the components marked by asterisks and prompts you for your existing VPC configu
 <div class="sect2">
 <h3 id="active-directory-domain-services">Active Directory Domain Services</h3>
 <div class="paragraph">
-<p>To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (AD DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability.</p>
-</div>
-<div id="architecture3" class="imageblock">
-<div class="content">
-<a class="image" href="images/image4.png"><img src="images/image4.png" alt="Architecture3" width="648" height="373"></a>
-</div>
-<div class="title">Figure 3. Domain controllers in each Availability Zone</div>
-</div>
-<div class="paragraph">
-<p>In <a href="#architecture3">Figure 3</a>, we included a domain controller in the Active Directory tier in each Availability Zone.</p>
+<p>To provide user authentication and authorization, the Microsoft SharePoint servers in this reference architecture use Active Directory Domain Services (AD DS). As you deploy your environment, you should place at least one domain controller in a private subnet in each Availability Zone for redundancy and high availability. This Quick Start includes a domain controller in the Active Directory tier in each Availability Zone.</p>
 </div>
 <div class="paragraph">
 <p>There are two ways to use AD DS in the AWS Cloud:</p>
@@ -1091,7 +1073,7 @@ the components marked by asterisks and prompts you for your existing VPC configu
 <div class="ulist">
 <ul>
 <li>
-<p>Cloud only – As shown in <a href="#architecture3">Figure 3</a>, this type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.</p>
+<p>Cloud only – This type of architecture means that your entire Active Directory forest exists only within the AWS Cloud. There are no on-premises domain controllers.</p>
 </li>
 <li>
 <p>Hybrid – The hybrid architecture takes advantage of your existing AD DS environment. You can extend your private, on-premises network to AWS so the resources in the cloud can use your existing Active Directory infrastructure. In a hybrid architecture, we recommend that you deploy domain controllers for your existing Active Directory forest to the AWS Cloud. We recommend this configuration primarily to ensure that the deployed application servers remain functional and available if there is an on-premises outage.</p>
@@ -1109,12 +1091,6 @@ the components marked by asterisks and prompts you for your existing VPC configu
 </div>
 <div class="paragraph">
 <p>The RD Gateway uses the Remote Desktop Protocol (RDP) over HTTPS to help establish a secure, encrypted connection between remote administrators on the internet and Windows-based EC2 instances. This does not require you to configure a virtual private network (VPN) connection. This allows you to reduce vulnerabilities on your Windows-based instances during remote administration.</p>
-</div>
-<div id="architecture4" class="imageblock">
-<div class="content">
-<a class="image" href="images/image5.png"><img src="images/image5.png" alt="Architecture4" width="648" height="378"></a>
-</div>
-<div class="title">Figure 4. NAT gateways and Remote Desktop Gateways in public subnets</div>
 </div>
 <div class="paragraph">
 <p>The AWS CloudFormation templates provided in this Quick Start automatically deploy the architecture described in <a href="https://fwd.aws/5VrKP">Remote Desktop Gateway on the AWS Cloud: Quick Start Reference Deployment</a>. After you launch your SharePoint infrastructure using a deployment option in this guide, you initially connect to your instances using the standard RDP TCP port 3389. You can then follow the steps in this guide to secure future connections via HTTPS. (See <a href="#post-deployment-steps">Post-deployment steps</a>.)</p>
@@ -1466,15 +1442,15 @@ You are responsible for the cost of the AWS services used while running this Qui
 <tbody>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/AdxKM" target="_blank" rel="noopener">Deploy SharePoint into a new VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-sharepoint/blob/master/templates/sharepoint-master.template.yaml" target="_blank" rel="noopener">View template</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/JVkXY" target="_blank" rel="noopener">View template</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/z67Gy" target="_blank" rel="noopener">Deploy a SharePoint farm into an existing VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-sharepoint/blob/master/templates/sharepoint-farm.template.yaml" target="_blank" rel="noopener">View template</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/KyqPn" target="_blank" rel="noopener">View template</a></p></td>
 </tr>
 <tr>
 <td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/AmVKK" target="_blank" rel="noopener">Deploy a single SharePoint server into an existing VPC on AWS</a></p></td>
-<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://github.com/aws-quickstart/quickstart-microsoft-sharepoint/blob/master/templates/sharepoint-single.template.yaml" target="_blank" rel="noopener">View template</a></p></td>
+<td class="tableblock halign-center valign-top"><p class="tableblock"><a href="https://fwd.aws/7j5z3" target="_blank" rel="noopener">View template</a></p></td>
 </tr>
 </tbody>
 </table>
@@ -1528,7 +1504,7 @@ If you deploy SharePoint into an existing VPC, ensure that your VPC has two priv
 <p>Monitor the status of the stack. When the status is <strong>CREATE_COMPLETE</strong>, the SharePoint deployment is ready.</p>
 </li>
 <li>
-<p>Use the values displayed in the <strong>Outputs</strong> tab for the stack, as shown in <a href="#cfn_outputs">Figure 5</a>, to view the created resources.</p>
+<p>Use the values displayed in the <strong>Outputs</strong> tab for the stack, as shown in <a href="#cfn_outputs">Figure 2</a>, to view the created resources.</p>
 </li>
 </ol>
 </div>
@@ -1536,7 +1512,7 @@ If you deploy SharePoint into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <a class="image" href="images/cfn_outputs.png"><img src="images/cfn_outputs.png" alt="cfn_outputs" width="648" height="439"></a>
 </div>
-<div class="title">Figure 5. SharePoint outputs after successful deployment</div>
+<div class="title">Figure 2. SharePoint outputs after successful deployment</div>
 </div>
 </div>
 </div>
@@ -1566,7 +1542,7 @@ If you deploy SharePoint into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <a class="image" href="images/image17.png"><img src="images/image17.png" alt="PostDeploy1" width="283" height="151"></a>
 </div>
-<div class="title">Figure 6. Creating site collections</div>
+<div class="title">Figure 3. Creating site collections</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="3">
@@ -1579,7 +1555,7 @@ If you deploy SharePoint into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <a class="image" href="images/image18.png"><img src="images/image18.png" alt="PostDeploy2" width="648" height="562"></a>
 </div>
-<div class="title">Figure 7. Creating a team site</div>
+<div class="title">Figure 4. Creating a team site</div>
 </div>
 <div class="paragraph">
 <p>You must define a <strong>Primary Site Collection Administrator</strong> on this page. You can use either the domain administrator account for this value, or any other valid account within the domain. When you finish filling out the form, choose <strong>OK</strong>.</p>
@@ -1595,7 +1571,7 @@ If you deploy SharePoint into an existing VPC, ensure that your VPC has two priv
 <div class="content">
 <a class="image" href="images/image19.png"><img src="images/image19.png" alt="PostDeploy3" width="648" height="455"></a>
 </div>
-<div class="title">Figure 8. Team site</div>
+<div class="title">Figure 5. Team site</div>
 </div>
 </div>
 <div class="sect2">
@@ -1625,7 +1601,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image7.png"><img src="images/image7.png" alt="PostDeploy4" width="477" height="315"></a>
 </div>
-<div class="title">Figure 9. Connecting to WSFCNODE1</div>
+<div class="title">Figure 6. Connecting to WSFCNODE1</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="2">
@@ -1641,7 +1617,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image20.png"><img src="images/image20.png" alt="PostDeploy5" width="648" height="586"></a>
 </div>
-<div class="title">Figure 10. Setting databases to full recovery mode</div>
+<div class="title">Figure 7. Setting databases to full recovery mode</div>
 </div>
 </div>
 <div class="sect3">
@@ -1660,7 +1636,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image21.png"><img src="images/image21.png" alt="PostDeploy6" width="648" height="358"></a>
 </div>
-<div class="title">Figure 11. Backing up a database</div>
+<div class="title">Figure 8. Backing up a database</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="2">
@@ -1683,7 +1659,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image22.png"><img src="images/image22.png" alt="PostDeploy7" width="352" height="389"></a>
 </div>
-<div class="title">Figure 12. Choosing Add Database for the availability group</div>
+<div class="title">Figure 9. Choosing Add Database for the availability group</div>
 </div>
 </li>
 </ol>
@@ -1699,7 +1675,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image23.png"><img src="images/image23.png" alt="PostDeploy8" width="648" height="589"></a>
 </div>
-<div class="title">Figure 13. Choosing databases to include in the availability group</div>
+<div class="title">Figure 10. Choosing databases to include in the availability group</div>
 </div>
 </li>
 </ol>
@@ -1724,7 +1700,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image24.png"><img src="images/image24.png" alt="PostDeploy9" width="648" height="352"></a>
 </div>
-<div class="title">Figure 14. Choosing automatic seeding to populate secondary replicas</div>
+<div class="title">Figure 11. Choosing automatic seeding to populate secondary replicas</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="6">
@@ -1743,7 +1719,7 @@ This step is not required if deploying a SharePoint farm into a new VPC.
 <div class="content">
 <a class="image" href="images/image25.png"><img src="images/image25.png" alt="PostDeploy10" width="648" height="260"></a>
 </div>
-<div class="title">Figure 15. Validation checks before adding the databases to the availability group</div>
+<div class="title">Figure 12. Validation checks before adding the databases to the availability group</div>
 </div>
 </div>
 </div>
@@ -1780,13 +1756,13 @@ $db.Update()
 <div class="sect2">
 <h3 id="_test_automatic_failover">Test automatic failover</h3>
 <div class="paragraph">
-<p>After your external SharePoint site is available, you can test automatic failover. On the Amazon EC2 console, stop WSFCNode 1, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <a href="#PostDeploy11">Figure 16</a>.)</p>
+<p>After your external SharePoint site is available, you can test automatic failover. On the Amazon EC2 console, stop WSFCNode 1, SPServer1, and SPServer3. (You can stop the instances simultaneously, as shown in <a href="#PostDeploy11">Figure 13</a>.)</p>
 </div>
 <div id="PostDeploy11" class="imageblock">
 <div class="content">
 <a class="image" href="images/image26.png"><img src="images/image26.png" alt="PostDeploy11" width="625" height="369"></a>
 </div>
-<div class="title">Figure 16. Stopping the instances in Availability Zone 1</div>
+<div class="title">Figure 13. Stopping the instances in Availability Zone 1</div>
 </div>
 <div class="paragraph">
 <p>The SharePoint databases should fail over automatically to the second WSFC node. The load balancers should detect that SPServer1 and SPServer3 have gone offline and should direct HTTP traffic to SPServer2 and SPServer4, respectively. You can revisit the site and the central administrator site in your web browser to confirm that everything is still working.</p>
@@ -1811,7 +1787,7 @@ $db.Update()
 <div class="content">
 <a class="image" href="images/image32.png"><img src="images/image32.png" alt="PostDeploy12" width="417" height="164"></a>
 </div>
-<div class="title">Figure 17. A single-server SharePoint topology</div>
+<div class="title">Figure 14. A single-server SharePoint topology</div>
 </div>
 <div class="paragraph">
 <p>In this topology, all SharePoint service applications and instances will run on one server with no load balancing being required. The database server, however, runs on a different server than SharePoint.</p>
@@ -1826,7 +1802,7 @@ $db.Update()
 <div class="content">
 <a class="image" href="images/image33.png"><img src="images/image33.png" alt="PostDeploy13" width="417" height="248"></a>
 </div>
-<div class="title">Figure 18. An example of how multiple-server topologies in SharePoint can work</div>
+<div class="title">Figure 15. An example of how multiple-server topologies in SharePoint can work</div>
 </div>
 <div class="paragraph">
 <p>This Quick Start uses the SharePoint MinRole feature to evenly distribute services among servers in a SharePoint farm deployment. This Quick Start uses the following MinRole roles:</p>
@@ -1842,19 +1818,10 @@ $db.Update()
 </ul>
 </div>
 <div class="paragraph">
+<p>Two servers, one in each MinRole role, are set up in different Availability Zones. This helps to ensure that if one Availability Zone is impaired, a server in each role is still running in the second Availability Zone.</p>
+</div>
+<div class="paragraph">
 <p>For more information about MinRole, see <a href="https://docs.microsoft.com/en-us/sharepoint/install/overview-of-minrole-server-roles-in-sharepoint-server">Overview of MinRole Server Roles in SharePoint Servers 2016 and 2019</a>.</p>
-</div>
-<div class="paragraph">
-<p>With two servers in both roles (to support high availability), the resulting architecture is shown in <a href="#PostDeploy14">Figure 19</a>&gt;&gt;.</p>
-</div>
-<div id="PostDeploy14" class="imageblock">
-<div class="content">
-<a class="image" href="images/architecture_diagram.png"><img src="images/architecture_diagram.png" alt="PostDeploy14" width="738" height="434"></a>
-</div>
-<div class="title">Figure 19. Multiple-server topology</div>
-</div>
-<div class="paragraph">
-<p>To help ensure the highest availability, the servers are set up in different Availability Zones. This helps to ensure that if an entire Availability Zone is impaired, the servers in the second Availability Zone are still running.</p>
 </div>
 <div class="sect4">
 <h5 id="load-balancing">Load balancing</h5>
@@ -1881,16 +1848,16 @@ $db.Update()
 <div class="sect3">
 <h4 id="intranet-sharepoint-server-farm-on-aws">Intranet SharePoint server farm on AWS</h4>
 <div class="paragraph">
-<p>The architecture diagrams shown up to this point represent an isolated Microsoft SharePoint farm. For this scenario, domain users on the SharePoint network can access the content, but it&#8217;s closed off to anyone outside the SharePoint domain and network. To allow access for a corporate network, the architecture must include private connectivity from the on-premises environment. <a href="#PostDeploy15">Figure 20</a> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.</p>
+<p>In an isolated Microsoft SharePoint farm scenario, domain users on the SharePoint network can access the content, but it&#8217;s closed off to anyone outside the SharePoint domain and network. To allow corporate network access, the architecture must include private connectivity from the on-premises environment. <a href="#PostDeploy15">Figure 16</a> shows a typical topology for an intranet SharePoint server farm running on the AWS Cloud.</p>
 </div>
 <div id="PostDeploy15" class="imageblock">
 <div class="content">
 <a class="image" href="images/image35.png"><img src="images/image35.png" alt="PostDeploy15" width="743" height="434"></a>
 </div>
-<div class="title">Figure 20. Intranet SharePoint server farm topology</div>
+<div class="title">Figure 16. Intranet SharePoint server farm topology</div>
 </div>
 <div class="paragraph">
-<p>In <a href="#PostDeploy15">Figure 20</a>, we created a VPN tunnel from the customer gateway to the VPN gateway running in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.</p>
+<p><a href="#PostDeploy15">Figure 16</a> depicts a VPN tunnel running from the customer gateway to the VPN gateway in the VPC (to enable internal network connectivity to the VPC). The customer gateway is an Internet Protocol Security (IPsec)-capable device.</p>
 </div>
 <div class="paragraph">
 <p>In addition, AWS offers the AWS Direct Connect service, which allows you to create a direct network connection from your data center into the AWS Cloud. In either case, when you connect to the VPC from your on-premises environment, you can provision internal Elastic Load Balancing to spread incoming traffic to front-end servers across each Availability Zone. Elastic Load Balancing provides high availability if a server fails. If a web front-end server is unavailable, requests are sent to one that is online.</p>
@@ -1919,7 +1886,7 @@ $db.Update()
 <div class="content">
 <a class="image" href="images/image36.png"><img src="images/image36.png" alt="PostDeploy16" width="597" height="281"></a>
 </div>
-<div class="title">Figure 21. Default network ACL configuration for a VPC subnet</div>
+<div class="title">Figure 17. Default network ACL configuration for a VPC subnet</div>
 </div>
 <div class="paragraph">
 <p>You can keep the default network ACL configuration or add more specific rules to restrict traffic between subnets at the network level. Typically, network ACLs will mirror your security group rules. One benefit of multiple layers of network security (security groups and network ACLs) is that each layer can be managed by a separate group in your organization. If a server administrator inadvertently exposes unnecessary network ports on a security group, a network administrator could supersede this configuration by blocking that traffic at the network ACL layer.</p>
@@ -1928,22 +1895,13 @@ $db.Update()
 <div class="sect4">
 <h5 id="secure-extranet-publishing">Secure extranet publishing</h5>
 <div class="paragraph">
-<p>Some organizations may use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.</p>
-</div>
-<div class="paragraph">
-<p><a href="#PostDeploy17">Figure 22</a> shows an example of publishing SharePoint web front-end servers, located in a private subnet, through a reverse proxy server deployed into a public subnet.</p>
-</div>
-<div id="PostDeploy17" class="imageblock">
-<div class="content">
-<a class="image" href="images/image37.png"><img src="images/image37.png" alt="PostDeploy17" width="648" height="389"></a>
-</div>
-<div class="title">Figure 22. Web application publishing with a reverse proxy server</div>
+<p>Some organizations use SharePoint Server to host a publicly accessible extranet. In this scenario, you can add reverse proxy servers to your public subnet to provide additional security and threat management. In this configuration, the public subnet acts like the DMZ that you would typically use in a physical network environment. Webpage requests from external users are sent to these reverse proxy servers, which would establishes a connection to your web front-end servers in a private subnet.</p>
 </div>
 <div class="paragraph">
 <p>A benefit of this architecture is that it provides the ability to pre-authenticate users at the perimeter of your network while shielding your internal SharePoint servers from the internet. Several third-party appliances and applications can be used for this task. The Microsoft Web Application Proxy role in Windows Server 2019 also provides support for publishing SharePoint resources on the internet.</p>
 </div>
 <div class="paragraph">
-<p>The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers to configure the environment as shown in <a href="#PostDeploy17">Figure 22</a>.</p>
+<p>The AWS CloudFormation template provided by this Quick Start does not set up extranet publishing. After the deployment, you can add reverse proxy servers in the public subnets.</p>
 </div>
 </div>
 </div>
@@ -2223,7 +2181,7 @@ For additional information, see <a href="https://docs.aws.amazon.com/AWSCloudFor
 <div class="content">
 <a class="image" href="images/image27.png"><img src="images/image27.png" alt="Troubleshooting1" width="648" height="285"></a>
 </div>
-<div class="title">Figure 23. Compliance view in Systems Manager</div>
+<div class="title">Figure 18. Compliance view in Systems Manager</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="2">
@@ -2274,7 +2232,7 @@ Non-compliant resources occur when the server could not be configured correctly.
 <div class="content">
 <a class="image" href="images/image28.png"><img src="images/image28.png" alt="Troubleshooting2" width="648" height="261"></a>
 </div>
-<div class="title">Figure 24. Filtering to show non-compliant resources</div>
+<div class="title">Figure 19. Filtering to show non-compliant resources</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="6">
@@ -2297,7 +2255,7 @@ Non-compliant resources occur when the server could not be configured correctly.
 <div class="content">
 <a class="image" href="images/image29.png"><img src="images/image29.png" alt="Troubleshooting3" width="648" height="160"></a>
 </div>
-<div class="title">Figure 25. Finding the association ID</div>
+<div class="title">Figure 20. Finding the association ID</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="7">
@@ -2310,7 +2268,7 @@ Non-compliant resources occur when the server could not be configured correctly.
 <div class="content">
 <a class="image" href="images/image30.png"><img src="images/image30.png" alt="Troubleshooting4" width="648" height="473"></a>
 </div>
-<div class="title">Figure 26. Filtering to show non-compliant resources</div>
+<div class="title">Figure 21. Filtering to show non-compliant resources</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="8">
@@ -2329,7 +2287,7 @@ Non-compliant resources occur when the server could not be configured correctly.
 <div class="content">
 <a class="image" href="images/image31.png"><img src="images/image31.png" alt="Troubleshooting5" width="648" height="143"></a>
 </div>
-<div class="title">Figure 27. The output link for a specific execution job</div>
+<div class="title">Figure 22. The output link for a specific execution job</div>
 </div>
 <div class="olist arabic">
 <ol class="arabic" start="11">
