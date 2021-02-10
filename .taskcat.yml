@@ -19,6 +19,7 @@ tests:
   sharepoint-farm:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
+      ADScenarioType: 'AWS Directory Service for Microsoft AD (Enterprise Edition)'
       DomainAdminUser: admin
       DomainAdminPassword: $[taskcat_genpass_16]
       Farm: Deploy a SharePoint farm

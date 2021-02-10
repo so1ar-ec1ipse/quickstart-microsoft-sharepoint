@@ -34,6 +34,7 @@ Metadata:
       - Label:
           default: Microsoft Active Directory configuration
         Parameters:
+          - ADScenarioType
           - ADServer1InstanceType
           - ADServer1NetBIOSName
           - ADServer1PrivateIP
@@ -89,6 +90,8 @@ Metadata:
           - QSS3BucketRegion
           - QSS3KeyPrefix
     ParameterLabels:
+      ADScenarioType:
+        default: AD scenario type
       AvailabilityZones:
         default: Availability Zones
       ADServer1InstanceType:
@@ -215,6 +218,14 @@ Parameters:
   AvailabilityZones:
     Description: List of Availability Zones to use for the subnets in the VPC. Only two Availability Zones are used for this deployment, and the logical order is preserved.
     Type: List<AWS::EC2::AvailabilityZone::Name>
+  ADScenarioType:
+    AllowedValues:
+      - AWS Directory Service for Microsoft AD (Enterprise Edition)
+      - Microsoft AD on Amazon EC2
+    Default: Microsoft AD on Amazon EC2
+    Description: 'Select the type of AD DS deployment to use: AWS Directory Service
+      for Microsoft AD or managing your own Amazon EC2 AD instances.'
+    Type: String
   ADServer1InstanceType:
     AllowedValues:
       - t2.large
@@ -608,6 +619,9 @@ Parameters:
     MaxLength: 16
     Default: 10.0.0.10
 Conditions:
+  UseAWSDirectoryServiceEE: !Equals
+    - !Ref 'ADScenarioType'
+    - AWS Directory Service for Microsoft AD (Enterprise Edition)
   GovCloudCondition: !Equals
     - !Ref 'AWS::Region'
     - us-gov-west-1
@@ -650,28 +664,41 @@ Resources:
     Properties:
       TemplateURL:
         !Sub
-          - 'https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/ad-1.template'
-          - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
-            S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
-      Parameters:
-        ADServer1PrivateIP: !Ref 'ADServer1PrivateIP'
-        ADServer2InstanceType: !Ref 'ADServer2InstanceType'
-        ADServer2PrivateIP: !Ref 'ADServer2PrivateIP'
-        ADServer1InstanceType: !Ref 'ADServer1InstanceType'
-        ADServer1NetBIOSName: !Ref 'ADServer1NetBIOSName'
-        ADServer2NetBIOSName: !Ref 'ADServer2NetBIOSName'
-        DomainAdminPassword: !Ref 'DomainAdminPassword'
-        DomainAdminUser: !Ref 'DomainAdminUser'
-        DomainDNSName: !Ref 'DomainDNSName'
-        DomainNetBIOSName: !Ref 'DomainNetBIOSName'
-        KeyPairName: !Ref 'KeyPairName'
-        PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
-        PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
-        VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
-        QSS3BucketName: !Ref 'QSS3BucketName'
-        QSS3BucketRegion: !Ref 'QSS3BucketRegion'
-        QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/'
-        VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
+        - https://${S3Bucket}.s3.${S3Region}.${AWS::URLSuffix}/${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/templates/${QSADTemplate}
+        - QSADTemplate: !If [UseAWSDirectoryServiceEE, 'ad-3.template', 'ad-1.template']
+          S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
+          S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
+      Parameters: !If
+        - UseAWSDirectoryServiceEE
+        - DomainAdminPassword: !Ref 'DomainAdminPassword'
+          DomainDNSName: !Ref 'DomainDNSName'
+          DomainNetBIOSName: !Ref 'DomainNetBIOSName'
+          KeyPairName: !Ref 'KeyPairName'
+          PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+          PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+          QSS3BucketName: !Ref 'QSS3BucketName'
+          QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+          QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/'
+          VPCCIDR: !Ref 'VPCCIDR'
+          VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+        - ADServer1PrivateIP: !Ref 'ADServer1PrivateIP'
+          ADServer2InstanceType: !Ref 'ADServer2InstanceType'
+          ADServer2PrivateIP: !Ref 'ADServer2PrivateIP'
+          ADServer1InstanceType: !Ref 'ADServer1InstanceType'
+          ADServer1NetBIOSName: !Ref 'ADServer1NetBIOSName'
+          ADServer2NetBIOSName: !Ref 'ADServer2NetBIOSName'
+          DomainAdminPassword: !Ref 'DomainAdminPassword'
+          DomainAdminUser: !Ref 'DomainAdminUser'
+          DomainDNSName: !Ref 'DomainDNSName'
+          DomainNetBIOSName: !Ref 'DomainNetBIOSName'
+          KeyPairName: !Ref 'KeyPairName'
+          PrivateSubnet1ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet1AID'
+          PrivateSubnet2ID: !GetAtt 'VPCStack.Outputs.PrivateSubnet2AID'
+          VPCID: !GetAtt 'VPCStack.Outputs.VPCID'
+          QSS3BucketName: !Ref 'QSS3BucketName'
+          QSS3BucketRegion: !Ref 'QSS3BucketRegion'
+          QSS3KeyPrefix: !Sub '${QSS3KeyPrefix}submodules/quickstart-microsoft-activedirectory/'
+          VPCCIDR: !GetAtt 'VPCStack.Outputs.VPCCIDR'
   RDGWStack:
     DependsOn: ADStack
     Condition: IncludeRDGW
@@ -684,7 +711,10 @@ Resources:
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
         DomainAdminPassword: !Ref 'DomainAdminPassword'
-        DomainAdminUser: !Ref 'DomainAdminUser'
+        DomainAdminUser: !If
+          - UseAWSDirectoryServiceEE
+          - admin
+          - !Ref 'DomainAdminUser'
         DomainDNSName: !Ref 'DomainDNSName'
         DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
@@ -708,9 +738,20 @@ Resources:
           - S3Region: !If [UsingDefaultBucket, !Ref 'AWS::Region', !Ref QSS3BucketRegion]
             S3Bucket: !If [UsingDefaultBucket, !Sub '${QSS3BucketName}-${AWS::Region}', !Ref QSS3BucketName]
       Parameters:
-        ADScenarioType: Microsoft AD on Amazon EC2
+        ADScenarioType: !Ref 'ADScenarioType'
+        ADServer1PrivateIP: !If
+          - UseAWSDirectoryServiceEE
+          - !GetAtt 'ADStack.Outputs.ADServer1PrivateIP'
+          - !Ref 'ADServer1PrivateIP'
+        ADServer2PrivateIP: !If
+          - UseAWSDirectoryServiceEE
+          - !GetAtt 'ADStack.Outputs.ADServer2PrivateIP'
+          - !Ref 'ADServer2PrivateIP'
         DomainAdminPassword: !Ref 'DomainAdminPassword'
-        DomainAdminUser: !Ref 'DomainAdminUser'
+        DomainAdminUser: !If
+          - UseAWSDirectoryServiceEE
+          - admin
+          - !Ref 'DomainAdminUser'
         DomainDNSName: !Ref 'DomainDNSName'
         DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
