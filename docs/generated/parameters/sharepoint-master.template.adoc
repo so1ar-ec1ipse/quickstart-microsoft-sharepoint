@@ -28,7 +28,8 @@
 .Microsoft Active Directory configuration
 [width="100%",cols="16%,11%,73%",options="header",]
 |===
-|Parameter label (name) |Default value|Description|Domain controller 1 instance type
+|Parameter label (name) |Default value|Description|AD scenario type
+(`ADScenarioType`)|`Microsoft AD on Amazon EC2`|Select the type of AD DS deployment to use: AWS Directory Service for Microsoft AD or managing your own Amazon EC2 AD instances.|Domain controller 1 instance type
 (`ADServer1InstanceType`)|`m5.xlarge`|EC2 instance type for the first Active Directory instance.|Domain controller 1 NetBIOS name
 (`ADServer1NetBIOSName`)|`DC1`|NetBIOS name of the first Active Directory server (up to 15 characters).|Domain controller 1 private IP address
 (`ADServer1PrivateIP`)|`10.0.0.10`|Fixed private IP address for the first Active Directory server located in Availability Zone 1.|Domain controller 2 instance type
