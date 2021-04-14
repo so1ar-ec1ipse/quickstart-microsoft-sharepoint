@@ -5,6 +5,16 @@
 == Post-deployment steps
 // If Post-deployment steps are required, add them here. If not, remove the heading
 
+=== Run Windows Updates
+
+In order to ensure the deployed servers' operating systems and installed applications have the latest Microsoft updates, run Windows Update on each server.
+
+1. Create an RDP session from the Remote Desktop Gateway server to each deployed server.
+2. Open the *Settings* application.
+3. Open *Update & Security*.
+4. Click *Check for updates*.
+5. Install any updates and reboot if necessary.
+
 === Create initial content
 
 This step assumes that you deployed a SharePoint farm rather than a single server, and that the server name prefix value is SPServer. In this scenario, we assume that the SharePoint farm host an internal site, and then we set up a modern team site to validate our test.
