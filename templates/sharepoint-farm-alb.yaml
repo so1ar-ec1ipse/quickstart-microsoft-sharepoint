@@ -260,6 +260,7 @@ Resources:
 
   DSCBucket:
     Type: AWS::S3::Bucket
+    DeletionPolicy: Retain
     Properties:
       LifecycleConfiguration:
         Rules:
