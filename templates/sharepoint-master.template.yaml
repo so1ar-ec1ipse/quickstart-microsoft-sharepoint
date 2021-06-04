@@ -755,6 +755,7 @@ Resources:
         DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
         KeyPairName: !Ref 'KeyPairName'
+        SQLServerVersion: !Ref 'SQLServerVersion'
         SQLServiceAccount: !Ref 'SQLServiceAccount'
         SQLServiceAccountPassword: !Ref 'SQLServiceAccountPassword'
         SQLLicenseProvided: !Ref 'SQLLicenseProvided'
