@@ -19,7 +19,7 @@ tests:
   sharepoint-farm:
     parameters:
       AvailabilityZones: $[taskcat_getaz_2]
-      ADScenarioType: 'AWS Directory Service for Microsoft AD (Enterprise Edition)'
+      ADScenarioType: 'Microsoft AD on Amazon EC2'
       DomainAdminUser: admin
       DomainAdminPassword: $[taskcat_genpass_16]
       Farm: Deploy a SharePoint farm
@@ -35,7 +35,7 @@ tests:
       SQLServiceAccount: sqlsa
       SQLServiceAccountPassword: $[taskcat_genpass_16]
     regions:
-    - us-east-1
+    - us-east-2
     s3_bucket: ''
     template: templates/sharepoint-master.template.yaml
 #  sharepoint-single:
