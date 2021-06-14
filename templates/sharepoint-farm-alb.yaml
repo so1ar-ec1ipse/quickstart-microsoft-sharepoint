@@ -7,7 +7,7 @@ Description: >
   installed into an existing VPC that was built using the sample reference architecture
   titled "Implementing Active Directory Domain Services in the AWS Cloud" **WARNING**
   This template creates Amazon EC2 Windows instance and related resources. You will be
-  billed for the AWS resources used if you create a stack from this template.
+  billed for the AWS resources used if you create a stack from this template. (qs-1s0fjiug1)
 
 Metadata:
   AWS::CloudFormation::Interface:
@@ -736,7 +736,7 @@ Resources:
           };
       Handler: index.handler
       Role: !GetAtt WriteMOFRole.Arn
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Timeout: 10
 
   WriteFarmServerMOF:
@@ -2652,7 +2652,7 @@ Resources:
           };
       Handler: index.handler
       Role: !GetAtt GenerateUsernamesRole.Arn
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Timeout: 10
 
   GenerateUsernames:

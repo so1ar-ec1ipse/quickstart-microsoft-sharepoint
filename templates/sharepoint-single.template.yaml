@@ -463,7 +463,7 @@ Resources:
           };
       Handler: index.handler
       Role: !GetAtt WriteMOFRole.Arn
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Timeout: 10
 
   WriteSingleServerMOF:
@@ -1561,7 +1561,7 @@ Resources:
           };
       Handler: index.handler
       Role: !GetAtt GenerateUsernamesRole.Arn
-      Runtime: nodejs10.x
+      Runtime: nodejs12.x
       Timeout: 10
 
   GenerateUsernames:
