@@ -779,7 +779,7 @@ Resources:
         KeyPairName: !Ref 'KeyPairName'
         SQLServerVersion: !Ref 'SQLServerVersion'
         SQL2016Media: !Ref SQL2016Media
-        SQL2016Media: !Ref SQL2017Media
+        SQL2017Media: !Ref SQL2017Media
         SQL2019Media: !Ref SQL2019Media
         SQLServiceAccount: !Ref 'SQLServiceAccount'
         SQLServiceAccountPassword: !Ref 'SQLServiceAccountPassword'
