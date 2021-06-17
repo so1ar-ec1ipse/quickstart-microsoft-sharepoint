@@ -19,6 +19,7 @@
 :template_custom_datalookupfunction:
 :template_custom_writemoffile:
 :template_datalookupfunction:
+:template_deterministic_ec2_instances:
 :template_ec2:
 :template_elasticloadbalancing:
 :template_elasticloadbalancingv2:

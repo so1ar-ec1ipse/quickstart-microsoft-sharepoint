@@ -48,7 +48,10 @@
 (`SQLServerVersion`)|`2017`|Version of SQL Server to install on WSFC nodes. Choose 2016 or 2017.|Service account name
 (`SQLServiceAccount`)|`sqlsa`|User name for the SQL Server service account. This account is a domain user.|Service account password
 (`SQLServiceAccountPassword`)|`**__Requires input__**`|Password for the SQL Server service account. Must be at least 8 characters and contain letters, numbers, and symbols.|Amazon-provided SQL Server license
-(`SQLLicenseProvided`)|`yes`|Choose yes to license SQL Server from AWS Marketplace. Choose no to provide your own license post-deployment.|Data volume size
+(`SQLLicenseProvided`)|`yes`|Choose yes to license SQL Server from AWS Marketplace. Choose no to provide your own license post-deployment.|SQL Server 2016 installation media location
+(`SQL2016Media`)|`https://download.microsoft.com/download/9/0/7/907AD35F-9F9C-43A5-9789-52470555DB90/ENU/SQLServer2016SP1-FullSlipstream-x64-ENU.iso`|SQL Server 2016 installation media location|SQL Server 2017 installation media location
+(`SQL2017Media`)|`https://download.microsoft.com/download/E/F/2/EF23C21D-7860-4F05-88CE-39AA114B014B/SQLServer2017-x64-ENU.iso`|SQL Server 2017 installation media location|SQL Server 2019 installation media location
+(`SQL2019Media`)|`https://go.microsoft.com/fwlink/?linkid=866664`|SQL Server 2019 installation media location|Data volume size
 (`Volume1Size`)|`500`|Volume size for the SQL Data drive, in GiB.|Data volume type
 (`Volume1Type`)|`gp2`|Volume type for the SQL Data drive.|Data volume IOPS
 (`Volume1Iops`)|`1000`|IOPS for the SQL Data drive. (Use only when volume type is io1.)|Logs volume size
