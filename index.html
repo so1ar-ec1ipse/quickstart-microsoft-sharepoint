@@ -876,9 +876,9 @@ p.footer-text a{color:#d7d8d8}
 <li><a href="#_troubleshooting">Troubleshooting</a></li>
 <li><a href="#_parameter_reference">Parameter reference</a>
 <ul class="sectlevel2">
-<li><a href="#_parameters_for_deploying_a_single_sharepoint_server_into_an_existing_vpc">Parameters for deploying a single SharePoint server into an existing VPC</a></li>
-<li><a href="#_parameters_for_deploying_a_sharepoint_farm_into_an_existing_vpc">Parameters for deploying a SharePoint farm into an existing VPC</a></li>
 <li><a href="#_parameters_for_deploying_a_sharepoint_farm_into_a_new_vpc">Parameters for deploying a SharePoint farm into a new VPC</a></li>
+<li><a href="#_parameters_for_deploying_a_sharepoint_farm_into_an_existing_vpc">Parameters for deploying a SharePoint farm into an existing VPC</a></li>
+<li><a href="#_parameters_for_deploying_a_single_sharepoint_server_into_an_existing_vpc">Parameters for deploying a single SharePoint server into an existing VPC</a></li>
 </ul>
 </li>
 <li><a href="#_send_us_feedback">Send us feedback</a></li>
@@ -2382,449 +2382,9 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </table>
 </div>
 <div class="sect2">
-<h3 id="_parameters_for_deploying_a_single_sharepoint_server_into_an_existing_vpc">Parameters for deploying a single SharePoint server into an existing VPC</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 1. Network configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Key-pair name
-(<code>KeyPairName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public/private key pairs allow you to securely connect to your instance after it launches.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
-(<code>VPCID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (e.g., vpc-0343606e).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
-(<code>VPCCIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the subnet
-(<code>SubnetID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the private subnet into which SharePoint will be deployed (e.g., subnet-a0246dcd).</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 2. Amazon EC2 configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server instance type
-(<code>SPServerInstanceType</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.xlarge</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EC2 instance type for the SharePoint server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI
-(<code>WS2019FULLBASE</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Amazon-provided AMI for Windows Server 2019. If you want to use a different AMI, specify the AWS Systems Manager Parameter Store parameter namespace that provides your AMI ID.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server NetBIOS name
-(<code>SPServerNetBIOSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPServer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the SharePoint server (up to 15 characters).</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 3. Microsoft Active Directory configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
-(<code>DomainDNSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN) of the domain to join.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Domain NetBIOS name
-(<code>DomainNetBIOSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the domain to join for users of earlier versions of Windows. (Up to 15 characters.)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator user name
-(<code>ADAdminUserName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the domain, without the domain name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator password
-(<code>ADAdminPassword</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the Active Directory administrator account.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
-(<code>ADMemberSecurityGroup</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow access to the domain controllers for domain join and other actions.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 4. Microsoft SQL Server configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
-(<code>SQLServerAccessSecurityGroup</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow communication with the server (or servers) running SQL Server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database server name
-(<code>SPDatabaseName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server running SQL Server that will store the SharePoint databases.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator user name
-(<code>SQLAdminUserName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the server running SQL Server, without the domain name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator password
-(<code>SQLAdminPassword</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the SQL Server administrator account.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 5. Microsoft SharePoint configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket
-(<code>SPBinaryBucket</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the S3 bucket that contains your SharePoint binaries.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket Region
-(<code>SPBinaryBucketRegion</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Region in which the SharePoint binary S3 bucket is hosted.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary key
-(<code>SPBinaryKey</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The path (key) to the installer .zip file in the S3 bucket.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint product key
-(<code>SPProductKey</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>M692G-8N2JP-GG8B2-2W2P7-YY7J6</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise trial.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
-<h3 id="_parameters_for_deploying_a_sharepoint_farm_into_an_existing_vpc">Parameters for deploying a SharePoint farm into an existing VPC</h3>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 6. Network configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Key pair name
-(<code>KeyPairName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Public/private key pair that allows you to securely connect to your instance after it launches.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
-(<code>VPCID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (e.g., vpc-0343606e).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
-(<code>VPCCIDR</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 1 ID
-(<code>Subnet1ID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the first private subnet into which SharePoint will be deployed (e.g., subnet-a0246dcd).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 2 ID
-(<code>Subnet2ID</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the second private subnet into which SharePoint will be deployed (e.g., subnet-b58c3d67).</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">DNS server IP address
-(<code>DNSServerIP</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.10</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address of a DNS server on the network that will allow DNS entries to be created as the administrator account.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 7. Amazon EC2 configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server instance type
-(<code>SPServerInstanceType</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.xlarge</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">EC2 instance type for the SharePoint servers.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI
-(<code>WS2019FULLBASE</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server NetBIOS Name
-(<code>SPServerNetBIOSNamePrefix</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPServer</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name prefix of the SharePoint servers (up to 14 characters).</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 8. Microsoft Active Directory configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
-(<code>DomainDNSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN) of the domain to join.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Domain NetBIOS name
-(<code>DomainNetBIOSName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the domain to join.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator user name
-(<code>ADAdminUserName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the domain, without the domain name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator password
-(<code>ADAdminPassword</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the Active Directory administrator account.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
-(<code>ADMemberSecurityGroup</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow access to the domain controllers for domain join and other actions.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 9. Microsoft SQL Server configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
-(<code>SQLServerAccessSecurityGroup</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow communication with the server or servers running SQL Server.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Database server name
-(<code>SPDatabaseName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server running SQL Server that will store the SharePoint databases.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator user name
-(<code>SQLAdminUserName</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the server running SQL Server, without the domain name.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator password
-(<code>SQLAdminPassword</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the SQL Server administrator account.</p></td>
-</tr>
-</tbody>
-</table>
-<table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 10. Microsoft SharePoint configuration</caption>
-<colgroup>
-<col style="width: 16%;">
-<col style="width: 11%;">
-<col style="width: 73%;">
-</colgroup>
-<thead>
-<tr>
-<th class="tableblock halign-left valign-top">Parameter label (name)</th>
-<th class="tableblock halign-left valign-top">Default value</th>
-<th class="tableblock halign-left valign-top">Description</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket
-(<code>SPBinaryBucket</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the S3 bucket that contains your SharePoint binaries.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket Region
-(<code>SPBinaryBucketRegion</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The Region in which the SharePoint binary S3 bucket is hosted.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary key
-(<code>SPBinaryKey</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The path (key) to the installer .zip file in the S3 bucket.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint product key
-(<code>SPProductKey</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>M692G-8N2JP-GG8B2-2W2P7-YY7J6</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise Trial.</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator account domain
-(<code>DNSPrefixCentralAdmin</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spadmin</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The domain name for the central administrator account, without the domain suffix. (Use 'admin' not 'admin.domain.com'.)</p></td>
-</tr>
-<tr>
-<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint domain
-(<code>DNSPrefixMainSite</code>)</p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sharepoint</code></p></td>
-<td class="tableblock halign-left valign-top"><p class="tableblock">The domain name for the main SharePoint site, without the domain suffix. (Use 'site' not 'site.domain.com'.)</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<div class="sect2">
 <h3 id="_parameters_for_deploying_a_sharepoint_farm_into_a_new_vpc">Parameters for deploying a SharePoint farm into a new VPC</h3>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 11. Network configuration</caption>
+<caption class="title">Table 1. Network configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -2883,7 +2443,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 12. Microsoft SharePoint configuration</caption>
+<caption class="title">Table 2. Microsoft SharePoint configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -2954,7 +2514,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 13. Microsoft Active Directory configuration</caption>
+<caption class="title">Table 3. Microsoft Active Directory configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -3037,7 +2597,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 14. Microsoft SQL Server configuration</caption>
+<caption class="title">Table 4. Microsoft SQL Server configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -3156,7 +2716,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 15. WSFC configuration</caption>
+<caption class="title">Table 5. WSFC configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -3245,7 +2805,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 16. Microsoft Remote Desktop Gateway configuration</caption>
+<caption class="title">Table 6. Microsoft Remote Desktop Gateway configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -3280,7 +2840,7 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 </tbody>
 </table>
 <table class="tableblock frame-all grid-all stretch">
-<caption class="title">Table 17. AWS Quick Start configuration</caption>
+<caption class="title">Table 7. AWS Quick Start configuration</caption>
 <colgroup>
 <col style="width: 16%;">
 <col style="width: 11%;">
@@ -3311,6 +2871,446 @@ Unless you are customizing the Quick Start templates for your own deployment pro
 (<code>QSS3KeyPrefix</code>)</p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock"><code>quickstart-microsoft-sharepoint/</code></p></td>
 <td class="tableblock halign-left valign-top"><p class="tableblock">S3 key prefix for the Quick Start assets. Quick Start key prefix can include numbers, lowercase letters, uppercase letters, hyphens (-), and forward slash (/).</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_parameters_for_deploying_a_sharepoint_farm_into_an_existing_vpc">Parameters for deploying a SharePoint farm into an existing VPC</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 8. Network configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key pair name
+(<code>KeyPairName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public/private key pair that allows you to securely connect to your instance after it launches.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
+(<code>VPCID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (e.g., vpc-0343606e).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
+(<code>VPCCIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 1 ID
+(<code>Subnet1ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the first private subnet into which SharePoint will be deployed (e.g., subnet-a0246dcd).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Private subnet 2 ID
+(<code>Subnet2ID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the second private subnet into which SharePoint will be deployed (e.g., subnet-b58c3d67).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">DNS server IP address
+(<code>DNSServerIP</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.10</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The IP address of a DNS server on the network that will allow DNS entries to be created as the administrator account.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 9. Amazon EC2 configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server instance type
+(<code>SPServerInstanceType</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.xlarge</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">EC2 instance type for the SharePoint servers.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI
+(<code>WS2019FULLBASE</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server NetBIOS Name
+(<code>SPServerNetBIOSNamePrefix</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPServer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name prefix of the SharePoint servers (up to 14 characters).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 10. Microsoft Active Directory configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
+(<code>DomainDNSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN) of the domain to join.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain NetBIOS name
+(<code>DomainNetBIOSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the domain to join.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator user name
+(<code>ADAdminUserName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the domain, without the domain name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator password
+(<code>ADAdminPassword</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the Active Directory administrator account.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
+(<code>ADMemberSecurityGroup</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow access to the domain controllers for domain join and other actions.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 11. Microsoft SQL Server configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
+(<code>SQLServerAccessSecurityGroup</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow communication with the server or servers running SQL Server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database server name
+(<code>SPDatabaseName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server running SQL Server that will store the SharePoint databases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator user name
+(<code>SQLAdminUserName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the server running SQL Server, without the domain name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator password
+(<code>SQLAdminPassword</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the SQL Server administrator account.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 12. Microsoft SharePoint configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket
+(<code>SPBinaryBucket</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the S3 bucket that contains your SharePoint binaries.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket Region
+(<code>SPBinaryBucketRegion</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Region in which the SharePoint binary S3 bucket is hosted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary key
+(<code>SPBinaryKey</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The path (key) to the installer .zip file in the S3 bucket.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint product key
+(<code>SPProductKey</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>M692G-8N2JP-GG8B2-2W2P7-YY7J6</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise Trial.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator account domain
+(<code>DNSPrefixCentralAdmin</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>spadmin</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The domain name for the central administrator account, without the domain suffix. (Use 'admin' not 'admin.domain.com'.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint domain
+(<code>DNSPrefixMainSite</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>sharepoint</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The domain name for the main SharePoint site, without the domain suffix. (Use 'site' not 'site.domain.com'.)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="sect2">
+<h3 id="_parameters_for_deploying_a_single_sharepoint_server_into_an_existing_vpc">Parameters for deploying a single SharePoint server into an existing VPC</h3>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 13. Network configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Key-pair name
+(<code>KeyPairName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Public/private key pairs allow you to securely connect to your instance after it launches.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC ID
+(<code>VPCID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the VPC (e.g., vpc-0343606e).</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">VPC CIDR
+(<code>VPCCIDR</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>10.0.0.0/16</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">CIDR block for the VPC.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the subnet
+(<code>SubnetID</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">ID of the private subnet into which SharePoint will be deployed (e.g., subnet-a0246dcd).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 14. Amazon EC2 configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server instance type
+(<code>SPServerInstanceType</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>m5.xlarge</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Amazon EC2 instance type for the SharePoint server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Windows Server 2019 full base AMI
+(<code>WS2019FULLBASE</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>/aws/service/ami-windows-latest/Windows_Server-2019-English-Full-Base</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Amazon-provided AMI for Windows Server 2019. If you want to use a different AMI, specify the AWS Systems Manager Parameter Store parameter namespace that provides your AMI ID.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint server NetBIOS name
+(<code>SPServerNetBIOSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPServer</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the SharePoint server (up to 15 characters).</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 15. Microsoft Active Directory configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain DNS name
+(<code>DomainDNSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example.com</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Fully qualified domain name (FQDN) of the domain to join.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Domain NetBIOS name
+(<code>DomainNetBIOSName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>example</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">NetBIOS name of the domain to join for users of earlier versions of Windows. (Up to 15 characters.)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator user name
+(<code>ADAdminUserName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the domain, without the domain name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Administrator password
+(<code>ADAdminPassword</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the Active Directory administrator account.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
+(<code>ADMemberSecurityGroup</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow access to the domain controllers for domain join and other actions.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 16. Microsoft SQL Server configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Security group ID
+(<code>SQLServerAccessSecurityGroup</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The ID of the security group that will allow communication with the server (or servers) running SQL Server.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Database server name
+(<code>SPDatabaseName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the server running SQL Server that will store the SharePoint databases.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator user name
+(<code>SQLAdminUserName</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The user name of an account with rights to the server running SQL Server, without the domain name.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SQL Server administrator password
+(<code>SQLAdminPassword</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The password of the SQL Server administrator account.</p></td>
+</tr>
+</tbody>
+</table>
+<table class="tableblock frame-all grid-all stretch">
+<caption class="title">Table 17. Microsoft SharePoint configuration</caption>
+<colgroup>
+<col style="width: 16%;">
+<col style="width: 11%;">
+<col style="width: 73%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Parameter label (name)</th>
+<th class="tableblock halign-left valign-top">Default value</th>
+<th class="tableblock halign-left valign-top">Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket
+(<code>SPBinaryBucket</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The name of the S3 bucket that contains your SharePoint binaries.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary bucket Region
+(<code>SPBinaryBucketRegion</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>us-east-1</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The Region in which the SharePoint binary S3 bucket is hosted.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint binary key
+(<code>SPBinaryKey</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code><strong><em>Requires input</em></strong></code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The path (key) to the installer .zip file in the S3 bucket.</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock">SharePoint product key
+(<code>SPProductKey</code>)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>M692G-8N2JP-GG8B2-2W2P7-YY7J6</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">The product key to use with SharePoint. The default key is for SharePoint 2019 Enterprise trial.</p></td>
 </tr>
 </tbody>
 </table>
@@ -3365,13 +3365,13 @@ and to share your customizations with others.</p>
 </html>
 <!--
 repo commit:
-12745d42f321bf857f094ea72572aacbbd536248
+9668811b6442581c9e69cbf85243e9fe7f5fe688
 
 submodule config:
  a9d6c5903745c1091793d3cd1f960948919c2c9f docs/boilerplate (remotes/origin/revert-131-doc-edits-75-ga9d6c59)
  ffc7af4e59a09dbf52199a3ecf70f3805abeff48 submodules/quickstart-aws-vpc (v1.0-58-gffc7af4)
- 152fda102e8514604eaf201be381d814438b2047 submodules/quickstart-microsoft-activedirectory (heads/main)
- f759e77b3d3d826f3fc96213d61037893266d177 submodules/quickstart-microsoft-rdgateway (heads/main)
+ 49c9085439491d4bdffee67e54495931f48e39ea submodules/quickstart-microsoft-activedirectory (heads/main)
+ 372a20abf49dffeb385848b03fc58d86289eb6b0 submodules/quickstart-microsoft-rdgateway (heads/main)
  9a12b934ade4dfc3a11688046ce9171860e61daa submodules/quickstart-microsoft-sql (heads/main)
  e1f1a322eff1014be7fbaa8f8384e9dea2fa218c submodules/quickstart-microsoft-utilities (heads/main)
 -->
