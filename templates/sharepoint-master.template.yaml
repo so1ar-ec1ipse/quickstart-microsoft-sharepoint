@@ -53,7 +53,6 @@ Metadata:
           - SQLServiceAccountPassword
           - SQLLicenseProvided
           - SQL2016Media
-          - SQL2017Media
           - SQL2019Media
           - Volume1Size
           - Volume1Type
@@ -145,8 +144,6 @@ Metadata:
         default: Version
       SQL2016Media:
         default: SQL Server 2016 installation media location
-      SQL2017Media:
-        default: SQL Server 2017 installation media location
       SQL2019Media:
         default: SQL Server 2019 installation media location
       SQLServiceAccount:
@@ -401,18 +398,13 @@ Parameters:
   SQLServerVersion:
     AllowedValues:
       - '2016'
-      - '2017'
       - '2019'
-    Default: '2017'
-    Description: Version of SQL Server to install on WSFC nodes. Choose 2016 or 2017.
+    Default: '2019'
+    Description: Version of SQL Server to install on WSFC nodes. Choose 2016 or 2019.
     Type: String
   SQL2016Media:
     Default: https://download.microsoft.com/download/9/0/7/907AD35F-9F9C-43A5-9789-52470555DB90/ENU/SQLServer2016SP1-FullSlipstream-x64-ENU.iso
     Description: SQL Server 2016 installation media location
-    Type: String
-  SQL2017Media:
-    Default: https://download.microsoft.com/download/E/F/2/EF23C21D-7860-4F05-88CE-39AA114B014B/SQLServer2017-x64-ENU.iso
-    Description: SQL Server 2017 installation media location
     Type: String
   SQL2019Media:
     Default: https://go.microsoft.com/fwlink/?linkid=866664
@@ -779,7 +771,6 @@ Resources:
         KeyPairName: !Ref 'KeyPairName'
         SQLServerVersion: !Ref 'SQLServerVersion'
         SQL2016Media: !Ref SQL2016Media
-        SQL2017Media: !Ref SQL2017Media
         SQL2019Media: !Ref SQL2019Media
         SQLServiceAccount: !Ref 'SQLServiceAccount'
         SQLServiceAccountPassword: !Ref 'SQLServiceAccountPassword'
