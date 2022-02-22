@@ -48,11 +48,9 @@ Metadata:
       - Label:
           default: Microsoft SQL Server configuration
         Parameters:
-          - SQLServerVersion
           - SQLServiceAccount
           - SQLServiceAccountPassword
           - SQLLicenseProvided
-          - SQL2016Media
           - SQL2019Media
           - Volume1Size
           - Volume1Type
@@ -140,10 +138,6 @@ Metadata:
         default: RD Gateway server instance type
       SPServerNetBIOSName:
         default: SharePoint Server NetBIOS name
-      SQLServerVersion:
-        default: Version
-      SQL2016Media:
-        default: SQL Server 2016 installation media location
       SQL2019Media:
         default: SQL Server 2019 installation media location
       SQLServiceAccount:
@@ -394,17 +388,6 @@ Parameters:
     Description: NetBIOS name (single-server deployment) or name prefix (farm deployment) of the SharePoint server or servers (up to 14 characters).
     MaxLength: '14'
     MinLength: '1'
-    Type: String
-  SQLServerVersion:
-    AllowedValues:
-      - '2016'
-      - '2019'
-    Default: '2019'
-    Description: Version of SQL Server to install on WSFC nodes. Choose 2016 or 2019.
-    Type: String
-  SQL2016Media:
-    Default: https://download.microsoft.com/download/9/0/7/907AD35F-9F9C-43A5-9789-52470555DB90/ENU/SQLServer2016SP1-FullSlipstream-x64-ENU.iso
-    Description: SQL Server 2016 installation media location
     Type: String
   SQL2019Media:
     Default: https://go.microsoft.com/fwlink/?linkid=866664
@@ -769,8 +752,7 @@ Resources:
         DomainMemberSGID: !GetAtt 'ADStack.Outputs.DomainMemberSGID'
         DomainNetBIOSName: !Ref 'DomainNetBIOSName'
         KeyPairName: !Ref 'KeyPairName'
-        SQLServerVersion: !Ref 'SQLServerVersion'
-        SQL2016Media: !Ref SQL2016Media
+        SQLServerVersion: '2019'
         SQL2019Media: !Ref SQL2019Media
         SQLServiceAccount: !Ref 'SQLServiceAccount'
         SQLServiceAccountPassword: !Ref 'SQLServiceAccountPassword'
