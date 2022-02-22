@@ -10,6 +10,12 @@ Description: >
   billed for the AWS resources used if you create a stack from this template. (qs-1qtrn51tc)
 
 Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+        - W3011
+        - W9006
+        - E9101
   QuickStartDocumentation:
     EntrypointName: "Parameters for deploying a SharePoint farm into an existing VPC"
   AWS::CloudFormation::Interface:
@@ -56,10 +62,6 @@ Metadata:
     ParameterLabels:
       WS2019FULLBASE:
         default: Windows Server 2019 full base AMI
-      QSS3BucketName:
-        default: Quick Start S3 bucket name
-      QSS3KeyPrefix:
-        default: Quick Start S3 key prefix
       SPServerInstanceType:
         default: SharePoint server instance type
       Subnet1ID:
@@ -268,11 +270,6 @@ Rules:
             - !Ref 'AWS::Region'
         AssertDescription: M4 instances are not available in the Paris Region.
 
-Conditions:
-  GovCloudCondition: !Equals
-    - !Ref 'AWS::Region'
-    - us-gov-west-1
-
 Resources:
 
   DSCBucket:
@@ -318,7 +315,7 @@ Resources:
                 Action:
                   - s3:GetObject
                 Resource:
-                  - !Sub "arn:aws:s3:::${SPBinaryBucket}/${SPBinaryKey}"
+                  - !Sub "arn:${AWS::Partition}:s3:::${SPBinaryBucket}/${SPBinaryKey}"
           PolicyName: aws-quickstart-SPServer
       Path: /
       ManagedPolicyArns:
@@ -358,7 +355,7 @@ Resources:
       - SPServer1
     Properties:
       Handle: !Ref SPServer1WaitConditionHanle
-      Timeout: 14400 
+      Timeout: '14400'
   
   SPServer2WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -366,7 +363,7 @@ Resources:
       - SPServer2
     Properties:
       Handle: !Ref SPServer2WaitConditionHanle
-      Timeout: 14400 
+      Timeout: '14400'
 
   SPServer3WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -374,7 +371,7 @@ Resources:
       - SPServer3
     Properties:
       Handle: !Ref SPServer3WaitConditionHanle
-      Timeout: 14400 
+      Timeout: '14400'
 
   SPServer4WaitCondition:
     Type: AWS::CloudFormation::WaitCondition
@@ -382,7 +379,7 @@ Resources:
       - SPServer4
     Properties:
       Handle: !Ref SPServer4WaitConditionHanle
-      Timeout: 14400 
+      Timeout: '14400'
 
   SPServer1:
     Type: AWS::EC2::Instance
@@ -397,11 +394,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -469,11 +466,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -541,11 +538,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -613,11 +610,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
@@ -689,7 +686,7 @@ Resources:
   SharePointSGIngress:
     Type: AWS::EC2::SecurityGroupIngress
     Properties:
-      IpProtocol: -1
+      IpProtocol: '-1'
       FromPort: -1
       ToPort: -1
       GroupId: !Ref SharePointSG
@@ -2838,7 +2835,7 @@ Resources:
     Properties:
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: 30
-      HealthCheckPort: 80
+      HealthCheckPort: '80'
       HealthCheckProtocol: HTTP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3
@@ -2874,7 +2871,7 @@ Resources:
     Properties:
       HealthCheckEnabled: true
       HealthCheckIntervalSeconds: 30
-      HealthCheckPort: 80
+      HealthCheckPort: '80'
       HealthCheckProtocol: TCP
       HealthCheckTimeoutSeconds: 10
       HealthyThresholdCount: 3

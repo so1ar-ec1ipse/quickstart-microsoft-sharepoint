@@ -7,6 +7,12 @@ Description: >
   billed for the AWS resources used if you create a stack from this template. (qs-1qtrn4fjk)
 
 Metadata:
+  cfn-lint:
+    config:
+      ignore_checks:
+        - W3011
+        - W9006
+        - E9101
   QuickStartDocumentation:
     EntrypointName: "Parameters for deploying a single SharePoint server into an existing VPC"
   AWS::CloudFormation::Interface:
@@ -49,10 +55,6 @@ Metadata:
     ParameterLabels:
       WS2019FULLBASE:
         default: Windows Server 2019 full base AMI
-      QSS3BucketName:
-        default: Quick Start S3 bucket name
-      QSS3KeyPrefix:
-        default: Quick Start S3 key prefix
       SPServerInstanceType:
         default: SharePoint server instance type
       SubnetID:
@@ -232,11 +234,6 @@ Rules:
             - !Ref 'AWS::Region'
         AssertDescription: M4 instances are not available in the Paris Region.
 
-Conditions:
-  GovCloudCondition: !Equals
-    - !Ref 'AWS::Region'
-    - us-gov-west-1
-
 Resources:
 
   DSCBucket:
@@ -282,7 +279,7 @@ Resources:
                 Action:
                   - s3:GetObject
                 Resource:
-                  - !Sub "arn:aws:s3:::${SPBinaryBucket}/${SPBinaryKey}"
+                  - !Sub "arn:${AWS::Partition}:s3:::${SPBinaryBucket}/${SPBinaryKey}"
           PolicyName: aws-quickstart-SPServer
       Path: /
       ManagedPolicyArns:
@@ -313,7 +310,7 @@ Resources:
       - SharePointServer
     Properties:
       Handle: !Ref SharePointServerWaitConditionHanle
-      Timeout: 7200 
+      Timeout: '7200'
 
   SharePointServer:
     Type: AWS::EC2::Instance
@@ -328,11 +325,11 @@ Resources:
       BlockDeviceMappings:
         - DeviceName: /dev/sda1
           Ebs:
-            VolumeSize: '80'
+            VolumeSize: 80
             VolumeType: gp2
         - DeviceName: /dev/xvdd
           Ebs:
-            VolumeSize: '100'
+            VolumeSize: 100
             VolumeType: gp2
       SecurityGroupIds:
         - !Ref SharePointSG
