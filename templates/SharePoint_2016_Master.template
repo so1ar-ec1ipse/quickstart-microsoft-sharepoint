@@ -14,6 +14,7 @@ Metadata:
         - W9006
         - E0002
         - E9007
+				- E9008
         - E9009
         - E9010
       ignore_reason:
